@@ -1,5 +1,5 @@
 
-package com.pylon.react-native-spokestack;
+package com.pylon.RNSpokestack;
 
 import com.pylon.spokestack.SpeechContext;
 
@@ -13,6 +13,9 @@ import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.Callback;
+
+import java.util.ArrayList;
+import javax.annotation.Nullable;
 
 public class RNSpokestackModule extends ReactContextBaseJavaModule implements SpeechContext.OnSpeechEventListener {
 
@@ -37,19 +40,19 @@ public class RNSpokestackModule extends ReactContextBaseJavaModule implements Sp
   @Override
   public void onEvent(SpeechContext.Event event, SpeechContext context) {
       switch (event) {
-      case context.ACTIVATE:
+      case ACTIVATE:
           onSpeechStart();
           break;
-      case context.DEACTIVATE:
+      case DEACTIVATE:
           onSpeechEnd();
           break;
-      case context.RECOGNIZE:
+      case RECOGNIZE:
           onSpeechResults(context.getTranscript());
           break;
       default:
-          WritableMap event = Arguments.createMap();
-          event.putBoolean("error", true);
-          sendEvent("unrecognizedEvent", event);
+          WritableMap response = Arguments.createMap();
+          response.putBoolean("error", true);
+          sendEvent("unrecognizedEvent", response);
           break;
       }
   }
@@ -61,15 +64,9 @@ public class RNSpokestackModule extends ReactContextBaseJavaModule implements Sp
       sendEvent("onSpeechError", event);
   }
 
-  public void onSpeechResults(ArrayList<String> results) {
-      WritableArray arr = Arguments.createArray();
-
-      for (String result : results) {
-          arr.pushString(result);
-      }
-
+  public void onSpeechResults(String results) {
       WritableMap event = Arguments.createMap();
-      event.putArray("value", arr);
+      event.putString("value", results);
       sendEvent("onSpeechResults", event);
   }
 

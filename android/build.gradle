@@ -27,11 +27,11 @@ android {
 }
 
 repositories {
+    mavenLocal()
     mavenCentral()
 }
 
 dependencies {
     compile 'com.facebook.react:react-native:+'
-    compile 'com.pylon.spokestack:0.1.2+'
+    compile 'com.pylon:spokestack:0.1.4'
 }
-  
