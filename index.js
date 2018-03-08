@@ -26,7 +26,7 @@ class Spokestack {
       'onSpeechStart': this._onSpeechStart.bind(this),
       'onSpeechEnd': this._onSpeechEnd.bind(this),
       'onSpeechError': this._onSpeechError.bind(this),
-      'onSpeechResults': this._onSpeechResults.bind(this),
+      'onSpeechResults': this._onSpeechResults.bind(this)
     }
   }
 
@@ -37,7 +37,7 @@ class Spokestack {
     }
   }
 
-  initialize (pipelineComponents, pipelineActivities, timeout = 0, wakeword = '') {
+  initialize (pipelineComponents) {
     if (!this._loaded && !this._listeners) {
       this._listeners = Object.keys(this._events)
         .map((key, index) => spokestackEmitter.addListener(key, this._events[key]))

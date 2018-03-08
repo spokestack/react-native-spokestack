@@ -1,5 +1,5 @@
 
-package com.pylon.react-native-spokestack;
+package com.pylon.RNSpokestack;
 
 import java.util.Arrays;
 import java.util.Collections;
