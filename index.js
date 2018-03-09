@@ -8,13 +8,9 @@ const {
 } = NativeModules
 const spokestackEmitter = new NativeEventEmitter(RNSpokestack)
 
-// Configuration Enums
+var speechPipeline
 
-const PipelineComponents = {
-  SAD: Symbol('com.pylon.spokestack.libfvad.VADTrigger'),
-  ASR: Symbol('com.pylon.spokestack.?'),
-  COMMANDS: Symbol('com.pylon.spokestack.?')
-}
+// Configuration Enums
 
 class Spokestack {
   // Class methods
@@ -23,10 +19,7 @@ class Spokestack {
     this._loaded = false
     this._listeners = null
     this.events = {
-      'onSpeechStart': this._onSpeechStart.bind(this),
-      'onSpeechEnd': this._onSpeechEnd.bind(this),
-      'onSpeechError': this._onSpeechError.bind(this),
-      'onSpeechResults': this._onSpeechResults.bind(this)
+      'onSpeechEvent': this._onSpeechEvent.bind(this)
     }
   }
 
@@ -53,35 +46,48 @@ class Spokestack {
       }
     }
 
+    speechPipeline = new RNSpokestack()
+
     return pipelineInit
   }
 
   start (pipelineInitialization) {
-    // RNSpokestack.start(pipelineInitialization)
+    speechPipeline.start()
   }
 
-  stop () {}
+  stop () {
+    speechPipeline.stop()
+  }
+
+  transcript () {
+    speechPipeline.transcript()
+  }
+
+  isActive () {
+    speechPipeline.isActive()
+  }
 
   // Events
 
-  _onSpeechStart (e) {
-    if (this.onSpeechStart) {
-      this.onSpeechStart(e)
-    }
-  }
-  _onSpeechEnd (e) {
-    if (this.onSpeechEnd) {
-      this.onSpeechEnd(e)
-    }
-  }
-  _onSpeechError (e) {
-    if (this.onSpeechError) {
-      this.onSpeechError(e)
-    }
-  }
-  _onSpeechResults (e) {
-    if (this.onSpeechResults) {
-      this.onSpeechResults(e)
+  _onSpeechEvent (e) {
+    switch (e) {
+      case 'activate':
+        if (this.onSpeechStart) {
+          this.onSpeechStart(e)
+        }
+        break
+      case 'deactivate':
+        if (this.onSpeechEnd) {
+          this.onSpeechEnd(e)
+        }
+        break
+      case 'recognize':
+        if (this.onSpeechResults) {
+          this.onSpeechResults(e)
+        }
+        break
+      default:
+        break
     }
   }
 }
