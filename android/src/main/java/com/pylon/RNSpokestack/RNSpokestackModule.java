@@ -1,12 +1,15 @@
 
 package com.pylon.RNSpokestack;
 
+import com.pylon.spokestack.SpeechPipeline;
 import com.pylon.spokestack.SpeechContext;
+import com.pylon.spokestack.OnSpeechEventListener;
 
 import android.os.Bundle;
 
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -17,13 +20,25 @@ import com.facebook.react.bridge.Callback;
 import java.util.ArrayList;
 import javax.annotation.Nullable;
 
-public class RNSpokestackModule extends ReactContextBaseJavaModule implements SpeechContext.OnSpeechEventListener {
+public class RNSpokestackModule extends ReactContextBaseJavaModule implements OnSpeechEventListener {
 
   private final ReactApplicationContext reactContext;
+  private SpeechContext.Event event;
+  private SpeechPipeline pipeline;
+  private SpeechContext context;
 
   public RNSpokestackModule(ReactApplicationContext reactContext) {
     super(reactContext);
     this.reactContext = reactContext;
+
+    pipeline = new SpeechPipeline.Builder()
+      .setInputClass("com.pylon.spokestack.android.MicrophoneInput")
+      .addStageClass("com.pylon.spokestack.libfvad.VADTrigger")
+      .setProperty("sample-rate", 16000)
+      .setProperty("frame-width", 20)
+      .setProperty("buffer-width", 300)
+      .addOnSpeechEventListener(this)
+      .build();
   }
 
   @Override
@@ -37,49 +52,34 @@ public class RNSpokestackModule extends ReactContextBaseJavaModule implements Sp
           .emit(eventName, params);
   }
 
-  @Override
-  public void onEvent(SpeechContext.Event event, SpeechContext context) {
-      switch (event) {
-      case ACTIVATE:
-          onSpeechStart();
-          break;
-      case DEACTIVATE:
-          onSpeechEnd();
-          break;
-      case RECOGNIZE:
-          onSpeechResults(context.getTranscript());
-          break;
-      default:
-          WritableMap response = Arguments.createMap();
-          response.putBoolean("error", true);
-          sendEvent("unrecognizedEvent", response);
-          break;
+  public void start() {
+    pipeline.start();
+  }
+
+  public void stop() {
+    pipeline.stop();
+  }
+
+  public String transcript() {
+      if (context == null) {
+          return "";
+      } else {
+          return context.getTranscript();
       }
   }
 
-  public void onSpeechError(String errorMessage) {
-      //String errorMessage = getErrorText(errorCode);
-      WritableMap event = Arguments.createMap();
-      event.putString("error", errorMessage);
-      sendEvent("onSpeechError", event);
+  public Boolean isActive() {
+      if (context == null) {
+          return false;
+      } else {
+          return context.isActive();
+      }
   }
 
-  public void onSpeechResults(String results) {
-      WritableMap event = Arguments.createMap();
-      event.putString("value", results);
-      sendEvent("onSpeechResults", event);
+  public void onEvent(SpeechContext.Event event, SpeechContext context) {
+      this.context = context;
+      WritableMap react_event = Arguments.createMap();
+      react_event.putString("event", event.name());
+      sendEvent("onSpeechEvent", react_event);
   }
-
-  public void onSpeechStart() {
-      WritableMap event = Arguments.createMap();
-      event.putBoolean("error", false);
-      sendEvent("onSpeechStart", event);
-  }
-
-  public void onSpeechEnd() {
-      WritableMap event = Arguments.createMap();
-      event.putBoolean("error", false);
-      sendEvent("onSpeechEnd", event);
-  }
-
 }

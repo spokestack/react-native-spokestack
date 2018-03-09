@@ -33,5 +33,5 @@ repositories {
 
 dependencies {
     compile 'com.facebook.react:react-native:+'
-    compile 'com.pylon:spokestack:0.1.4'
+    compile 'com.pylon:spokestack:0.1.6'
 }
