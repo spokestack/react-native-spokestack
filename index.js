@@ -44,7 +44,6 @@ class RNSpokestack {
   }
 
   start (pipelineInitialization) {
-    console.log('spokestack start')
     Spokestack.start((error) => {
       if (error) {
         console.log('spokestack start error:' + error)
@@ -74,7 +73,6 @@ class RNSpokestack {
   // Events
 
   _onSpeechEvent (e) {
-    console.log('onspeechevent ' + e)
     switch (e) {
       case 'activate':
         if (this.onSpeechStart) {
