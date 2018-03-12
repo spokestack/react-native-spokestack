@@ -3,10 +3,10 @@ import {
     NativeModules
 } from 'react-native'
 
-const { RNSpokestack } = NativeModules
-const spokestackEmitter = new NativeEventEmitter(RNSpokestack)
+const { Spokestack } = NativeModules
+const spokestackEmitter = new NativeEventEmitter(Spokestack)
 
-class Spokestack {
+class RNSpokestack {
   // Class methods
 
   constructor () {
@@ -44,24 +44,37 @@ class Spokestack {
   }
 
   start (pipelineInitialization) {
-    RNSpokestack.start()
+    console.log('spokestack start')
+    Spokestack.start((error) => {
+      if (error) {
+        console.log('spokestack start error:' + error)
+        return error
+      }
+      return null
+    })
   }
 
   stop () {
-    RNSpokestack.stop()
+    Spokestack.stop((error) => {
+      if (error) {
+        return error
+      }
+      return null
+    })
   }
 
   transcript () {
-    RNSpokestack.transcript()
+    return Spokestack.transcript(transcript => transcript)
   }
 
   isActive () {
-    RNSpokestack.isActive()
+    return Spokestack.isActive(isActive => isActive)
   }
 
   // Events
 
   _onSpeechEvent (e) {
+    console.log('onspeechevent ' + e)
     switch (e) {
       case 'activate':
         if (this.onSpeechStart) {
@@ -69,7 +82,7 @@ class Spokestack {
         }
         break
       case 'deactivate':
-      if (this.onSpeechEnd) {
+        if (this.onSpeechEnd) {
           this.onSpeechEnd(e)
         }
         break
@@ -84,4 +97,4 @@ class Spokestack {
   }
 }
 
-module.exports = new Spokestack()
+module.exports = new RNSpokestack()

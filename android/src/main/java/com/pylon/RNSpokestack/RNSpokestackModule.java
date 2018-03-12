@@ -6,6 +6,8 @@ import com.pylon.spokestack.SpeechContext;
 import com.pylon.spokestack.OnSpeechEventListener;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
 
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.facebook.react.bridge.WritableMap;
@@ -44,7 +46,8 @@ public class RNSpokestackModule extends ReactContextBaseJavaModule implements On
   }
 
   @ReactMethod
-  public void start() throws Exception {
+  public void start(final Callback callback) {
+    final RNSpokestackModule self = this;
     pipeline = new SpeechPipeline.Builder()
       .setInputClass("com.pylon.spokestack.android.MicrophoneInput")
       .addStageClass("com.pylon.spokestack.libfvad.VADTrigger")
@@ -53,34 +56,63 @@ public class RNSpokestackModule extends ReactContextBaseJavaModule implements On
       .setProperty("buffer-width", 300)
       .addOnSpeechEventListener(this)
       .build();
-    pipeline.start();
+    Handler mainHandler = new Handler(this.reactContext.getMainLooper());
+    mainHandler.post(new Runnable() {
+        @Override
+        public void run() {
+          try {
+            pipeline.start();
+          }
+          catch(Exception e) {
+            Log.e("module", e.toString());
+            callback.invoke(e);
+          }
+          callback.invoke(false);
+        }
+      });
   }
 
   @ReactMethod
-  public void stop() {
-    pipeline.stop();
+  public void stop(final Callback callback) {
+    Handler mainHandler = new Handler(this.reactContext.getMainLooper());
+    mainHandler.post(new Runnable() {
+        @Override
+        public void run() {
+          try {
+            pipeline.stop();
+          }
+          catch(Exception e) {
+            Log.e("module", e.toString());
+            callback.invoke(e);
+          }
+          callback.invoke(false);
+        }
+      });
   }
 
   @ReactMethod
-  public String transcript() {
-      if (context == null) {
-          return "";
-      } else {
-          return context.getTranscript();
-      }
+  public void transcript(final Callback callback) {
+    final RNSpokestackModule self = this;
+    if (context == null) {
+      callback.invoke(false);
+    } else {
+      callback.invoke(context.getTranscript());
+    }
   }
 
   @ReactMethod
-  public Boolean isActive() {
-      if (context == null) {
-          return false;
-      } else {
-          return context.isActive();
-      }
+  public void isActive(final Callback callback) {
+    final RNSpokestackModule self = this;
+    if (context == null) {
+      callback.invoke(false);
+    } else {
+      callback.invoke(context.isActive());
+    }
   }
 
-  @ReactMethod
+  @Override
   public void onEvent(SpeechContext.Event event, SpeechContext context) {
+    Log.i("module onEvent", event.name());
       this.context = context;
       WritableMap react_event = Arguments.createMap();
       react_event.putString("event", event.name());
