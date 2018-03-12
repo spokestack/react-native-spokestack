@@ -30,20 +30,11 @@ public class RNSpokestackModule extends ReactContextBaseJavaModule implements On
   public RNSpokestackModule(ReactApplicationContext reactContext) {
     super(reactContext);
     this.reactContext = reactContext;
-
-    pipeline = new SpeechPipeline.Builder()
-      .setInputClass("com.pylon.spokestack.android.MicrophoneInput")
-      .addStageClass("com.pylon.spokestack.libfvad.VADTrigger")
-      .setProperty("sample-rate", 16000)
-      .setProperty("frame-width", 20)
-      .setProperty("buffer-width", 300)
-      .addOnSpeechEventListener(this)
-      .build();
   }
 
   @Override
   public String getName() {
-    return "RNSpokestack";
+    return "Spokestack";
   }
 
   private void sendEvent(String eventName, @Nullable WritableMap params) {
@@ -52,14 +43,25 @@ public class RNSpokestackModule extends ReactContextBaseJavaModule implements On
           .emit(eventName, params);
   }
 
-  public void start() {
+  @ReactMethod
+  public void start() throws Exception {
+    pipeline = new SpeechPipeline.Builder()
+      .setInputClass("com.pylon.spokestack.android.MicrophoneInput")
+      .addStageClass("com.pylon.spokestack.libfvad.VADTrigger")
+      .setProperty("sample-rate", 16000)
+      .setProperty("frame-width", 20)
+      .setProperty("buffer-width", 300)
+      .addOnSpeechEventListener(this)
+      .build();
     pipeline.start();
   }
 
+  @ReactMethod
   public void stop() {
     pipeline.stop();
   }
 
+  @ReactMethod
   public String transcript() {
       if (context == null) {
           return "";
@@ -68,6 +70,7 @@ public class RNSpokestackModule extends ReactContextBaseJavaModule implements On
       }
   }
 
+  @ReactMethod
   public Boolean isActive() {
       if (context == null) {
           return false;
@@ -76,6 +79,7 @@ public class RNSpokestackModule extends ReactContextBaseJavaModule implements On
       }
   }
 
+  @ReactMethod
   public void onEvent(SpeechContext.Event event, SpeechContext context) {
       this.context = context;
       WritableMap react_event = Arguments.createMap();

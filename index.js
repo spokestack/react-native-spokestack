@@ -3,14 +3,8 @@ import {
     NativeModules
 } from 'react-native'
 
-const {
-    RNSpokestack
-} = NativeModules
+const { RNSpokestack } = NativeModules
 const spokestackEmitter = new NativeEventEmitter(RNSpokestack)
-
-var speechPipeline
-
-// Configuration Enums
 
 class Spokestack {
   // Class methods
@@ -18,7 +12,7 @@ class Spokestack {
   constructor () {
     this._loaded = false
     this._listeners = null
-    this.events = {
+    this._events = {
       'onSpeechEvent': this._onSpeechEvent.bind(this)
     }
   }
@@ -46,25 +40,23 @@ class Spokestack {
       }
     }
 
-    speechPipeline = new RNSpokestack()
-
     return pipelineInit
   }
 
   start (pipelineInitialization) {
-    speechPipeline.start()
+    RNSpokestack.start()
   }
 
   stop () {
-    speechPipeline.stop()
+    RNSpokestack.stop()
   }
 
   transcript () {
-    speechPipeline.transcript()
+    RNSpokestack.transcript()
   }
 
   isActive () {
-    speechPipeline.isActive()
+    RNSpokestack.isActive()
   }
 
   // Events
@@ -77,7 +69,7 @@ class Spokestack {
         }
         break
       case 'deactivate':
-        if (this.onSpeechEnd) {
+      if (this.onSpeechEnd) {
           this.onSpeechEnd(e)
         }
         break
