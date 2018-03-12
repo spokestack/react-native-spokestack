@@ -64,7 +64,6 @@ public class RNSpokestackModule extends ReactContextBaseJavaModule implements On
             pipeline.start();
           }
           catch(Exception e) {
-            Log.e("module", e.toString());
             callback.invoke(e);
           }
           callback.invoke(false);
@@ -82,7 +81,6 @@ public class RNSpokestackModule extends ReactContextBaseJavaModule implements On
             pipeline.stop();
           }
           catch(Exception e) {
-            Log.e("module", e.toString());
             callback.invoke(e);
           }
           callback.invoke(false);
@@ -112,7 +110,6 @@ public class RNSpokestackModule extends ReactContextBaseJavaModule implements On
 
   @Override
   public void onEvent(SpeechContext.Event event, SpeechContext context) {
-    Log.i("module onEvent", event.name());
       this.context = context;
       WritableMap react_event = Arguments.createMap();
       react_event.putString("event", event.name());
