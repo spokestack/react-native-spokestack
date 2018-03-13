@@ -3,22 +3,16 @@ import {
     NativeModules
 } from 'react-native'
 
-const {
-    RNSpokestack
-} = NativeModules
-const spokestackEmitter = new NativeEventEmitter(RNSpokestack)
+const { Spokestack } = NativeModules
+const spokestackEmitter = new NativeEventEmitter(Spokestack)
 
-var speechPipeline
-
-// Configuration Enums
-
-class Spokestack {
+class RNSpokestack {
   // Class methods
 
   constructor () {
     this._loaded = false
     this._listeners = null
-    this.events = {
+    this._events = {
       'onSpeechEvent': this._onSpeechEvent.bind(this)
     }
   }
@@ -46,25 +40,34 @@ class Spokestack {
       }
     }
 
-    speechPipeline = new RNSpokestack()
-
     return pipelineInit
   }
 
   start (pipelineInitialization) {
-    speechPipeline.start()
+    Spokestack.start((error) => {
+      if (error) {
+        console.log('spokestack start error:' + error)
+        return error
+      }
+      return null
+    })
   }
 
   stop () {
-    speechPipeline.stop()
+    Spokestack.stop((error) => {
+      if (error) {
+        return error
+      }
+      return null
+    })
   }
 
   transcript () {
-    speechPipeline.transcript()
+    return Spokestack.transcript(transcript => transcript)
   }
 
   isActive () {
-    speechPipeline.isActive()
+    return Spokestack.isActive(isActive => isActive)
   }
 
   // Events
@@ -92,4 +95,4 @@ class Spokestack {
   }
 }
 
-module.exports = new Spokestack()
+module.exports = new RNSpokestack()
