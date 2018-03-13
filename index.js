@@ -43,15 +43,15 @@ class RNSpokestack {
     return pipelineInit
   }
 
-  start (pipelineInitialization) {
-    var result = Spokestack.start()
+  async start (pipelineInitialization) {
+    var result = await Spokestack.start()
     if (result) {
       console.log('spokestack start error:' + JSON.stringify(result))
       return result
     }
   }
 
-  stop () {
+  async stop () {
     return Spokestack.stop()
   }
 
