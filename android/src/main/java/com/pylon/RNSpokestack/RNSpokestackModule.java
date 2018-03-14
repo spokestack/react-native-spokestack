@@ -17,7 +17,7 @@ import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
-import com.facebook.react.bridge.Callback;
+import com.facebook.react.bridge.Promise;
 
 import java.util.ArrayList;
 import javax.annotation.Nullable;
@@ -46,7 +46,7 @@ public class RNSpokestackModule extends ReactContextBaseJavaModule implements On
   }
 
   @ReactMethod
-  public void start(final Callback callback) {
+  public void start(final Promise promise) {
     final RNSpokestackModule self = this;
     pipeline = new SpeechPipeline.Builder()
       .setInputClass("com.pylon.spokestack.android.MicrophoneInput")
@@ -62,57 +62,47 @@ public class RNSpokestackModule extends ReactContextBaseJavaModule implements On
         public void run() {
           try {
             pipeline.start();
+            promise.resolve(false);
           }
           catch(Exception e) {
-            callback.invoke(e);
+            Log.e("spokestack.start", e.getMessage());
+            promise.reject(e);
           }
-          callback.invoke(false);
         }
       });
   }
 
   @ReactMethod
-  public void stop(final Callback callback) {
+  public void stop(final Promise promise) {
     Handler mainHandler = new Handler(this.reactContext.getMainLooper());
     mainHandler.post(new Runnable() {
         @Override
         public void run() {
           try {
             pipeline.stop();
+            promise.resolve(false);
           }
           catch(Exception e) {
-            callback.invoke(e);
+            promise.reject(e);
           }
-          callback.invoke(false);
         }
       });
   }
 
-  @ReactMethod
-  public void transcript(final Callback callback) {
-    final RNSpokestackModule self = this;
-    if (context == null) {
-      callback.invoke(false);
-    } else {
-      callback.invoke(context.getTranscript());
-    }
-  }
-
-  @ReactMethod
-  public void isActive(final Callback callback) {
-    final RNSpokestackModule self = this;
-    if (context == null) {
-      callback.invoke(false);
-    } else {
-      callback.invoke(context.isActive());
-    }
-  }
-
-  @Override
   public void onEvent(SpeechContext.Event event, SpeechContext context) {
+    String transcript = "";
+    boolean isActive = true;
+    if (context == null) {
+      isActive = false;
+    } else {
+      isActive = context.isActive();
+      transcript = context.getTranscript();
+    }
       this.context = context;
       WritableMap react_event = Arguments.createMap();
       react_event.putString("event", event.name());
+      react_event.putString("transcript", transcript);
+      react_event.putBoolean("isActive", isActive);
       sendEvent("onSpeechEvent", react_event);
   }
 }

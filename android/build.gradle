@@ -14,7 +14,6 @@ apply plugin: 'com.android.library'
 apply plugin: 'android-native-dependencies'
 
 native_dependencies {
-    artifact 'com.snappydb:snappydb-native:0.2+'
     artifact 'com.pylon:spokestack:0.1.6'
 }
 
@@ -46,6 +45,6 @@ repositories {
 
 dependencies {
     compile 'com.facebook.react:react-native:+'
-    compile 'io.grpc:grpc-okhttp:1.10.0'    // (must replace grpc-netty on android)
+    provided 'io.grpc:grpc-okhttp:1.10.0'    // (must replace grpc-netty on android)
     compile 'com.pylon:spokestack:0.1.6'
 }

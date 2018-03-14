@@ -43,37 +43,22 @@ class RNSpokestack {
     return pipelineInit
   }
 
-  start (pipelineInitialization) {
-    Spokestack.start((error) => {
-      if (error) {
-        console.log('spokestack start error:' + error)
-        return error
-      }
-      return null
-    })
+  async start (pipelineInitialization) {
+    var result = await Spokestack.start()
+    if (result) {
+      console.log('spokestack start error:' + JSON.stringify(result))
+      return result
+    }
   }
 
-  stop () {
-    Spokestack.stop((error) => {
-      if (error) {
-        return error
-      }
-      return null
-    })
-  }
-
-  transcript () {
-    return Spokestack.transcript(transcript => transcript)
-  }
-
-  isActive () {
-    return Spokestack.isActive(isActive => isActive)
+  async stop () {
+    return Spokestack.stop()
   }
 
   // Events
 
   _onSpeechEvent (e) {
-    switch (e) {
+    switch (e.event.toLowerCase()) {
       case 'activate':
         if (this.onSpeechStart) {
           this.onSpeechStart(e)
@@ -85,8 +70,8 @@ class RNSpokestack {
         }
         break
       case 'recognize':
-        if (this.onSpeechResults) {
-          this.onSpeechResults(e)
+        if (this.onSpeechRecognized) {
+          this.onSpeechRecognized(e)
         }
         break
       default:
