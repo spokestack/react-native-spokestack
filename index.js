@@ -35,7 +35,7 @@ class RNSpokestack {
     Spokestack.initialize(pipelineConfig)
   }
 
-  start (pipelineInitialization) {
+  start () {
     Spokestack.start()
   }
 
