@@ -12,12 +12,12 @@ import android.util.Log;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.bridge.ReadableMapKeySetIterator;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
-import com.facebook.react.bridge.Promise;
 
 import java.util.ArrayList;
 import javax.annotation.Nullable;
@@ -25,9 +25,7 @@ import javax.annotation.Nullable;
 public class RNSpokestackModule extends ReactContextBaseJavaModule implements OnSpeechEventListener {
 
   private final ReactApplicationContext reactContext;
-  private SpeechContext.Event event;
   private SpeechPipeline pipeline;
-  private SpeechContext context;
 
   public RNSpokestackModule(ReactApplicationContext reactContext) {
     super(reactContext);
@@ -46,63 +44,56 @@ public class RNSpokestackModule extends ReactContextBaseJavaModule implements On
   }
 
   @ReactMethod
-  public void start(final Promise promise) {
-    final RNSpokestackModule self = this;
-    pipeline = new SpeechPipeline.Builder()
-      .setInputClass("com.pylon.spokestack.android.MicrophoneInput")
-      .addStageClass("com.pylon.spokestack.libfvad.VADTrigger")
-      .setProperty("sample-rate", 16000)
-      .setProperty("frame-width", 20)
-      .setProperty("buffer-width", 300)
-      .addOnSpeechEventListener(this)
-      .build();
-    Handler mainHandler = new Handler(this.reactContext.getMainLooper());
-    mainHandler.post(new Runnable() {
-        @Override
-        public void run() {
-          try {
-            pipeline.start();
-            promise.resolve(false);
-          }
-          catch(Exception e) {
-            Log.e("spokestack.start", e.getMessage());
-            promise.reject(e);
-          }
-        }
-      });
+  public void initialize(ReadableMap config) {
+    assert config.hasKey("input") : "'input' key is required in config";
+    assert config.hasKey("stages") : "'stages' key is required in config";
+
+    final SpeechPipeline.Builder builder = new SpeechPipeline.Builder();
+
+    builder.setInputClass(config.getString("input"));
+
+    for (Object stage : config.getArray("stages").toArrayList()) {
+      builder.addStageClass(stage.toString());
+    }
+
+    if (config.hasKey("string_properties")) {
+      ReadableMap string_properties = config.getMap("string_properties");
+      ReadableMapKeySetIterator string_properties_it = string_properties.keySetIterator();
+      while (string_properties_it.hasNextKey()) {
+        String key = string_properties_it.nextKey();
+        String value = string_properties.getString(key);
+        builder.setProperty(key, value);
+      }
+    }
+
+    if (config.hasKey("int_properties")) {
+      ReadableMap int_properties = config.getMap("int_properties");
+      ReadableMapKeySetIterator int_properties_it = int_properties.keySetIterator();
+      while (int_properties_it.hasNextKey()) {
+        String key = int_properties_it.nextKey();
+        int value = int_properties.getInt(key);
+        builder.setProperty(key, value);
+      }
+    }
+
+    pipeline = builder.build();
   }
 
   @ReactMethod
-  public void stop(final Promise promise) {
-    Handler mainHandler = new Handler(this.reactContext.getMainLooper());
-    mainHandler.post(new Runnable() {
-        @Override
-        public void run() {
-          try {
-            pipeline.stop();
-            promise.resolve(false);
-          }
-          catch(Exception e) {
-            promise.reject(e);
-          }
-        }
-      });
+  public void start() throws Exception {
+    pipeline.start();
+  }
+
+  @ReactMethod
+  public void stop () {
+    pipeline.stop();
   }
 
   public void onEvent(SpeechContext.Event event, SpeechContext context) {
-    String transcript = "";
-    boolean isActive = true;
-    if (context == null) {
-      isActive = false;
-    } else {
-      isActive = context.isActive();
-      transcript = context.getTranscript();
-    }
-      this.context = context;
-      WritableMap react_event = Arguments.createMap();
-      react_event.putString("event", event.name());
-      react_event.putString("transcript", transcript);
-      react_event.putBoolean("isActive", isActive);
-      sendEvent("onSpeechEvent", react_event);
+    WritableMap react_event = Arguments.createMap();
+    react_event.putString("event", event.name());
+    react_event.putString("transcript", context.getTranscript());
+    react_event.putBoolean("isActive", context.isActive());
+    sendEvent("onSpeechEvent", react_event);
   }
 }

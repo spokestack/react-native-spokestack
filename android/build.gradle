@@ -46,5 +46,6 @@ repositories {
 dependencies {
     compile 'com.facebook.react:react-native:+'
     provided 'io.grpc:grpc-okhttp:1.10.0'    // (must replace grpc-netty on android)
+    provided 'com.google.cloud:google-cloud-speech:0.32.0-alpha'
     compile 'com.pylon:spokestack:0.1.6'
 }
