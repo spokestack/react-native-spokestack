@@ -3,6 +3,7 @@ package com.pylon.RNSpokestack;
 
 import com.pylon.spokestack.SpeechPipeline;
 import com.pylon.spokestack.SpeechContext;
+import com.pylon.spokestack.SpeechConfig;
 import com.pylon.spokestack.OnSpeechEventListener;
 
 import android.os.Bundle;
@@ -49,33 +50,16 @@ public class RNSpokestackModule extends ReactContextBaseJavaModule implements On
     assert config.hasKey("stages") : "'stages' key is required in config";
 
     final SpeechPipeline.Builder builder = new SpeechPipeline.Builder();
-
     builder.setInputClass(config.getString("input"));
 
     for (Object stage : config.getArray("stages").toArrayList()) {
       builder.addStageClass(stage.toString());
     }
 
-    if (config.hasKey("string_properties")) {
-      ReadableMap string_properties = config.getMap("string_properties");
-      ReadableMapKeySetIterator string_properties_it = string_properties.keySetIterator();
-      while (string_properties_it.hasNextKey()) {
-        String key = string_properties_it.nextKey();
-        String value = string_properties.getString(key);
-        builder.setProperty(key, value);
-      }
-    }
-
-    if (config.hasKey("int_properties")) {
-      ReadableMap int_properties = config.getMap("int_properties");
-      ReadableMapKeySetIterator int_properties_it = int_properties.keySetIterator();
-      while (int_properties_it.hasNextKey()) {
-        String key = int_properties_it.nextKey();
-        int value = int_properties.getInt(key);
-        builder.setProperty(key, value);
-      }
-    }
-
+    config
+      .getMap("properties")
+      .toHashMap()
+      .forEach((k,v) -> builder.setProperty(k, v));
     pipeline = builder.build();
   }
 
