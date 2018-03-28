@@ -39,9 +39,9 @@ public class RNSpokestackModule extends ReactContextBaseJavaModule implements On
   }
 
   private void sendEvent(String eventName, @Nullable WritableMap params) {
-      this.reactContext
-          .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
-          .emit(eventName, params);
+    this.reactContext
+      .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+      .emit(eventName, params);
   }
 
   @ReactMethod
