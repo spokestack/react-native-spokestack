@@ -8,7 +8,7 @@ import com.pylon.spokestack.OnSpeechEventListener;
 
 import android.os.Bundle;
 import android.os.Handler;
-
+import android.util.Log;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.ReadableMap;
@@ -20,6 +20,7 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 
 import java.util.ArrayList;
+import java.util.Map;
 import javax.annotation.Nullable;
 
 public class RNSpokestackModule extends ReactContextBaseJavaModule implements OnSpeechEventListener {
@@ -56,12 +57,10 @@ public class RNSpokestackModule extends ReactContextBaseJavaModule implements On
     }
 
     if (config.hasKey("properties")) {
-      config
-        .getMap("properties")
-        .toHashMap()
-        .forEach((k,v) -> builder.setProperty(k, v));
+      Map<String, Object> map = config.getMap("properties").toHashMap();
+      for (String k: map.keySet())
+        builder.setProperty(k, map.get(k));
     }
-
     builder.addOnSpeechEventListener(this);
 
     pipeline = builder.build();
