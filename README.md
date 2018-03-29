@@ -9,7 +9,7 @@ React Native wrapper for the [Spokestack](https://github.com/pylon/spokestack-an
 
 ### Mostly automatic installation
 
-`$ yarn link spokestack-react-native`
+`$ react-native link spokestack-react-native`
 
 ### Manual installation
 
