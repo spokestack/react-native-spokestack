@@ -1,7 +1,7 @@
 
 # spokestack-react-native
 
-React Native wrapper for the [https://github.com/pylon/spokestack-android](Spokestack) speech activity detection/automated speech recognition project.
+React Native wrapper for the [Spokestack](https://github.com/pylon/spokestack-android) speech activity detection/automated speech recognition project.
 
 ## Getting started
 
@@ -9,10 +9,9 @@ React Native wrapper for the [https://github.com/pylon/spokestack-android](Spoke
 
 ### Mostly automatic installation
 
-`$ yarn link spokestack-react-native && react-native link spokestack-react-native`
+`$ yarn link spokestack-react-native`
 
 ### Manual installation
-
 
 #### Android
 
@@ -29,14 +28,90 @@ React Native wrapper for the [https://github.com/pylon/spokestack-android](Spoke
       compile project(':RNSpokestack')
   	```
 
-
 ## Usage
-```javascript
-import RNSpokestack from 'spokestack-react-native';
 
-// TODO: What to do with the module?
-RNSpokestack;
+### Java
+
+#### `android/app/build.gradle`
 ```
+buildscript {
+  repositories {
+    mavenLocal()
+    mavenCentral()
+    jcenter()
+  }
+  dependencies {
+    classpath 'com.nabilhachicha:android-native-dependencies:0.1.2'
+  }
+}
+
+apply plugin: 'android-native-dependencies'
+
+android {
+  compileSdkVersion 23 // miniumum
+  defaultConfig {
+    multiDexEnabled true
+  }
+  packagingOptions {
+    exclude 'project.properties'
+    exclude 'META-INF/INDEX.LIST'
+    exclude 'META-INF/io.netty.versions.properties'
+    pickFirst 'lib/armeabi-v7a/libspokestack.so'
+  }
+}
+
+dependencies {
+  annotationProcessor 'com.google.auto.value:auto-value:1.2' // spokestack google
+  implementation 'io.grpc:grpc-okhttp:1.10.0'    // spokestack google (must replace grpc-netty on android)
+  implementation 'com.google.code.gson:gson:2.8.2'
+  implementation project(':spokestack-react-native')
+}
+
+native_dependencies {
+    artifact 'com.pylon:spokestack:0.1.7'
+}
+```
+#### `android/app/src/main/AndroidManifest.xml`
+```
+<uses-permission android:name="android.permission.RECORD_AUDIO" />
+```
+
+### Javascript
+
+```javascript
+import RNSpokestack from 'spokestack-react-native'
+
+// There are three events that can be bound with callbacks
+RNSpokestack.onSpeechStarted = this._onSpeechStart.bind(this)
+RNSpokestack.onSpeechRecognized = this._onSpeechRecognized.bind(this)
+RNSpokestack.onSpeechEnded = this._onSpeechEnd.bind(this)
+
+// initialize the Spokestack pipeline. 
+// The pipeline has three required top-level keys: 'input', 'stages', and 'properties'.
+// For further examples, see https://github.com/pylon/spokestack-android#configuration
+RNSpokestack.initialize({
+  'input': 'com.pylon.spokestack.android.MicrophoneInput', // required, provides audio input into the stages
+  'stages': [
+    'com.pylon.spokestack.libfvad.VADTrigger', // enable voice activity detection. necessary to trigger speech recognition.
+    'com.pylon.spokestack.google.GoogleSpeechRecognizer' // one of the two supplied speech recognition services
+    // 'com.pylon.spokestack.microsoft.BingSpeechRecognizer'
+  ],
+  'properties': {
+    'locale': 'en-US',
+    'google-credentials': YOUR_GOOGLE_VOICE_CREDENTIALS
+    // 'bing-speech-api-key': YOUR_BING_VOICE_CREDENTIALS
+  }
+})
+
+RNSpokestack.start() // start voice activity detection and speech recognition. can only start after initialize is called.
+RNSpokestack.stop() // stop voice activity detection and speech recognition. can only start after initialize is called
+// NB start() and stop() can be called repeatedly.
+```
+
+## Gotchas
+  - Requires Android SDK 23 level support
+  - Requires Gradle 3.0.1+ (`classpath 'com.android.tools.build:gradle:3.0.1'` in root `build.gradle` `dependencies`)
+  - Enable app setting for microphone permission
 
 ## License
 
