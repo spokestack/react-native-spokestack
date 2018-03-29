@@ -108,6 +108,20 @@ RNSpokestack.stop() // stop voice activity detection and speech recognition. can
 // NB start() and stop() can be called repeatedly.
 ```
 
+## API
+
+Method Name                 | Description                                                                         | Platform
+--------------------------- | ----------------------------------------------------------------------------------- | --------
+RNSpokestack.initialize()       | Initialize the Spokestack VAD/ASR pipeline; required for `start()` and `stop()`                                      | Android
+RNSpokestack.start()               | Starts listening for speech activity  | Android
+RNSpokestack.stop()                | Stops listening for speech activity                      | Android
+
+Event Name                          | Description                                            | Event                           
+----------------------------------- | ------------------------------------------------------ | -----------------------------------------------
+Voice.onSpeechStarted(event)     | Invoked when speech is recognized                    | `null`
+Voice.onSpeechEnded(event)            | Invoked when speech has stopped       | `null`
+Voice.onSpeechRecognized(event)        | Invoked when speech has been recognized | `string`
+
 ## Gotchas
   - Requires Android SDK 23 level support
   - Requires Gradle 3.0.1+ (`classpath 'com.android.tools.build:gradle:3.0.1'` in root `build.gradle` `dependencies`)
