@@ -15,7 +15,7 @@ React Native wrapper for the [Spokestack](https://github.com/pylon/spokestack-an
 
 #### Android
 
-1. Open up `android/app/src/main/java/[...]/MainActivity.java`
+1. Open up `android/app/src/main/java/[...]/MainApplication.java` (could also be called `MainActivity.java` or similar)
   - Add `import com.pylon.RNSpokestack.RNSpokestackPackage;` to the imports at the top of the file
   - Add `new RNSpokestackPackage()` to the list returned by the `getPackages()` method
 2. Append the following lines to `android/settings.gradle`:
