@@ -20,17 +20,15 @@ React Native wrapper for the [Spokestack](https://github.com/pylon/spokestack-an
   - Add `new RNSpokestackPackage()` to the list returned by the `getPackages()` method
 2. Append the following lines to `android/settings.gradle`:
   	```
-  	include ':RNSpokestack'
-  	project(':RNSpokestack').projectDir = new File(rootProject.projectDir, 	'../node_modules/spokestack-react-native/android')
+  	include ':spokestack-react-native'
+  	project(':spokestack-react-native').projectDir = new File(rootProject.projectDir, 	'../node_modules/spokestack-react-native/android')
   	```
 3. Insert the following lines inside the dependencies block in `android/app/build.gradle`:
   	```
-      compile project(':RNSpokestack')
+      compile project(':spokestack-react-native')
   	```
 
-## Usage
-
-### Java
+### Gradle Setup
 
 #### `android/app/build.gradle`
 ```
@@ -75,6 +73,8 @@ native_dependencies {
 ```
 <uses-permission android:name="android.permission.RECORD_AUDIO" />
 ```
+
+## Usage
 
 ### Javascript
 
