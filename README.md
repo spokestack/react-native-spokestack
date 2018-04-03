@@ -46,7 +46,7 @@ buildscript {
 apply plugin: 'android-native-dependencies'
 
 android {
-  compileSdkVersion 23 // miniumum
+  compileSdkVersion 26 // miniumum
   defaultConfig {
     multiDexEnabled true
   }
@@ -123,7 +123,7 @@ Voice.onSpeechEnded(event)            | Invoked when speech has stopped       | 
 Voice.onSpeechRecognized(event)        | Invoked when speech has been recognized | `string`
 
 ## Gotchas
-  - Requires Android SDK 23 level support
+  - Requires Android SDK 26 level support
   - Requires Gradle 3.0.1+ (`classpath 'com.android.tools.build:gradle:3.0.1'` in root `build.gradle` `dependencies`)
   - Enable app setting for microphone permission
 
