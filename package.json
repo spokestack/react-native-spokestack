@@ -1,6 +1,6 @@
 {
   "name": "spokestack-react-native",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "React Native wrapper for Spokestack",
   "main": "index.js",
   "author": "Noel Weichbrodt <noel@pylon.com>",
