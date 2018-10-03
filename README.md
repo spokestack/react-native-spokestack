@@ -62,6 +62,7 @@ dependencies {
   annotationProcessor 'com.google.auto.value:auto-value:1.2' // spokestack google
   implementation 'io.grpc:grpc-okhttp:1.10.0'    // spokestack google (must replace grpc-netty on android)
   implementation 'com.google.code.gson:gson:2.8.2'
+  implementation 'com.google.cloud:google-cloud-speech:0.61.0-beta
   implementation project(':spokestack-react-native')
 }
 
