@@ -66,7 +66,7 @@ dependencies {
 }
 
 native_dependencies {
-    artifact 'com.pylon:spokestack:0.1.7'
+    artifact 'com.pylon:spokestack:0.1.8'
 }
 ```
 #### `android/app/src/main/AndroidManifest.xml`
