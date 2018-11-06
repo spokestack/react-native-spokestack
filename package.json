@@ -1,5 +1,5 @@
 {
-  "name": "spokestack-react-native",
+  "name": "react-native-spokestack",
   "version": "0.0.4",
   "description": "React Native wrapper for Spokestack",
   "main": "index.js",
@@ -18,7 +18,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git://github.com/pylon/spokestack-react-native.git"
+    "url": "git://github.com/pylon/react-native-spokestack.git"
   },
   "license": "Apache-2.0",
   "peerDependencies": {
