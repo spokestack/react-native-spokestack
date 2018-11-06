@@ -26,7 +26,7 @@ React Native wrapper for the [Spokestack](https://github.com/pylon/spokestack-an
    ```
 3. Insert the following lines inside the dependencies block in `android/app/build.gradle`:
    ```
-     compile project(':react-native-spokestack')
+     implementation project(':react-native-spokestack')
    ```
 
 ### Gradle Setup
@@ -34,43 +34,16 @@ React Native wrapper for the [Spokestack](https://github.com/pylon/spokestack-an
 #### `android/app/build.gradle`
 
 ```
-buildscript {
-  repositories {
-    mavenLocal()
-    mavenCentral()
-    jcenter()
-  }
-  dependencies {
-    classpath 'com.nabilhachicha:android-native-dependencies:0.1.2'
-  }
-}
-
-apply plugin: 'android-native-dependencies'
-
+...
 android {
-  compileSdkVersion 26 // miniumum
-  defaultConfig {
-    multiDexEnabled true
-  }
+	...
   packagingOptions {
     exclude 'project.properties'
     exclude 'META-INF/INDEX.LIST'
-    exclude 'META-INF/io.netty.versions.properties'
-    pickFirst 'lib/armeabi-v7a/libspokestack.so'
+		exclude 'META-INF/DEPENDENCIES'
   }
 }
-
-dependencies {
-  annotationProcessor 'com.google.auto.value:auto-value:1.2' // spokestack google
-  implementation 'io.grpc:grpc-okhttp:3.11.0'    // spokestack google (must replace grpc-netty on android)
-  implementation 'com.google.code.gson:gson:2.8.5'
-  implementation 'com.google.cloud:google-cloud-speech:0.61.0-beta
-  implementation project(':react-native-spokestack')
-}
-
-native_dependencies {
-    artifact 'com.pylon:spokestack:0.1.8'
-}
+...
 ```
 
 #### `android/app/src/main/AndroidManifest.xml`
@@ -84,17 +57,14 @@ native_dependencies {
 ### Javascript
 
 ```javascript
-import RNSpokestack from "react-native-spokestack";
+import Spokestack from "react-native-spokestack";
 
 // There are three events that can be bound with callbacks
-RNSpokestack.onSpeechStarted = this._onSpeechStart.bind(this);
-RNSpokestack.onSpeechRecognized = this._onSpeechRecognized.bind(this);
-RNSpokestack.onSpeechEnded = this._onSpeechEnd.bind(this);
 
 // initialize the Spokestack pipeline.
 // The pipeline has three required top-level keys: 'input', 'stages', and 'properties'.
 // For further examples, see https://github.com/pylon/spokestack-android#configuration
-RNSpokestack.initialize({
+Spokestack.initialize({
   input: "com.pylon.spokestack.android.MicrophoneInput", // required, provides audio input into the stages
   stages: [
     "com.pylon.spokestack.libfvad.VADTrigger", // enable voice activity detection. necessary to trigger speech recognition.
@@ -108,24 +78,37 @@ RNSpokestack.initialize({
   }
 });
 
-RNSpokestack.start(); // start voice activity detection and speech recognition. can only start after initialize is called.
-RNSpokestack.stop(); // stop voice activity detection and speech recognition. can only start after initialize is called
+// Binding events
+const logEvent = e => console.log(e);
+Spokestack.onSpeechStarted = logEvent;
+Spokestack.onSpeechEnded = logEvent;
+Spokestack.onSpeechError = e => {
+  Spokestack.stop();
+  logEvent(e);
+};
+Spokestack.onSpeechRecognized = e => {
+  logEvent(e);
+  console.log(e.transcript); // "Hello Spokestack"
+};
+
+Spokestack.start(); // start voice activity detection and speech recognition. can only start after initialize is called.
+Spokestack.stop(); // stop voice activity detection and speech recognition. can only start after initialize is called
 // NB start() and stop() can be called repeatedly.
 ```
 
 ## API
 
-| Method Name                  | Description                                                                     | Platform |
-| ---------------------------- | ------------------------------------------------------------------------------- | -------- |
-| RNSpokestack.initialize()    | Initialize the Spokestack VAD/ASR pipeline; required for `start()` and `stop()` | Android  |
-| RNSpokestack.start()         | Starts listening for speech activity                                            | Android  |
-| RNSpokestack.stop()          | Stops listening for speech activity                                             | Android  |
+| Method Name                | Description                                                                     | Platform |
+| -------------------------- | ------------------------------------------------------------------------------- | -------- |
+| Spokestack.initialize()    | Initialize the Spokestack VAD/ASR pipeline; required for `start()` and `stop()` | Android  |
+| Spokestack.start()         | Starts listening for speech activity                                            | Android  |
+| Spokestack.stop()          | Stops listening for speech activity                                             | Android  |
 
-| Event Name                      | Description                             | Event    |
-| ------------------------------- | --------------------------------------- | -------- |
-| Voice.onSpeechStarted(event)    | Invoked when speech is recognized       | `null`   |
-| Voice.onSpeechEnded(event)      | Invoked when speech has stopped         | `null`   |
-| Voice.onSpeechRecognized(event) | Invoked when speech has been recognized | `string` |
+| Event Name                           | Description                             | Event    |
+| ------------------------------------ | --------------------------------------- | -------- |
+| Spokestack.onSpeechStarted(event)    | Invoked when speech is recognized       | `null`   |
+| Spokestack.onSpeechEnded(event)      | Invoked when speech has stopped         | `null`   |
+| Spokestack.onSpeechRecognized(event) | Invoked when speech has been recognized | `string` |
 
 ## Gotchas
 
