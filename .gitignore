@@ -8,7 +8,7 @@
 node_modules/
 npm-debug.log
 yarn-error.log
-  
+
 
 # Android/IntelliJ
 #
@@ -23,4 +23,6 @@ android/src/main/jniLibs/
 buck-out/
 \.buckd/
 *.keystore
-      
+
+# Used in development (see wml node package)
+.watchmanconfig

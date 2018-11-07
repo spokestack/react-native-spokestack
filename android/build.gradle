@@ -12,11 +12,6 @@ apply plugin: 'com.android.library'
 android {
     compileSdkVersion 27
 
-    compileOptions {
-        sourceCompatibility 1.7
-        targetCompatibility 1.7
-    }
-
     defaultConfig {
         minSdkVersion 16
         targetSdkVersion 27
@@ -26,10 +21,9 @@ android {
     lintOptions {
         abortOnError false
     }
-    packagingOptions {
-        exclude 'project.properties'
-        exclude 'META-INF/INDEX.LIST'
-        exclude 'META-INF/io.netty.versions.properties'
+	compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 
@@ -39,6 +33,10 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.facebook.react:react-native:+'
+    annotationProcessor 'com.google.auto.value:auto-value:1.2'
+    implementation 'io.grpc:grpc-okhttp:1.16.1'
+    implementation 'com.google.code.gson:gson:2.8.5'
+    implementation 'com.google.cloud:google-cloud-speech:0.69.0-beta'
+	implementation 'com.facebook.react:react-native:+'
     implementation 'com.pylon:spokestack:0.1.8'
 }
