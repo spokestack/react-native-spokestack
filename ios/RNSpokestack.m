@@ -8,8 +8,6 @@
   bool hasListeners;
 }
 
-@property (nonatomic) SpeechPipeline* pipeline;
-
 RCT_EXPORT_MODULE();
 
 - (dispatch_queue_t)methodQueue
@@ -41,6 +39,8 @@ RCT_EXPORT_MODULE();
   }
 }
 
+// @property (nonatomic) SpeechPipeline* pipeline;
+
 RCT_EXPORT_METHOD(initialize:(NSDictionary *)config)
 {
   RCTLogInfo(@"Pretending to initialize with config %@", config);
@@ -54,6 +54,18 @@ RCT_EXPORT_METHOD(start:(NSString*)foo)
 RCT_EXPORT_METHOD(stop)
 {
   RCTLogInfo(@"Pretending to stop");
+}
+
+- (void)didFinish {
+    <#code#>
+}
+
+- (void)didRecognize:(SPSpeechContext * _Nonnull)result {
+    <#code#>
+}
+
+- (void)didStart {
+    <#code#>
 }
 
 @end

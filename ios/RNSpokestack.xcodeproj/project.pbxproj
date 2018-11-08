@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		5946BDDD218B8B4D00960874 /* GoogleConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = 5946BDDC218B8B4D00960874 /* GoogleConfiguration.m */; };
-		5946BE07218CCECF00960874 /* SpokeStack.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5946BE06218CCECF00960874 /* SpokeStack.framework */; };
+		5975430F2194C8BD00796C5A /* SpokeStack.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5975430E2194C8BD00796C5A /* SpokeStack.framework */; };
 		B3E7B58A1CC2AC0600A0062D /* RNSpokestack.m in Sources */ = {isa = PBXBuildFile; fileRef = B3E7B5891CC2AC0600A0062D /* RNSpokestack.m */; };
 /* End PBXBuildFile section */
 
@@ -28,7 +28,7 @@
 		134814201AA4EA6300B7C361 /* libRNSpokestack.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libRNSpokestack.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		5946BDDB218B8B2700960874 /* GoogleConfiguration.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GoogleConfiguration.h; sourceTree = "<group>"; };
 		5946BDDC218B8B4D00960874 /* GoogleConfiguration.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GoogleConfiguration.m; sourceTree = "<group>"; };
-		5946BE06218CCECF00960874 /* SpokeStack.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SpokeStack.framework; path = "spokestack-ios/SpokeStack/FrameworkBuild/Debug-iphoneos/SpokeStack.framework"; sourceTree = "<group>"; };
+		5975430E2194C8BD00796C5A /* SpokeStack.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SpokeStack.framework; path = "spokestack-ios/SpokeStack/FrameworkBuild/Debug-iphonesimulator/SpokeStack.framework"; sourceTree = SOURCE_ROOT; };
 		B3E7B5881CC2AC0600A0062D /* RNSpokestack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNSpokestack.h; sourceTree = "<group>"; };
 		B3E7B5891CC2AC0600A0062D /* RNSpokestack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNSpokestack.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -38,7 +38,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5946BE07218CCECF00960874 /* SpokeStack.framework in Frameworks */,
+				5975430F2194C8BD00796C5A /* SpokeStack.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -56,13 +56,21 @@
 		58B511D21A9E6C8500147676 = {
 			isa = PBXGroup;
 			children = (
-				5946BE06218CCECF00960874 /* SpokeStack.framework */,
+				5975430D2194C8AC00796C5A /* Frameworks */,
 				5946BDDB218B8B2700960874 /* GoogleConfiguration.h */,
 				5946BDDC218B8B4D00960874 /* GoogleConfiguration.m */,
 				B3E7B5881CC2AC0600A0062D /* RNSpokestack.h */,
 				B3E7B5891CC2AC0600A0062D /* RNSpokestack.m */,
 				134814211AA4EA7D00B7C361 /* Products */,
 			);
+			sourceTree = "<group>";
+		};
+		5975430D2194C8AC00796C5A /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				5975430E2194C8BD00796C5A /* SpokeStack.framework */,
+			);
+			path = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -232,6 +240,8 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(PROJECT_DIR)/../spokestack-ios/SpokeStack/Frameworks/**",
 					"$(PROJECT_DIR)/spokestack-ios/SpokeStack/FrameworkBuild/Debug-iphoneos",
+					"$(PROJECT_DIR)/spokestack-ios/SpokeStack/Frameworks/BoringSSL-GRPC",
+					"$(PROJECT_DIR)/spokestack-ios/SpokeStack/FrameworkBuild/Debug-iphonesimulator",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -252,6 +262,8 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(PROJECT_DIR)/../spokestack-ios/SpokeStack/Frameworks/**",
 					"$(PROJECT_DIR)/spokestack-ios/SpokeStack/FrameworkBuild/Debug-iphoneos",
+					"$(PROJECT_DIR)/spokestack-ios/SpokeStack/Frameworks/BoringSSL-GRPC",
+					"$(PROJECT_DIR)/spokestack-ios/SpokeStack/FrameworkBuild/Debug-iphonesimulator",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
