@@ -57,15 +57,15 @@ RCT_EXPORT_METHOD(stop)
 }
 
 - (void)didFinish {
-    <#code#>
+    
 }
 
 - (void)didRecognize:(SPSpeechContext * _Nonnull)result {
-    <#code#>
+    
 }
 
 - (void)didStart {
-    <#code#>
+    
 }
 
 @end

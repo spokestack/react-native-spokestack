@@ -11,7 +11,7 @@
 #ifndef GoogleConfiguration_h
 #define GoogleConfiguration_h
 
-@interface GoogleConfiguration : NSObject <GoogleRecognizerConfiguration *>
+@interface GoogleConfiguration : NSObject
 
 @end
 

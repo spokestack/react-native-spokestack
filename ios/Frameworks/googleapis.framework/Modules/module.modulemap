@@ -1,0 +1,6 @@
+framework module googleapis {
+  umbrella header "googleapis-umbrella.h"
+
+  export *
+  module * { export * }
+}
