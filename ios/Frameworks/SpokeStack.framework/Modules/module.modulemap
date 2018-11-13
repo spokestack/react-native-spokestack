@@ -1,0 +1,11 @@
+framework module SpokeStack {
+  umbrella header "SpokeStack.h"
+
+  export *
+  module * { export * }
+}
+
+module SpokeStack.Swift {
+    header "SpokeStack-Swift.h"
+    requires objc
+}
