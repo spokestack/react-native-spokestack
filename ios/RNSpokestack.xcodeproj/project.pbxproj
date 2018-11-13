@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		5975430F2194C8BD00796C5A /* SpokeStack.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5975430E2194C8BD00796C5A /* SpokeStack.framework */; };
+		592A58A0219B3A5C00162F40 /* SpokeStack.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 592A589F219B3A5C00162F40 /* SpokeStack.framework */; };
 		5975435E2195FA1600796C5A /* openssl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5975435D2195FA1600796C5A /* openssl.framework */; };
 		597543602195FA2C00796C5A /* googleapis.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5975435F2195FA2C00796C5A /* googleapis.framework */; };
 		597543622195FA3F00796C5A /* GRPCClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 597543612195FA3F00796C5A /* GRPCClient.framework */; };
@@ -33,7 +33,7 @@
 
 /* Begin PBXFileReference section */
 		134814201AA4EA6300B7C361 /* libRNSpokestack.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libRNSpokestack.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		5975430E2194C8BD00796C5A /* SpokeStack.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SpokeStack.framework; path = "spokestack-ios/SpokeStack/FrameworkBuild/Debug-iphonesimulator/SpokeStack.framework"; sourceTree = SOURCE_ROOT; };
+		592A589F219B3A5C00162F40 /* SpokeStack.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SpokeStack.framework; path = "spokestack-ios/SpokeStack/FrameworkBuild/Debug-iphoneos/SpokeStack.framework"; sourceTree = SOURCE_ROOT; };
 		5975435D2195FA1600796C5A /* openssl.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = openssl.framework; sourceTree = "<group>"; };
 		5975435F2195FA2C00796C5A /* googleapis.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = googleapis.framework; sourceTree = "<group>"; };
 		597543612195FA3F00796C5A /* GRPCClient.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = GRPCClient.framework; sourceTree = "<group>"; };
@@ -51,13 +51,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5975430F2194C8BD00796C5A /* SpokeStack.framework in Frameworks */,
 				597543682195FA6D00796C5A /* RxLibrary.framework in Frameworks */,
 				5975436A2195FA8100796C5A /* nanopb.framework in Frameworks */,
 				597543602195FA2C00796C5A /* googleapis.framework in Frameworks */,
 				5975435E2195FA1600796C5A /* openssl.framework in Frameworks */,
 				597543662195FA5E00796C5A /* ProtoRPC.framework in Frameworks */,
 				597543622195FA3F00796C5A /* GRPCClient.framework in Frameworks */,
+				592A58A0219B3A5C00162F40 /* SpokeStack.framework in Frameworks */,
 				597543642195FA4C00796C5A /* grpc.framework in Frameworks */,
 				5975436C2195FA9100796C5A /* Protobuf.framework in Frameworks */,
 			);
@@ -87,6 +87,7 @@
 		5975430D2194C8AC00796C5A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				592A589F219B3A5C00162F40 /* SpokeStack.framework */,
 				5975436B2195FA9100796C5A /* Protobuf.framework */,
 				597543692195FA8100796C5A /* nanopb.framework */,
 				597543672195FA6D00796C5A /* RxLibrary.framework */,
@@ -95,7 +96,6 @@
 				597543612195FA3F00796C5A /* GRPCClient.framework */,
 				5975435F2195FA2C00796C5A /* googleapis.framework */,
 				5975435D2195FA1600796C5A /* openssl.framework */,
-				5975430E2194C8BD00796C5A /* SpokeStack.framework */,
 			);
 			path = Frameworks;
 			sourceTree = "<group>";
