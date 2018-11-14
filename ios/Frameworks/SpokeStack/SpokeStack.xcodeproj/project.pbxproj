@@ -1,0 +1,1099 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		011C1920216BCA3200DB36FD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 011C191F216BCA3200DB36FD /* AppDelegate.swift */; };
+		011C1922216BCA3200DB36FD /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 011C1921216BCA3200DB36FD /* ViewController.swift */; };
+		011C1925216BCA3200DB36FD /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 011C1923216BCA3200DB36FD /* Main.storyboard */; };
+		011C1927216BCA3200DB36FD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 011C1926216BCA3200DB36FD /* Assets.xcassets */; };
+		011C192A216BCA3200DB36FD /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 011C1928216BCA3200DB36FD /* LaunchScreen.storyboard */; };
+		011C193B216BCBCA00DB36FD /* StandardGoogleRecognitionConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 011C193A216BCBCA00DB36FD /* StandardGoogleRecognitionConfiguration.swift */; };
+		011C1943216BDBE000DB36FD /* SpokeStack.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01D31F3B216BAF260055FD45 /* SpokeStack.framework */; };
+		011C1944216BDBE000DB36FD /* SpokeStack.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 01D31F3B216BAF260055FD45 /* SpokeStack.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		01A715AF216BE69800975604 /* openssl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01D322F4216BB10C0055FD45 /* openssl.framework */; };
+		01A715B0216BE69800975604 /* openssl.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 01D322F4216BB10C0055FD45 /* openssl.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		01A715B1216BE69800975604 /* googleapis.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01D322AD216BB10C0055FD45 /* googleapis.framework */; };
+		01A715B2216BE69800975604 /* googleapis.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 01D322AD216BB10C0055FD45 /* googleapis.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		01A715B3216BE69800975604 /* GRPCClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01D322AF216BB10C0055FD45 /* GRPCClient.framework */; };
+		01A715B4216BE69800975604 /* GRPCClient.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 01D322AF216BB10C0055FD45 /* GRPCClient.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		01A715B5216BE69800975604 /* grpc.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01D322FE216BB10D0055FD45 /* grpc.framework */; };
+		01A715B6216BE69800975604 /* grpc.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 01D322FE216BB10D0055FD45 /* grpc.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		01A715B7216BE69800975604 /* ProtoRPC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01D322AB216BB10C0055FD45 /* ProtoRPC.framework */; };
+		01A715B8216BE69800975604 /* ProtoRPC.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 01D322AB216BB10C0055FD45 /* ProtoRPC.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		01A715B9216BE69800975604 /* RxLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01D322A9216BB10C0055FD45 /* RxLibrary.framework */; };
+		01A715BA216BE69800975604 /* RxLibrary.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 01D322A9216BB10C0055FD45 /* RxLibrary.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		01A715BB216BE69800975604 /* nanopb.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01D322FA216BB10C0055FD45 /* nanopb.framework */; };
+		01A715BC216BE69800975604 /* nanopb.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 01D322FA216BB10C0055FD45 /* nanopb.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		01A715BD216BE69800975604 /* Protobuf.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01D322FC216BB10D0055FD45 /* Protobuf.framework */; };
+		01A715BE216BE69800975604 /* Protobuf.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 01D322FC216BB10D0055FD45 /* Protobuf.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		01AC1539216BB6CE001B9146 /* openssl.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 01D322F4216BB10C0055FD45 /* openssl.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		01AC153A216BB6CE001B9146 /* googleapis.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 01D322AD216BB10C0055FD45 /* googleapis.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		01AC153B216BB6CE001B9146 /* GRPCClient.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 01D322AF216BB10C0055FD45 /* GRPCClient.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		01AC153C216BB6CE001B9146 /* grpc.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 01D322FE216BB10D0055FD45 /* grpc.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		01AC153D216BB6CE001B9146 /* ProtoRPC.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 01D322AB216BB10C0055FD45 /* ProtoRPC.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		01AC153E216BB6CE001B9146 /* RxLibrary.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 01D322A9216BB10C0055FD45 /* RxLibrary.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		01AC153F216BB6CE001B9146 /* nanopb.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 01D322FA216BB10C0055FD45 /* nanopb.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		01AC1540216BB6CE001B9146 /* Protobuf.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 01D322FC216BB10D0055FD45 /* Protobuf.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		01D31F45216BAF260055FD45 /* SpokeStack.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01D31F3B216BAF260055FD45 /* SpokeStack.framework */; };
+		01D31F4A216BAF260055FD45 /* SpokeStackTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01D31F49216BAF260055FD45 /* SpokeStackTests.swift */; };
+		01D31F4C216BAF260055FD45 /* SpokeStack.h in Headers */ = {isa = PBXBuildFile; fileRef = 01D31F3E216BAF260055FD45 /* SpokeStack.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		01D31F5E216BAF950055FD45 /* StandardRecognizerConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01D31F5B216BAF950055FD45 /* StandardRecognizerConfiguration.swift */; };
+		01D31F5F216BAF950055FD45 /* StandardRecognizerConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01D31F5B216BAF950055FD45 /* StandardRecognizerConfiguration.swift */; };
+		01D31F62216BAFA40055FD45 /* AudioController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01D31F61216BAFA40055FD45 /* AudioController.swift */; };
+		01D31F63216BAFA40055FD45 /* AudioController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01D31F61216BAFA40055FD45 /* AudioController.swift */; };
+		01D31F66216BAFB50055FD45 /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01D31F65216BAFB50055FD45 /* Error.swift */; };
+		01D31F67216BAFB50055FD45 /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01D31F65216BAFB50055FD45 /* Error.swift */; };
+		01D31F6A216BAFC60055FD45 /* SpeechPipeline.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01D31F69216BAFC60055FD45 /* SpeechPipeline.swift */; };
+		01D31F6B216BAFC60055FD45 /* SpeechPipeline.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01D31F69216BAFC60055FD45 /* SpeechPipeline.swift */; };
+		01D31F6F216BAFD90055FD45 /* SPSpeechContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01D31F6D216BAFD90055FD45 /* SPSpeechContext.swift */; };
+		01D31F70216BAFD90055FD45 /* SPSpeechContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01D31F6D216BAFD90055FD45 /* SPSpeechContext.swift */; };
+		01D31F71216BAFD90055FD45 /* RecognizerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01D31F6E216BAFD90055FD45 /* RecognizerService.swift */; };
+		01D31F72216BAFD90055FD45 /* RecognizerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01D31F6E216BAFD90055FD45 /* RecognizerService.swift */; };
+		01D31F77216BAFEF0055FD45 /* SpeechRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01D31F74216BAFEF0055FD45 /* SpeechRecognizer.swift */; };
+		01D31F78216BAFEF0055FD45 /* SpeechRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01D31F74216BAFEF0055FD45 /* SpeechRecognizer.swift */; };
+		01D31F79216BAFEF0055FD45 /* AudioControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01D31F75216BAFEF0055FD45 /* AudioControllerDelegate.swift */; };
+		01D31F7A216BAFEF0055FD45 /* AudioControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01D31F75216BAFEF0055FD45 /* AudioControllerDelegate.swift */; };
+		01D31F7B216BAFEF0055FD45 /* SpeechRecognizerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01D31F76216BAFEF0055FD45 /* SpeechRecognizerService.swift */; };
+		01D31F7C216BAFEF0055FD45 /* SpeechRecognizerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01D31F76216BAFEF0055FD45 /* SpeechRecognizerService.swift */; };
+		01D31F80216BB0000055FD45 /* GoogleRecognizerConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01D31F7E216BB0000055FD45 /* GoogleRecognizerConfiguration.swift */; };
+		01D31F81216BB0000055FD45 /* GoogleRecognizerConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01D31F7E216BB0000055FD45 /* GoogleRecognizerConfiguration.swift */; };
+		01D31F82216BB0000055FD45 /* RecognizerConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01D31F7F216BB0000055FD45 /* RecognizerConfiguration.swift */; };
+		01D31F83216BB0000055FD45 /* RecognizerConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01D31F7F216BB0000055FD45 /* RecognizerConfiguration.swift */; };
+		01D31F86216BB0120055FD45 /* GoogleSpeechRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01D31F85216BB0110055FD45 /* GoogleSpeechRecognizer.swift */; };
+		01D31F87216BB0120055FD45 /* GoogleSpeechRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01D31F85216BB0110055FD45 /* GoogleSpeechRecognizer.swift */; };
+		01D31F8A216BB0220055FD45 /* Results.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01D31F89216BB0220055FD45 /* Results.swift */; };
+		01D31F8B216BB0220055FD45 /* Results.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01D31F89216BB0220055FD45 /* Results.swift */; };
+		01D31F8E216BB0370055FD45 /* Typealiases.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01D31F8D216BB0370055FD45 /* Typealiases.swift */; };
+		01D31F8F216BB0370055FD45 /* Typealiases.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01D31F8D216BB0370055FD45 /* Typealiases.swift */; };
+		01D32466216BB10D0055FD45 /* RxLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01D322A9216BB10C0055FD45 /* RxLibrary.framework */; };
+		01D32467216BB10D0055FD45 /* RxLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01D322A9216BB10C0055FD45 /* RxLibrary.framework */; };
+		01D32468216BB10D0055FD45 /* ProtoRPC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01D322AB216BB10C0055FD45 /* ProtoRPC.framework */; };
+		01D32469216BB10D0055FD45 /* ProtoRPC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01D322AB216BB10C0055FD45 /* ProtoRPC.framework */; };
+		01D3246A216BB10D0055FD45 /* googleapis.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01D322AD216BB10C0055FD45 /* googleapis.framework */; };
+		01D3246B216BB10D0055FD45 /* googleapis.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01D322AD216BB10C0055FD45 /* googleapis.framework */; };
+		01D3246C216BB10D0055FD45 /* GRPCClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01D322AF216BB10C0055FD45 /* GRPCClient.framework */; };
+		01D3246D216BB10D0055FD45 /* GRPCClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01D322AF216BB10C0055FD45 /* GRPCClient.framework */; };
+		01D3246E216BB10D0055FD45 /* gRPCCertificates.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 01D322B0216BB10C0055FD45 /* gRPCCertificates.bundle */; };
+		01D3246F216BB10D0055FD45 /* gRPCCertificates.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 01D322B0216BB10C0055FD45 /* gRPCCertificates.bundle */; };
+		01D32494216BB10D0055FD45 /* openssl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01D322F4216BB10C0055FD45 /* openssl.framework */; };
+		01D32495216BB10D0055FD45 /* openssl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01D322F4216BB10C0055FD45 /* openssl.framework */; };
+		01D32498216BB10D0055FD45 /* nanopb.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01D322FA216BB10C0055FD45 /* nanopb.framework */; };
+		01D32499216BB10D0055FD45 /* nanopb.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01D322FA216BB10C0055FD45 /* nanopb.framework */; };
+		01D3249A216BB10D0055FD45 /* Protobuf.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01D322FC216BB10D0055FD45 /* Protobuf.framework */; };
+		01D3249B216BB10D0055FD45 /* Protobuf.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01D322FC216BB10D0055FD45 /* Protobuf.framework */; };
+		01D3249C216BB10D0055FD45 /* grpc.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01D322FE216BB10D0055FD45 /* grpc.framework */; };
+		01D3249D216BB10D0055FD45 /* grpc.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01D322FE216BB10D0055FD45 /* grpc.framework */; };
+		01DE0FEF216BFEE2007C23A7 /* gRPCCertificates.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 01D322B0216BB10C0055FD45 /* gRPCCertificates.bundle */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		011C1945216BDBE000DB36FD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 01D31F32216BAF260055FD45 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 01D31F3A216BAF260055FD45;
+			remoteInfo = SpokeStack;
+		};
+		01D31F46216BAF260055FD45 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 01D31F32216BAF260055FD45 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 01D31F3A216BAF260055FD45;
+			remoteInfo = SpokeStack;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		011C1947216BDBE000DB36FD /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				011C1944216BDBE000DB36FD /* SpokeStack.framework in Embed Frameworks */,
+				01A715BA216BE69800975604 /* RxLibrary.framework in Embed Frameworks */,
+				01A715BC216BE69800975604 /* nanopb.framework in Embed Frameworks */,
+				01A715B2216BE69800975604 /* googleapis.framework in Embed Frameworks */,
+				01A715B0216BE69800975604 /* openssl.framework in Embed Frameworks */,
+				01A715B8216BE69800975604 /* ProtoRPC.framework in Embed Frameworks */,
+				01A715B4216BE69800975604 /* GRPCClient.framework in Embed Frameworks */,
+				01A715B6216BE69800975604 /* grpc.framework in Embed Frameworks */,
+				01A715BE216BE69800975604 /* Protobuf.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		01AC1538216BB6AA001B9146 /* Copy Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				01AC1539216BB6CE001B9146 /* openssl.framework in Copy Frameworks */,
+				01AC153A216BB6CE001B9146 /* googleapis.framework in Copy Frameworks */,
+				01AC153B216BB6CE001B9146 /* GRPCClient.framework in Copy Frameworks */,
+				01AC153C216BB6CE001B9146 /* grpc.framework in Copy Frameworks */,
+				01AC153D216BB6CE001B9146 /* ProtoRPC.framework in Copy Frameworks */,
+				01AC153E216BB6CE001B9146 /* RxLibrary.framework in Copy Frameworks */,
+				01AC153F216BB6CE001B9146 /* nanopb.framework in Copy Frameworks */,
+				01AC1540216BB6CE001B9146 /* Protobuf.framework in Copy Frameworks */,
+			);
+			name = "Copy Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		011C191D216BCA3200DB36FD /* SpokeStackFrameworkExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SpokeStackFrameworkExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		011C191F216BCA3200DB36FD /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		011C1921216BCA3200DB36FD /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		011C1924216BCA3200DB36FD /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		011C1926216BCA3200DB36FD /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		011C1929216BCA3200DB36FD /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		011C192B216BCA3200DB36FD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		011C193A216BCBCA00DB36FD /* StandardGoogleRecognitionConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StandardGoogleRecognitionConfiguration.swift; sourceTree = "<group>"; };
+		01D31F3B216BAF260055FD45 /* SpokeStack.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SpokeStack.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		01D31F3E216BAF260055FD45 /* SpokeStack.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SpokeStack.h; sourceTree = "<group>"; };
+		01D31F3F216BAF260055FD45 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		01D31F44216BAF260055FD45 /* SpokeStackTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SpokeStackTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		01D31F49216BAF260055FD45 /* SpokeStackTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpokeStackTests.swift; sourceTree = "<group>"; };
+		01D31F4B216BAF260055FD45 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		01D31F57216BAF680055FD45 /* SpokeStackConfig.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = SpokeStackConfig.xcconfig; sourceTree = "<group>"; };
+		01D31F5B216BAF950055FD45 /* StandardRecognizerConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StandardRecognizerConfiguration.swift; sourceTree = "<group>"; };
+		01D31F61216BAFA40055FD45 /* AudioController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioController.swift; sourceTree = "<group>"; };
+		01D31F65216BAFB50055FD45 /* Error.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Error.swift; sourceTree = "<group>"; };
+		01D31F69216BAFC60055FD45 /* SpeechPipeline.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpeechPipeline.swift; sourceTree = "<group>"; };
+		01D31F6D216BAFD90055FD45 /* SPSpeechContext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SPSpeechContext.swift; sourceTree = "<group>"; };
+		01D31F6E216BAFD90055FD45 /* RecognizerService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecognizerService.swift; sourceTree = "<group>"; };
+		01D31F74216BAFEF0055FD45 /* SpeechRecognizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpeechRecognizer.swift; sourceTree = "<group>"; };
+		01D31F75216BAFEF0055FD45 /* AudioControllerDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioControllerDelegate.swift; sourceTree = "<group>"; };
+		01D31F76216BAFEF0055FD45 /* SpeechRecognizerService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpeechRecognizerService.swift; sourceTree = "<group>"; };
+		01D31F7E216BB0000055FD45 /* GoogleRecognizerConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GoogleRecognizerConfiguration.swift; sourceTree = "<group>"; };
+		01D31F7F216BB0000055FD45 /* RecognizerConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecognizerConfiguration.swift; sourceTree = "<group>"; };
+		01D31F85216BB0110055FD45 /* GoogleSpeechRecognizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GoogleSpeechRecognizer.swift; sourceTree = "<group>"; };
+		01D31F89216BB0220055FD45 /* Results.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Results.swift; sourceTree = "<group>"; };
+		01D31F8D216BB0370055FD45 /* Typealiases.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Typealiases.swift; sourceTree = "<group>"; };
+		01D322A9216BB10C0055FD45 /* RxLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = RxLibrary.framework; sourceTree = "<group>"; };
+		01D322AB216BB10C0055FD45 /* ProtoRPC.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ProtoRPC.framework; sourceTree = "<group>"; };
+		01D322AD216BB10C0055FD45 /* googleapis.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = googleapis.framework; sourceTree = "<group>"; };
+		01D322AF216BB10C0055FD45 /* GRPCClient.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = GRPCClient.framework; sourceTree = "<group>"; };
+		01D322B0216BB10C0055FD45 /* gRPCCertificates.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = gRPCCertificates.bundle; sourceTree = "<group>"; };
+		01D322F4216BB10C0055FD45 /* openssl.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = openssl.framework; sourceTree = "<group>"; };
+		01D322FA216BB10C0055FD45 /* nanopb.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = nanopb.framework; sourceTree = "<group>"; };
+		01D322FC216BB10D0055FD45 /* Protobuf.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Protobuf.framework; sourceTree = "<group>"; };
+		01D322FE216BB10D0055FD45 /* grpc.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = grpc.framework; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		011C191A216BCA3200DB36FD /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				011C1943216BDBE000DB36FD /* SpokeStack.framework in Frameworks */,
+				01A715B9216BE69800975604 /* RxLibrary.framework in Frameworks */,
+				01A715BB216BE69800975604 /* nanopb.framework in Frameworks */,
+				01A715B1216BE69800975604 /* googleapis.framework in Frameworks */,
+				01A715AF216BE69800975604 /* openssl.framework in Frameworks */,
+				01A715B7216BE69800975604 /* ProtoRPC.framework in Frameworks */,
+				01A715B3216BE69800975604 /* GRPCClient.framework in Frameworks */,
+				01A715B5216BE69800975604 /* grpc.framework in Frameworks */,
+				01A715BD216BE69800975604 /* Protobuf.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		01D31F38216BAF260055FD45 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				01D32494216BB10D0055FD45 /* openssl.framework in Frameworks */,
+				01D32466216BB10D0055FD45 /* RxLibrary.framework in Frameworks */,
+				01D3249A216BB10D0055FD45 /* Protobuf.framework in Frameworks */,
+				01D3246A216BB10D0055FD45 /* googleapis.framework in Frameworks */,
+				01D32468216BB10D0055FD45 /* ProtoRPC.framework in Frameworks */,
+				01D32498216BB10D0055FD45 /* nanopb.framework in Frameworks */,
+				01D3249C216BB10D0055FD45 /* grpc.framework in Frameworks */,
+				01D3246C216BB10D0055FD45 /* GRPCClient.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		01D31F41216BAF260055FD45 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				01D32469216BB10D0055FD45 /* ProtoRPC.framework in Frameworks */,
+				01D32467216BB10D0055FD45 /* RxLibrary.framework in Frameworks */,
+				01D3249D216BB10D0055FD45 /* grpc.framework in Frameworks */,
+				01D3246B216BB10D0055FD45 /* googleapis.framework in Frameworks */,
+				01D32499216BB10D0055FD45 /* nanopb.framework in Frameworks */,
+				01D32495216BB10D0055FD45 /* openssl.framework in Frameworks */,
+				01D31F45216BAF260055FD45 /* SpokeStack.framework in Frameworks */,
+				01D3246D216BB10D0055FD45 /* GRPCClient.framework in Frameworks */,
+				01D3249B216BB10D0055FD45 /* Protobuf.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		011C191E216BCA3200DB36FD /* SpokeStackFrameworkExample */ = {
+			isa = PBXGroup;
+			children = (
+				011C191F216BCA3200DB36FD /* AppDelegate.swift */,
+				011C1921216BCA3200DB36FD /* ViewController.swift */,
+				011C1923216BCA3200DB36FD /* Main.storyboard */,
+				011C1926216BCA3200DB36FD /* Assets.xcassets */,
+				011C1928216BCA3200DB36FD /* LaunchScreen.storyboard */,
+				011C192B216BCA3200DB36FD /* Info.plist */,
+			);
+			path = SpokeStackFrameworkExample;
+			sourceTree = "<group>";
+		};
+		01D31F31216BAF260055FD45 = {
+			isa = PBXGroup;
+			children = (
+				011C191E216BCA3200DB36FD /* SpokeStackFrameworkExample */,
+				01D31F3C216BAF260055FD45 /* Products */,
+				01D31F3D216BAF260055FD45 /* SpokeStack */,
+				01D31F48216BAF260055FD45 /* SpokeStackTests */,
+			);
+			sourceTree = "<group>";
+		};
+		01D31F3C216BAF260055FD45 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				01D31F3B216BAF260055FD45 /* SpokeStack.framework */,
+				01D31F44216BAF260055FD45 /* SpokeStackTests.xctest */,
+				011C191D216BCA3200DB36FD /* SpokeStackFrameworkExample.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		01D31F3D216BAF260055FD45 /* SpokeStack */ = {
+			isa = PBXGroup;
+			children = (
+				01D31F90216BB09E0055FD45 /* Externals */,
+				01D31F59216BAF710055FD45 /* Configurations */,
+				01D31F60216BAF9A0055FD45 /* Controllers */,
+				01D31F64216BAFAA0055FD45 /* Errors */,
+				01D31F68216BAFBC0055FD45 /* Managers */,
+				01D31F6C216BAFCD0055FD45 /* Models */,
+				01D31F73216BAFE20055FD45 /* Protocols */,
+				01D31F84216BB0070055FD45 /* Recognizers */,
+				01D31F88216BB0180055FD45 /* Results */,
+				01D31F55216BAF3D0055FD45 /* Support Files */,
+				01D31F8C216BB0270055FD45 /* Typealiases */,
+				01D31F56216BAF5C0055FD45 /* XConfigs */,
+			);
+			path = SpokeStack;
+			sourceTree = "<group>";
+		};
+		01D31F48216BAF260055FD45 /* SpokeStackTests */ = {
+			isa = PBXGroup;
+			children = (
+				01D31F49216BAF260055FD45 /* SpokeStackTests.swift */,
+				01D31F4B216BAF260055FD45 /* Info.plist */,
+			);
+			path = SpokeStackTests;
+			sourceTree = "<group>";
+		};
+		01D31F55216BAF3D0055FD45 /* Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				01D31F3E216BAF260055FD45 /* SpokeStack.h */,
+				01D31F3F216BAF260055FD45 /* Info.plist */,
+			);
+			name = "Support Files";
+			sourceTree = "<group>";
+		};
+		01D31F56216BAF5C0055FD45 /* XConfigs */ = {
+			isa = PBXGroup;
+			children = (
+				01D31F57216BAF680055FD45 /* SpokeStackConfig.xcconfig */,
+			);
+			name = XConfigs;
+			sourceTree = "<group>";
+		};
+		01D31F59216BAF710055FD45 /* Configurations */ = {
+			isa = PBXGroup;
+			children = (
+				011C193A216BCBCA00DB36FD /* StandardGoogleRecognitionConfiguration.swift */,
+				01D31F5B216BAF950055FD45 /* StandardRecognizerConfiguration.swift */,
+			);
+			name = Configurations;
+			sourceTree = "<group>";
+		};
+		01D31F60216BAF9A0055FD45 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				01D31F61216BAFA40055FD45 /* AudioController.swift */,
+			);
+			name = Controllers;
+			sourceTree = "<group>";
+		};
+		01D31F64216BAFAA0055FD45 /* Errors */ = {
+			isa = PBXGroup;
+			children = (
+				01D31F65216BAFB50055FD45 /* Error.swift */,
+			);
+			name = Errors;
+			sourceTree = "<group>";
+		};
+		01D31F68216BAFBC0055FD45 /* Managers */ = {
+			isa = PBXGroup;
+			children = (
+				01D31F69216BAFC60055FD45 /* SpeechPipeline.swift */,
+			);
+			name = Managers;
+			sourceTree = "<group>";
+		};
+		01D31F6C216BAFCD0055FD45 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				01D31F6E216BAFD90055FD45 /* RecognizerService.swift */,
+				01D31F6D216BAFD90055FD45 /* SPSpeechContext.swift */,
+			);
+			name = Models;
+			sourceTree = "<group>";
+		};
+		01D31F73216BAFE20055FD45 /* Protocols */ = {
+			isa = PBXGroup;
+			children = (
+				01D31F7D216BAFF40055FD45 /* Configurations */,
+				01D31F75216BAFEF0055FD45 /* AudioControllerDelegate.swift */,
+				01D31F74216BAFEF0055FD45 /* SpeechRecognizer.swift */,
+				01D31F76216BAFEF0055FD45 /* SpeechRecognizerService.swift */,
+			);
+			name = Protocols;
+			sourceTree = "<group>";
+		};
+		01D31F7D216BAFF40055FD45 /* Configurations */ = {
+			isa = PBXGroup;
+			children = (
+				01D31F7E216BB0000055FD45 /* GoogleRecognizerConfiguration.swift */,
+				01D31F7F216BB0000055FD45 /* RecognizerConfiguration.swift */,
+			);
+			name = Configurations;
+			sourceTree = "<group>";
+		};
+		01D31F84216BB0070055FD45 /* Recognizers */ = {
+			isa = PBXGroup;
+			children = (
+				01D31F85216BB0110055FD45 /* GoogleSpeechRecognizer.swift */,
+			);
+			name = Recognizers;
+			sourceTree = "<group>";
+		};
+		01D31F88216BB0180055FD45 /* Results */ = {
+			isa = PBXGroup;
+			children = (
+				01D31F89216BB0220055FD45 /* Results.swift */,
+			);
+			name = Results;
+			sourceTree = "<group>";
+		};
+		01D31F8C216BB0270055FD45 /* Typealiases */ = {
+			isa = PBXGroup;
+			children = (
+				01D31F8D216BB0370055FD45 /* Typealiases.swift */,
+			);
+			name = Typealiases;
+			sourceTree = "<group>";
+		};
+		01D31F90216BB09E0055FD45 /* Externals */ = {
+			isa = PBXGroup;
+			children = (
+				01D31F91216BB0A40055FD45 /* Google */,
+			);
+			name = Externals;
+			sourceTree = "<group>";
+		};
+		01D31F91216BB0A40055FD45 /* Google */ = {
+			isa = PBXGroup;
+			children = (
+				01D322B1216BB10C0055FD45 /* BoringSSL-GRPC */,
+				01D322AC216BB10C0055FD45 /* googleapis */,
+				01D322AE216BB10C0055FD45 /* gRPC */,
+				01D322FD216BB10D0055FD45 /* gRPC-Core */,
+				01D322AA216BB10C0055FD45 /* gRPC-ProtoRPC */,
+				01D322A8216BB10C0055FD45 /* gRPC-RxLibrary */,
+				01D322F9216BB10C0055FD45 /* nanopb */,
+				01D322FB216BB10D0055FD45 /* Protobuf */,
+			);
+			name = Google;
+			sourceTree = "<group>";
+		};
+		01D322A8216BB10C0055FD45 /* gRPC-RxLibrary */ = {
+			isa = PBXGroup;
+			children = (
+				01D322A9216BB10C0055FD45 /* RxLibrary.framework */,
+			);
+			name = "gRPC-RxLibrary";
+			path = "Frameworks/gRPC-RxLibrary";
+			sourceTree = SOURCE_ROOT;
+		};
+		01D322AA216BB10C0055FD45 /* gRPC-ProtoRPC */ = {
+			isa = PBXGroup;
+			children = (
+				01D322AB216BB10C0055FD45 /* ProtoRPC.framework */,
+			);
+			name = "gRPC-ProtoRPC";
+			path = "Frameworks/gRPC-ProtoRPC";
+			sourceTree = SOURCE_ROOT;
+		};
+		01D322AC216BB10C0055FD45 /* googleapis */ = {
+			isa = PBXGroup;
+			children = (
+				01D322AD216BB10C0055FD45 /* googleapis.framework */,
+			);
+			name = googleapis;
+			path = Frameworks/googleapis;
+			sourceTree = SOURCE_ROOT;
+		};
+		01D322AE216BB10C0055FD45 /* gRPC */ = {
+			isa = PBXGroup;
+			children = (
+				01D322AF216BB10C0055FD45 /* GRPCClient.framework */,
+				01D322B0216BB10C0055FD45 /* gRPCCertificates.bundle */,
+			);
+			name = gRPC;
+			path = Frameworks/gRPC;
+			sourceTree = SOURCE_ROOT;
+		};
+		01D322B1216BB10C0055FD45 /* BoringSSL-GRPC */ = {
+			isa = PBXGroup;
+			children = (
+				01D322F4216BB10C0055FD45 /* openssl.framework */,
+			);
+			name = "BoringSSL-GRPC";
+			path = "Frameworks/BoringSSL-GRPC";
+			sourceTree = SOURCE_ROOT;
+		};
+		01D322F9216BB10C0055FD45 /* nanopb */ = {
+			isa = PBXGroup;
+			children = (
+				01D322FA216BB10C0055FD45 /* nanopb.framework */,
+			);
+			name = nanopb;
+			path = Frameworks/nanopb;
+			sourceTree = SOURCE_ROOT;
+		};
+		01D322FB216BB10D0055FD45 /* Protobuf */ = {
+			isa = PBXGroup;
+			children = (
+				01D322FC216BB10D0055FD45 /* Protobuf.framework */,
+			);
+			name = Protobuf;
+			path = Frameworks/Protobuf;
+			sourceTree = SOURCE_ROOT;
+		};
+		01D322FD216BB10D0055FD45 /* gRPC-Core */ = {
+			isa = PBXGroup;
+			children = (
+				01D322FE216BB10D0055FD45 /* grpc.framework */,
+			);
+			name = "gRPC-Core";
+			path = "Frameworks/gRPC-Core";
+			sourceTree = SOURCE_ROOT;
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		01D31F36216BAF260055FD45 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				01D31F4C216BAF260055FD45 /* SpokeStack.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		011C191C216BCA3200DB36FD /* SpokeStackFrameworkExample */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 011C192C216BCA3200DB36FD /* Build configuration list for PBXNativeTarget "SpokeStackFrameworkExample" */;
+			buildPhases = (
+				011C1919216BCA3200DB36FD /* Sources */,
+				011C191A216BCA3200DB36FD /* Frameworks */,
+				011C191B216BCA3200DB36FD /* Resources */,
+				011C1947216BDBE000DB36FD /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				011C1946216BDBE000DB36FD /* PBXTargetDependency */,
+			);
+			name = SpokeStackFrameworkExample;
+			productName = SpokeStackFrameworkExample;
+			productReference = 011C191D216BCA3200DB36FD /* SpokeStackFrameworkExample.app */;
+			productType = "com.apple.product-type.application";
+		};
+		01D31F3A216BAF260055FD45 /* SpokeStack */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 01D31F4F216BAF260055FD45 /* Build configuration list for PBXNativeTarget "SpokeStack" */;
+			buildPhases = (
+				01D31F36216BAF260055FD45 /* Headers */,
+				01D31F37216BAF260055FD45 /* Sources */,
+				01D31F38216BAF260055FD45 /* Frameworks */,
+				01D31F39216BAF260055FD45 /* Resources */,
+				01AC1538216BB6AA001B9146 /* Copy Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SpokeStack;
+			productName = SpokeStack;
+			productReference = 01D31F3B216BAF260055FD45 /* SpokeStack.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		01D31F43216BAF260055FD45 /* SpokeStackTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 01D31F52216BAF260055FD45 /* Build configuration list for PBXNativeTarget "SpokeStackTests" */;
+			buildPhases = (
+				01D31F40216BAF260055FD45 /* Sources */,
+				01D31F41216BAF260055FD45 /* Frameworks */,
+				01D31F42216BAF260055FD45 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				01D31F47216BAF260055FD45 /* PBXTargetDependency */,
+			);
+			name = SpokeStackTests;
+			productName = SpokeStackTests;
+			productReference = 01D31F44216BAF260055FD45 /* SpokeStackTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		01D31F32216BAF260055FD45 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1000;
+				LastUpgradeCheck = 1010;
+				ORGANIZATIONNAME = "Pylon AI, Inc.";
+				TargetAttributes = {
+					011C191C216BCA3200DB36FD = {
+						CreatedOnToolsVersion = 10.0;
+					};
+					01D31F3A216BAF260055FD45 = {
+						CreatedOnToolsVersion = 10.0;
+						LastSwiftMigration = 1000;
+					};
+					01D31F43216BAF260055FD45 = {
+						CreatedOnToolsVersion = 10.0;
+					};
+				};
+			};
+			buildConfigurationList = 01D31F35216BAF260055FD45 /* Build configuration list for PBXProject "SpokeStack" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 01D31F31216BAF260055FD45;
+			productRefGroup = 01D31F3C216BAF260055FD45 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				01D31F3A216BAF260055FD45 /* SpokeStack */,
+				01D31F43216BAF260055FD45 /* SpokeStackTests */,
+				011C191C216BCA3200DB36FD /* SpokeStackFrameworkExample */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		011C191B216BCA3200DB36FD /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				01DE0FEF216BFEE2007C23A7 /* gRPCCertificates.bundle in Resources */,
+				011C192A216BCA3200DB36FD /* LaunchScreen.storyboard in Resources */,
+				011C1927216BCA3200DB36FD /* Assets.xcassets in Resources */,
+				011C1925216BCA3200DB36FD /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		01D31F39216BAF260055FD45 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				01D3246E216BB10D0055FD45 /* gRPCCertificates.bundle in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		01D31F42216BAF260055FD45 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				01D3246F216BB10D0055FD45 /* gRPCCertificates.bundle in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		011C1919216BCA3200DB36FD /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				011C1922216BCA3200DB36FD /* ViewController.swift in Sources */,
+				011C1920216BCA3200DB36FD /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		01D31F37216BAF260055FD45 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				01D31F6F216BAFD90055FD45 /* SPSpeechContext.swift in Sources */,
+				01D31F77216BAFEF0055FD45 /* SpeechRecognizer.swift in Sources */,
+				01D31F8E216BB0370055FD45 /* Typealiases.swift in Sources */,
+				01D31F66216BAFB50055FD45 /* Error.swift in Sources */,
+				01D31F6A216BAFC60055FD45 /* SpeechPipeline.swift in Sources */,
+				01D31F80216BB0000055FD45 /* GoogleRecognizerConfiguration.swift in Sources */,
+				01D31F7B216BAFEF0055FD45 /* SpeechRecognizerService.swift in Sources */,
+				01D31F71216BAFD90055FD45 /* RecognizerService.swift in Sources */,
+				01D31F82216BB0000055FD45 /* RecognizerConfiguration.swift in Sources */,
+				01D31F62216BAFA40055FD45 /* AudioController.swift in Sources */,
+				011C193B216BCBCA00DB36FD /* StandardGoogleRecognitionConfiguration.swift in Sources */,
+				01D31F8A216BB0220055FD45 /* Results.swift in Sources */,
+				01D31F79216BAFEF0055FD45 /* AudioControllerDelegate.swift in Sources */,
+				01D31F5E216BAF950055FD45 /* StandardRecognizerConfiguration.swift in Sources */,
+				01D31F86216BB0120055FD45 /* GoogleSpeechRecognizer.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		01D31F40216BAF260055FD45 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				01D31F8F216BB0370055FD45 /* Typealiases.swift in Sources */,
+				01D31F70216BAFD90055FD45 /* SPSpeechContext.swift in Sources */,
+				01D31F83216BB0000055FD45 /* RecognizerConfiguration.swift in Sources */,
+				01D31F5F216BAF950055FD45 /* StandardRecognizerConfiguration.swift in Sources */,
+				01D31F87216BB0120055FD45 /* GoogleSpeechRecognizer.swift in Sources */,
+				01D31F72216BAFD90055FD45 /* RecognizerService.swift in Sources */,
+				01D31F63216BAFA40055FD45 /* AudioController.swift in Sources */,
+				01D31F7C216BAFEF0055FD45 /* SpeechRecognizerService.swift in Sources */,
+				01D31F78216BAFEF0055FD45 /* SpeechRecognizer.swift in Sources */,
+				01D31F8B216BB0220055FD45 /* Results.swift in Sources */,
+				01D31F81216BB0000055FD45 /* GoogleRecognizerConfiguration.swift in Sources */,
+				01D31F6B216BAFC60055FD45 /* SpeechPipeline.swift in Sources */,
+				01D31F7A216BAFEF0055FD45 /* AudioControllerDelegate.swift in Sources */,
+				01D31F67216BAFB50055FD45 /* Error.swift in Sources */,
+				01D31F4A216BAF260055FD45 /* SpokeStackTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		011C1946216BDBE000DB36FD /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 01D31F3A216BAF260055FD45 /* SpokeStack */;
+			targetProxy = 011C1945216BDBE000DB36FD /* PBXContainerItemProxy */;
+		};
+		01D31F47216BAF260055FD45 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 01D31F3A216BAF260055FD45 /* SpokeStack */;
+			targetProxy = 01D31F46216BAF260055FD45 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		011C1923216BCA3200DB36FD /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				011C1924216BCA3200DB36FD /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		011C1928216BCA3200DB36FD /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				011C1929216BCA3200DB36FD /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		011C192D216BCA3200DB36FD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 01D31F57216BAF680055FD45 /* SpokeStackConfig.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = XM4VAKDQL9;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Frameworks/BoringSSL-GRPC",
+					"$(PROJECT_DIR)/Frameworks/googleapis",
+					"$(PROJECT_DIR)/Frameworks/gRPC",
+					"$(PROJECT_DIR)/Frameworks/gRPC-Core",
+					"$(PROJECT_DIR)/Frameworks/gRPC-ProtoRPC",
+					"$(PROJECT_DIR)/Frameworks/gRPC-RxLibrary",
+					"$(PROJECT_DIR)/Frameworks/nanopb",
+					"$(PROJECT_DIR)/Frameworks/Protobuf",
+				);
+				INFOPLIST_FILE = SpokeStackFrameworkExample/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.pylon.SpokeStackFrameworkExample;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		011C192E216BCA3200DB36FD /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 01D31F57216BAF680055FD45 /* SpokeStackConfig.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = XM4VAKDQL9;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Frameworks/BoringSSL-GRPC",
+					"$(PROJECT_DIR)/Frameworks/googleapis",
+					"$(PROJECT_DIR)/Frameworks/gRPC",
+					"$(PROJECT_DIR)/Frameworks/gRPC-Core",
+					"$(PROJECT_DIR)/Frameworks/gRPC-ProtoRPC",
+					"$(PROJECT_DIR)/Frameworks/gRPC-RxLibrary",
+					"$(PROJECT_DIR)/Frameworks/nanopb",
+					"$(PROJECT_DIR)/Frameworks/Protobuf",
+				);
+				INFOPLIST_FILE = SpokeStackFrameworkExample/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.pylon.SpokeStackFrameworkExample;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		01D31F4D216BAF260055FD45 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		01D31F4E216BAF260055FD45 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		01D31F50216BAF260055FD45 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 01D31F57216BAF680055FD45 /* SpokeStackConfig.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_STYLE = Automatic;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = S55ZL97588;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Frameworks/gRPC-RxLibrary",
+					"$(PROJECT_DIR)/Frameworks/gRPC-ProtoRPC",
+					"$(PROJECT_DIR)/Frameworks/googleapis",
+					"$(PROJECT_DIR)/Frameworks/gRPC",
+					"$(PROJECT_DIR)/Frameworks/BoringSSL-GRPC",
+					"$(PROJECT_DIR)/Frameworks/nanopb",
+					"$(PROJECT_DIR)/Frameworks/Protobuf",
+					"$(PROJECT_DIR)/Frameworks/gRPC-Core",
+				);
+				INFOPLIST_FILE = SpokeStack/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.pylon.SpokeStack;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		01D31F51216BAF260055FD45 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 01D31F57216BAF680055FD45 /* SpokeStackConfig.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_STYLE = Automatic;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = S55ZL97588;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Frameworks/gRPC-RxLibrary",
+					"$(PROJECT_DIR)/Frameworks/gRPC-ProtoRPC",
+					"$(PROJECT_DIR)/Frameworks/googleapis",
+					"$(PROJECT_DIR)/Frameworks/gRPC",
+					"$(PROJECT_DIR)/Frameworks/BoringSSL-GRPC",
+					"$(PROJECT_DIR)/Frameworks/nanopb",
+					"$(PROJECT_DIR)/Frameworks/Protobuf",
+					"$(PROJECT_DIR)/Frameworks/gRPC-Core",
+				);
+				INFOPLIST_FILE = SpokeStack/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.pylon.SpokeStack;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		01D31F53216BAF260055FD45 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 01D31F57216BAF680055FD45 /* SpokeStackConfig.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = XM4VAKDQL9;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Frameworks/gRPC-RxLibrary",
+					"$(PROJECT_DIR)/Frameworks/gRPC-ProtoRPC",
+					"$(PROJECT_DIR)/Frameworks/googleapis",
+					"$(PROJECT_DIR)/Frameworks/gRPC",
+					"$(PROJECT_DIR)/Frameworks/BoringSSL-GRPC",
+					"$(PROJECT_DIR)/Frameworks/nanopb",
+					"$(PROJECT_DIR)/Frameworks/Protobuf",
+					"$(PROJECT_DIR)/Frameworks/gRPC-Core",
+				);
+				INFOPLIST_FILE = SpokeStackTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.pylon.SpokeStackTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		01D31F54216BAF260055FD45 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 01D31F57216BAF680055FD45 /* SpokeStackConfig.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = XM4VAKDQL9;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Frameworks/gRPC-RxLibrary",
+					"$(PROJECT_DIR)/Frameworks/gRPC-ProtoRPC",
+					"$(PROJECT_DIR)/Frameworks/googleapis",
+					"$(PROJECT_DIR)/Frameworks/gRPC",
+					"$(PROJECT_DIR)/Frameworks/BoringSSL-GRPC",
+					"$(PROJECT_DIR)/Frameworks/nanopb",
+					"$(PROJECT_DIR)/Frameworks/Protobuf",
+					"$(PROJECT_DIR)/Frameworks/gRPC-Core",
+				);
+				INFOPLIST_FILE = SpokeStackTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.pylon.SpokeStackTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		011C192C216BCA3200DB36FD /* Build configuration list for PBXNativeTarget "SpokeStackFrameworkExample" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				011C192D216BCA3200DB36FD /* Debug */,
+				011C192E216BCA3200DB36FD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		01D31F35216BAF260055FD45 /* Build configuration list for PBXProject "SpokeStack" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				01D31F4D216BAF260055FD45 /* Debug */,
+				01D31F4E216BAF260055FD45 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		01D31F4F216BAF260055FD45 /* Build configuration list for PBXNativeTarget "SpokeStack" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				01D31F50216BAF260055FD45 /* Debug */,
+				01D31F51216BAF260055FD45 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		01D31F52216BAF260055FD45 /* Build configuration list for PBXNativeTarget "SpokeStackTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				01D31F53216BAF260055FD45 /* Debug */,
+				01D31F54216BAF260055FD45 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 01D31F32216BAF260055FD45 /* Project object */;
+}
