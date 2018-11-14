@@ -28,10 +28,16 @@ React Native wrapper for the [Spokestack](https://github.com/pylon/spokestack-an
    ```
      implementation project(':react-native-spokestack')
    ```
+   
+#### iOS
 
-### Gradle Setup
+  - Drag the RNSpokestack.xcodeproj from the react-native-spokestack/ios folder to the Libraries group on Xcode in your poject.
 
-#### `android/app/build.gradle`
+### Android Support
+
+#### Gradle Setup
+
+##### `android/app/build.gradle`
 
 ```
 ...
@@ -46,7 +52,7 @@ android {
 ...
 ```
 
-#### `android/app/src/main/AndroidManifest.xml`
+##### `android/app/src/main/AndroidManifest.xml`
 
 ```
 <uses-permission android:name="android.permission.RECORD_AUDIO" />
