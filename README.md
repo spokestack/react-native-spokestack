@@ -73,7 +73,7 @@ exclude 'META-INF/DEPENDENCIES'
 
 ```
 
-##### `android/app/src/main/AndroidManifest.xml`
+#### `android/app/src/main/AndroidManifest.xml`
 
 ```
 
