@@ -35,26 +35,48 @@ React Native wrapper for the [Spokestack](https://github.com/pylon/spokestack-an
 
 ### Android Support
 
-#### Gradle Setup
+#### `android/build.gradle`
 
-##### `android/app/build.gradle`
+Make sure the Google repo is listed first
 
 ```
+buildcripts {
+   ...
+    repositories {
+      google()
+      ...
+    }
+}
+
+allprojects{
+      repositories {
+        google()
+       ...
+    }
+}
+```
+
+#### `android/app/build.gradle`
+
+```
+
 ...
 android {
-	...
-  packagingOptions {
-    exclude 'project.properties'
-    exclude 'META-INF/INDEX.LIST'
-		exclude 'META-INF/DEPENDENCIES'
-  }
+...
+packagingOptions {
+exclude 'project.properties'
+exclude 'META-INF/INDEX.LIST'
+exclude 'META-INF/DEPENDENCIES'
+}
 }
 ...
+
 ```
 
 ##### `android/app/src/main/AndroidManifest.xml`
 
 ```
+
 <uses-permission android:name="android.permission.RECORD_AUDIO" />
 ```
 
