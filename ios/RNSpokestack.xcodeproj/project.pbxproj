@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		592A58A0219B3A5C00162F40 /* SpokeStack.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 592A589F219B3A5C00162F40 /* SpokeStack.framework */; };
 		5975435E2195FA1600796C5A /* openssl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5975435D2195FA1600796C5A /* openssl.framework */; };
 		597543602195FA2C00796C5A /* googleapis.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5975435F2195FA2C00796C5A /* googleapis.framework */; };
 		597543622195FA3F00796C5A /* GRPCClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 597543612195FA3F00796C5A /* GRPCClient.framework */; };
@@ -16,6 +15,7 @@
 		597543682195FA6D00796C5A /* RxLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 597543672195FA6D00796C5A /* RxLibrary.framework */; };
 		5975436A2195FA8100796C5A /* nanopb.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 597543692195FA8100796C5A /* nanopb.framework */; };
 		5975436C2195FA9100796C5A /* Protobuf.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5975436B2195FA9100796C5A /* Protobuf.framework */; };
+		59AE6ED2219F3C8A000628B7 /* SpokeStack.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5917CF05219E18E40036A0D2 /* SpokeStack.framework */; };
 		B3E7B58A1CC2AC0600A0062D /* RNSpokestack.m in Sources */ = {isa = PBXBuildFile; fileRef = B3E7B5891CC2AC0600A0062D /* RNSpokestack.m */; };
 /* End PBXBuildFile section */
 
@@ -33,7 +33,7 @@
 
 /* Begin PBXFileReference section */
 		134814201AA4EA6300B7C361 /* libRNSpokestack.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libRNSpokestack.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		592A589F219B3A5C00162F40 /* SpokeStack.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SpokeStack.framework; path = "spokestack-ios/SpokeStack/FrameworkBuild/Debug-iphoneos/SpokeStack.framework"; sourceTree = SOURCE_ROOT; };
+		5917CF05219E18E40036A0D2 /* SpokeStack.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SpokeStack.framework; path = "spokestack-ios/SpokeStack/FrameworkBuild/Debug-iphonesimulator/SpokeStack.framework"; sourceTree = SOURCE_ROOT; };
 		5975435D2195FA1600796C5A /* openssl.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = openssl.framework; sourceTree = "<group>"; };
 		5975435F2195FA2C00796C5A /* googleapis.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = googleapis.framework; sourceTree = "<group>"; };
 		597543612195FA3F00796C5A /* GRPCClient.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = GRPCClient.framework; sourceTree = "<group>"; };
@@ -51,13 +51,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				59AE6ED2219F3C8A000628B7 /* SpokeStack.framework in Frameworks */,
 				597543682195FA6D00796C5A /* RxLibrary.framework in Frameworks */,
 				5975436A2195FA8100796C5A /* nanopb.framework in Frameworks */,
 				597543602195FA2C00796C5A /* googleapis.framework in Frameworks */,
 				5975435E2195FA1600796C5A /* openssl.framework in Frameworks */,
 				597543662195FA5E00796C5A /* ProtoRPC.framework in Frameworks */,
 				597543622195FA3F00796C5A /* GRPCClient.framework in Frameworks */,
-				592A58A0219B3A5C00162F40 /* SpokeStack.framework in Frameworks */,
 				597543642195FA4C00796C5A /* grpc.framework in Frameworks */,
 				5975436C2195FA9100796C5A /* Protobuf.framework in Frameworks */,
 			);
@@ -87,7 +87,7 @@
 		5975430D2194C8AC00796C5A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				592A589F219B3A5C00162F40 /* SpokeStack.framework */,
+				5917CF05219E18E40036A0D2 /* SpokeStack.framework */,
 				5975436B2195FA9100796C5A /* Protobuf.framework */,
 				597543692195FA8100796C5A /* nanopb.framework */,
 				597543672195FA6D00796C5A /* RxLibrary.framework */,
@@ -110,6 +110,7 @@
 				58B511D71A9E6C8500147676 /* Sources */,
 				58B511D81A9E6C8500147676 /* Frameworks */,
 				58B511D91A9E6C8500147676 /* CopyFiles */,
+				5917CEDB219DE4EB0036A0D2 /* Run Script */,
 			);
 			buildRules = (
 			);
@@ -150,6 +151,27 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		5917CEDB219DE4EB0036A0D2 /* Run Script */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Run Script";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\necho THE PROJECT DIR IS $PROJECT_DIR\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		58B511D71A9E6C8500147676 /* Sources */ = {
@@ -263,21 +285,27 @@
 		58B511F01A9E6C8500147676 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CODE_SIGN_IDENTITY = "iPhone Developer: leontdorbhciew@mac.com (6EJY33EE39)";
 				FRAMEWORK_SEARCH_PATHS = (
-					"$(PROJECT_DIR)/../spokestack-ios/SpokeStack/Frameworks/**",
-					"$(PROJECT_DIR)/spokestack-ios/SpokeStack/FrameworkBuild/Debug-iphoneos",
-					"$(PROJECT_DIR)/spokestack-ios/SpokeStack/Frameworks/BoringSSL-GRPC",
+					"$(PROJECT_DIR)/Frameworks/**",
+					"${BUILT_PRODUCTS_DIR}/**",
+					"$(PROJECT_DIR)/spokestack-ios/SpokeStack/FrameworkBuild/Debug-iphoneos/**",
+					"$(PROJECT_DIR)/spokestack-ios/SpokeStack/FrameworkBuild/Debug-iphonesimulator/**",
+					"$(PROJECT_DIR)/spokestack-ios/SpokeStack/Frameworks/**",
 					"$(PROJECT_DIR)/spokestack-ios/SpokeStack/FrameworkBuild/Debug-iphonesimulator",
-					"$(PROJECT_DIR)/Frameworks",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"$(SRCROOT)/../../../React/**",
 					"$(SRCROOT)/../../react-native/React/**",
 				);
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
-				OTHER_LDFLAGS = "-ObjC";
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
+					"-lc++",
+				);
 				PRODUCT_NAME = RNSpokestack;
 				SKIP_INSTALL = YES;
 			};
@@ -286,21 +314,27 @@
 		58B511F11A9E6C8500147676 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CODE_SIGN_IDENTITY = "iPhone Developer: leontdorbhciew@mac.com (6EJY33EE39)";
 				FRAMEWORK_SEARCH_PATHS = (
-					"$(PROJECT_DIR)/../spokestack-ios/SpokeStack/Frameworks/**",
-					"$(PROJECT_DIR)/spokestack-ios/SpokeStack/FrameworkBuild/Debug-iphoneos",
-					"$(PROJECT_DIR)/spokestack-ios/SpokeStack/Frameworks/BoringSSL-GRPC",
+					"$(PROJECT_DIR)/Frameworks/**",
+					"${BUILT_PRODUCTS_DIR}/**",
+					"$(PROJECT_DIR)/spokestack-ios/SpokeStack/FrameworkBuild/Debug-iphoneos/**",
+					"$(PROJECT_DIR)/spokestack-ios/SpokeStack/FrameworkBuild/Debug-iphonesimulator/**",
+					"$(PROJECT_DIR)/spokestack-ios/SpokeStack/Frameworks/**",
 					"$(PROJECT_DIR)/spokestack-ios/SpokeStack/FrameworkBuild/Debug-iphonesimulator",
-					"$(PROJECT_DIR)/Frameworks",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"$(SRCROOT)/../../../React/**",
 					"$(SRCROOT)/../../react-native/React/**",
 				);
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
-				OTHER_LDFLAGS = "-ObjC";
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
+					"-lc++",
+				);
 				PRODUCT_NAME = RNSpokestack;
 				SKIP_INSTALL = YES;
 			};
