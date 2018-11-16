@@ -49,13 +49,13 @@ RCT_EXPORT_METHOD(initialize:(NSDictionary *)config)
 RCT_EXPORT_METHOD(start:(NSString*)foo)
 {
     RCTLogInfo(@"Pretending to start");
-    //_pipeline.start();
+    [_pipeline start];
 }
 
 RCT_EXPORT_METHOD(stop)
 {
     RCTLogInfo(@"Pretending to stop");
-    //_pipeline.stop();
+    [_pipeline stop];
 }
 
 - (void)didFinish {
