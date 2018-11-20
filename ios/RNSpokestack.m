@@ -34,8 +34,8 @@ SpeechPipeline* _pipeline;
 RCT_EXPORT_METHOD(initialize:(NSDictionary *)config)
 {
     RCTLogInfo(@"Pretending to initialize with config %@", config);
-//    GoogleRecognizerConfiguration *_recognizerConfig = [[GoogleRecognizerConfiguration alloc] init];
-//    _recognizerConfig.host = config[@"host"];
+    GoogleRecognizerConfiguration *_recognizerConfig = [[GoogleRecognizerConfiguration alloc] init];
+    _recognizerConfig.host = config[@"host"];
 //    _recognizerConfig.enableWordTimeOffsets = config[@"enableWordTimeOffsets"];
 //    _recognizerConfig.singleUtterance = config[@"singleUtterance"];
 //    _recognizerConfig.maxAlternatives = config[@"maxAlternatives"];
