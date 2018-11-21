@@ -36,14 +36,15 @@ RCT_EXPORT_METHOD(initialize:(NSDictionary *)config)
     RCTLogInfo(@"Pretending to initialize with config %@", config);
     GoogleRecognizerConfiguration *_recognizerConfig = [[GoogleRecognizerConfiguration alloc] init];
     _recognizerConfig.host = config[@"host"];
-//    _recognizerConfig.enableWordTimeOffsets = config[@"enableWordTimeOffsets"];
-//    _recognizerConfig.singleUtterance = config[@"singleUtterance"];
-//    _recognizerConfig.maxAlternatives = config[@"maxAlternatives"];
-//    _recognizerConfig.interimResults = config[@"interimResults"];
-//    _recognizerConfig.apiKey = config[@"apiKey"];
-//    _pipeline = [[SpeechPipeline alloc] init:google
-//                               configuration:_recognizerConfig
-//                                    delegate:self];
+    _recognizerConfig.enableWordTimeOffsets = config[@"enableWordTimeOffsets"];
+    _recognizerConfig.singleUtterance = config[@"singleUtterance"];
+    _recognizerConfig.maxAlternatives = config[@"maxAlternatives"];
+    _recognizerConfig.interimResults = config[@"interimResults"];
+    _recognizerConfig.apiKey = config[@"apiKey"];
+    _pipeline = [[SpeechPipeline alloc] init:RecognizerServiceGoogle
+                               configuration:_recognizerConfig
+                                    delegate:self
+                                       error:nil];
 }
 
 RCT_EXPORT_METHOD(start:(NSString*)foo)

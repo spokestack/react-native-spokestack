@@ -4,5 +4,4 @@
 #import <SpokeStack/SpokeStack-Swift.h>
 
 @interface RNSpokestack : RCTEventEmitter <RCTBridgeModule, SpeechRecognizer>
-//NSObject <RCTBridgeModule, SpeechRecognizer>
 @end
