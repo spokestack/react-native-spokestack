@@ -29,6 +29,31 @@ RCT_EXPORT_MODULE();
     return @[@"onSpeechRecognized", @"onSpeechStarted", @"onSpeechEnded"];
 }
 
+- (void)didFinish {
+    RCTLogInfo(@"speech ended");
+    if (hasListeners)
+    {
+        [self sendEventWithName:@"onSpeechEnded" body:@{}];
+    }
+}
+
+- (void)didRecognize:(SPSpeechContext * _Nonnull)results {
+    RCTLogInfo(@"speech recognized as %@", results.transcript);
+    if (hasListeners)
+    {
+        [self sendEventWithName:@"onSpeechRecognized" body:@{@"transcript": results.transcript}];
+        
+    }
+}
+
+- (void)didStart {
+    RCTLogInfo(@"speech started");
+    if (hasListeners)
+    {
+        [self sendEventWithName:@"onSpeechStarted" body:@{}];
+    }
+}
+
 SpeechPipeline* _pipeline;
 
 RCT_EXPORT_METHOD(initialize:(NSDictionary *)config)
@@ -57,31 +82,6 @@ RCT_EXPORT_METHOD(stop)
 {
     RCTLogInfo(@"Pretending to stop");
     [_pipeline stop];
-}
-
-- (void)didFinish {
-    RCTLogInfo(@"Pretending speech finished");
-    if (hasListeners)
-    {
-        //[self sendEventWithName:@"onSpeechEnded"];
-    }
-}
-
-- (void)didRecognize:(SPSpeechContext * _Nonnull)results {
-    RCTLogInfo(@"Pretending speech recognized as %@", results.transcript);
-    if (hasListeners)
-    {
-        //[self sendEventWithName:@"onSpeechRecognized" body:@{@"transcript": result.transcript}];
-        
-    }
-}
-
-- (void)didStart {
-    RCTLogInfo(@"Pretending speech started");
-    if (hasListeners)
-    {
-        //[self sendEventWithName:@"onSpeechStarted"];
-    }
 }
 
 @end
