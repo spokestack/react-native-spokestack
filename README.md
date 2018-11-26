@@ -31,6 +31,8 @@ React Native wrapper for the [Spokestack](https://github.com/pylon/spokestack-an
    
 #### iOS
 
+  - Currently only buildable on an `amd_64` target
+
   - Drag the RNSpokestack.xcodeproj from the react-native-spokestack/ios folder to the Libraries group on Xcode in your poject.
   
   - Click on your main project file (the one that represents the .xcodeproj) select Build Phases and drag the static library, libRNSpokestack.a, from the Libraries/RNSpokestack.xcodeproj/Products folder to Link Binary With Libraries
@@ -46,6 +48,7 @@ React Native wrapper for the [Spokestack](https://github.com/pylon/spokestack-an
       - gRCPCertificate.bundle
 
   - General
+    - Always Embed Swift Standard Libraries: Yes
     - Embedded Binaries:
       - /node_modules/react-native-spokestack/Frameworks
       - SpokeStack.framework

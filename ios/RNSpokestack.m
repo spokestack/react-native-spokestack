@@ -68,7 +68,7 @@ RCT_EXPORT_METHOD(stop)
 }
 
 - (void)didRecognize:(SPSpeechContext * _Nonnull)results {
-    //RCTLogInfo(@"Pretending speech recognized as %@", result.transcript);
+    RCTLogInfo(@"Pretending speech recognized as %@", results.transcript);
     if (hasListeners)
     {
         //[self sendEventWithName:@"onSpeechRecognized" body:@{@"transcript": result.transcript}];
