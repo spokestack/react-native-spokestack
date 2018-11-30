@@ -62,6 +62,11 @@ class RNSpokestack {
           this.onSpeechRecognized(e)
         }
         break
+      case 'error':
+        if (this.onError) {
+          this.onError(e)
+        }
+        break
       default:
         break
     }
