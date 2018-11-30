@@ -128,12 +128,12 @@ Spokestack.stop(); // stop voice activity detection and speech recognition. can 
 | Spokestack.start()         | Starts listening for speech activity                                            | Android  |
 | Spokestack.stop()          | Stops listening for speech activity                                             | Android  |
 
-| Event Name                           | Description                             | Event    |
-| ------------------------------------ | --------------------------------------- | -------- |
-| Spokestack.onSpeechStarted(event)    | Invoked when speech is recognized       | `null`   |
-| Spokestack.onSpeechEnded(event)      | Invoked when speech has stopped         | `null`   |
-| Spokestack.onSpeechRecognized(event) | Invoked when speech has been recognized | `string` |
-
+| Event Name                           | Event    | Description                             |
+| ------------------------------------ | -------- | --------------------------------------- |
+| Spokestack.onSpeechStarted(event)    | `null`   | Invoked when speech is recognized       |
+| Spokestack.onSpeechEnded(event)      | `null`   | Invoked when speech has stopped         |
+| Spokestack.onSpeechRecognized(event) | `string` | Invoked when speech has been recognized |
+| Spokestack.onError(event)            | `message` | Invoked upon an error in the speech pipeline execution |
 ## Gotchas
 
 - Requires Android SDK 26 level support
