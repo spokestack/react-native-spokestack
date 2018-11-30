@@ -16,12 +16,7 @@ Pod::Spec.new do |s|
 
 
   s.dependency "React"
-  #s.dependency "others"
+  s.dependency pod 'SpokeStack', :path => '~/w/spokestack-ios-pod/SpokeStack/0.0.4'
 
-  s.target 'RNSpokestack' do
-    # Comment the next line if you're not using Swift and don't want to use dynamic frameworks
-    use_frameworks!
-    # Pods for SpokeStack
-    pod 'SpokeStack', :path => '~/w/spokestack-ios-pod/SpokeStack/'
   end
 end
