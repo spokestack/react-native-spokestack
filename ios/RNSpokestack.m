@@ -1,5 +1,6 @@
 
 #import "RNSpokestack.h"
+#import <React/RCTConvert.h>
 #import <React/RCTLog.h>
 #import <SpokeStack/SpokeStack-Swift.h>
 
@@ -26,7 +27,7 @@ RCT_EXPORT_MODULE();
 
 - (NSArray<NSString *> *)supportedEvents
 {
-    return @[@"onSpeechRecognized", @"onSpeechStarted", @"onSpeechEnded"];
+    return @[@"onSpeechRecognized", @"onSpeechStarted", @"onSpeechEnded", @"onSpeechError"];
 }
 
 - (void)didFinish {
@@ -41,8 +42,7 @@ RCT_EXPORT_MODULE();
     RCTLogInfo(@"speech recognized as %@", results.transcript);
     if (hasListeners)
     {
-        [self sendEventWithName:@"onSpeechRecognized" body:@{@"transcript": results.transcript}];
-        
+        [self sendEventWithName:@"onSpeechRecognized" body:@{@"transcript": @[results.transcript]}];
     }
 }
 
@@ -54,25 +54,34 @@ RCT_EXPORT_MODULE();
     }
 }
 
+- (void)didError:(NSString * _Nonnull)error {
+    RCTLogInfo(@"speech error: %@", error);
+    if (hasListeners)
+    {
+        [self sendEventWithName:@"onSpeechError" body:@{@"error": error}];
+    }
+}
+
 SpeechPipeline* _pipeline;
 
 RCT_EXPORT_METHOD(initialize:(NSDictionary *)config)
 {
     RCTLogInfo(@"Pretending to initialize with config %@", config);
     GoogleRecognizerConfiguration *_recognizerConfig = [[GoogleRecognizerConfiguration alloc] init];
-    _recognizerConfig.host = config[@"host"];
-    _recognizerConfig.enableWordTimeOffsets = config[@"enableWordTimeOffsets"];
-    _recognizerConfig.singleUtterance = config[@"singleUtterance"];
-    _recognizerConfig.maxAlternatives = config[@"maxAlternatives"];
-    _recognizerConfig.interimResults = config[@"interimResults"];
-    _recognizerConfig.apiKey = config[@"apiKey"];
+    NSError *error;
+    _recognizerConfig.apiKey = [RCTConvert NSString:[config valueForKeyPath:@"properties.google-api-key"]];
+    NSLog(@"apiKey is %@", [RCTConvert NSString:[config valueForKeyPath:@"properties.google-api-key"]]);
     _pipeline = [[SpeechPipeline alloc] init:RecognizerServiceGoogle
                                configuration:_recognizerConfig
                                     delegate:self
-                                       error:nil];
+                                       error:&error];
+    if (error) {
+        NSLog(@"Pretending the initialize error status is %@", error);
+        [self didError:[error localizedDescription]];
+    }
 }
 
-RCT_EXPORT_METHOD(start:(NSString*)foo)
+RCT_EXPORT_METHOD(start)
 {
     RCTLogInfo(@"Pretending to start");
     [_pipeline start];
