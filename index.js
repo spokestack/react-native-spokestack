@@ -62,6 +62,11 @@ class RNSpokestack {
           this.onSpeechRecognized(e)
         }
         break
+      case 'trace':
+        if (this.onTrace) {
+          this.onTrace(e)
+        }
+        break
       case 'error':
         if (this.onError) {
           this.onError(e)
