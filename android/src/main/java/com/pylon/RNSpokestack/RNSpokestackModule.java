@@ -9,6 +9,7 @@ import com.pylon.spokestack.OnSpeechEventListener;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import java.util.Locale;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.ReadableMap;
@@ -61,7 +62,7 @@ public class RNSpokestackModule extends ReactContextBaseJavaModule implements On
       for (String k: map.keySet()) {
         if (k == "trace-level") {
           try {
-            builder.setProperty("trace-level", SpeechContext.TraceLevel.valueOf(map.get(k)).value())
+            builder.setProperty("trace-level", SpeechContext.TraceLevel.valueOf(map.get(k).toString().trim().toUpperCase(Locale.US)));
           } catch (IllegalArgumentException ex) {
             WritableMap react_event = Arguments.createMap();
             react_event.putString("error", "trace-level " + map.get(k) + " is not supported. Supported values are: " + SpeechContext.TraceLevel.values());
@@ -93,7 +94,7 @@ public class RNSpokestackModule extends ReactContextBaseJavaModule implements On
     react_event.putString("event", event.name());
     react_event.putString("transcript", context.getTranscript());
     react_event.putString("message", context.getMessage());
-    react_event.putString("error", context.getError());
+    react_event.putString("error", Log.getStackTraceString(context.getError()));
     react_event.putBoolean("isActive", context.isActive());
     sendEvent("onSpeechEvent", react_event);
   }
