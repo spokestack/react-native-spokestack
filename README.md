@@ -83,15 +83,13 @@ exclude 'META-INF/DEPENDENCIES'
 ```javascript
 import Spokestack from "react-native-spokestack";
 
-// There are three events that can be bound with callbacks
-
 // initialize the Spokestack pipeline.
 // The pipeline has three required top-level keys: 'input', 'stages', and 'properties'.
 // For further examples, see https://github.com/pylon/spokestack-android#configuration
 Spokestack.initialize({
   input: "com.pylon.spokestack.android.MicrophoneInput", // required, provides audio input into the stages
   stages: [
-    "com.pylon.spokestack.libfvad.VADTrigger", // enable voice activity detection. necessary to trigger speech recognition.
+    "com.pylon.spokestack.webrtc.VoiceActivityDetector", // voice activity detection. necessary to trigger speech recognition.
     "com.pylon.spokestack.google.GoogleSpeechRecognizer" // one of the two supplied speech recognition services
     // 'com.pylon.spokestack.microsoft.BingSpeechRecognizer'
   ],
@@ -103,22 +101,27 @@ Spokestack.initialize({
   }
 });
 
+// Start and stop the speech pipeline. start() and stop() can be called repeatedly.
+Spokestack.start(); // start voice activity detection and speech recognition. can only start after initialize is called.
+Spokestack.stop(); // stop voice activity detection and speech recognition. can only start after initialize is called
+
 // Binding events
 const logEvent = e => console.log(e);
 Spokestack.onSpeechStarted = logEvent;
 Spokestack.onSpeechEnded = logEvent;
-Spokestack.onSpeechError = e => {
+Spokestack.onError = e => {
   Spokestack.stop();
   logEvent(e);
 };
+Spokestack.onTrace = e => { // subscribe to tracing events according to the trace-level property
+  logEvent(e);
+  console.log(e.message);
+}
 Spokestack.onSpeechRecognized = e => {
   logEvent(e);
   console.log(e.transcript); // "Hello Spokestack"
 };
 
-Spokestack.start(); // start voice activity detection and speech recognition. can only start after initialize is called.
-Spokestack.stop(); // stop voice activity detection and speech recognition. can only start after initialize is called
-// NB start() and stop() can be called repeatedly.
 ```
 
 ## API

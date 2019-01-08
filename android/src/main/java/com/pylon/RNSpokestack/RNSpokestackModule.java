@@ -60,12 +60,19 @@ public class RNSpokestackModule extends ReactContextBaseJavaModule implements On
     if (config.hasKey("properties")) {
       Map<String, Object> map = config.getMap("properties").toHashMap();
       for (String k: map.keySet()) {
-        if (k == "trace-level") {
+        if (k.equals("trace-level")) {
           try {
-            builder.setProperty("trace-level", SpeechContext.TraceLevel.valueOf(map.get(k).toString().trim().toUpperCase(Locale.US)));
+            int l = SpeechContext.TraceLevel.valueOf(map
+                                                     .get(k)
+                                                     .toString()
+                                                     .trim()
+                                                     .toUpperCase(Locale.US)
+                                                     ).value();
+            builder.setProperty("trace-level", l);
           } catch (IllegalArgumentException ex) {
             WritableMap react_event = Arguments.createMap();
-            react_event.putString("error", "trace-level " + map.get(k) + " is not supported. Supported values are: " + SpeechContext.TraceLevel.values());
+            react_event.putString("event", "error");
+            react_event.putString("error", "The trace-level " + map.get(k) + " is not supported. Supported values are: " + java.util.Arrays.toString(SpeechContext.TraceLevel.values()));
             sendEvent("onSpeechEvent", react_event);
           }
         }
