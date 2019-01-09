@@ -97,7 +97,7 @@ Spokestack.initialize({
     locale: "en-US",
     "google-credentials": YOUR_GOOGLE_VOICE_CREDENTIALS,
     // 'bing-speech-api-key': YOUR_BING_VOICE_CREDENTIALS,
-    trace-level: "DEBUG" //"PERF", "INFO"
+    trace-level: Spokestack.TraceLevel.DEBUG
   }
 });
 
@@ -126,11 +126,15 @@ Spokestack.onSpeechRecognized = e => {
 
 ## API
 
+### Methods
+
 | Method Name                | Description                                                                     | Platform |
 | -------------------------- | ------------------------------------------------------------------------------- | -------- |
 | Spokestack.initialize()    | Initialize the Spokestack VAD/ASR pipeline; required for `start()` and `stop()` | Android  |
 | Spokestack.start()         | Starts listening for speech activity                                            | Android  |
 | Spokestack.stop()          | Stops listening for speech activity                                             | Android  |
+
+### Events
 
 | Event Name                           | Property | Description                             |
 | ------------------------------------ | -------- | --------------------------------------- |
@@ -139,6 +143,16 @@ Spokestack.onSpeechRecognized = e => {
 | Spokestack.onSpeechRecognized(event) | `transcript`:`string` | Invoked when speech has been recognized |
 | Spokestack.onTrace(event)            | `message`:`string` | Invoked when a trace message become available |
 | Spokestack.onError(event)            | `error`:`string`       | Invoked upon an error in the speech pipeline execution |
+
+### Enums
+
+| TraceLevel                           |    Value |
+| ------------------------------------ | -------- |
+| DEBUG                                |       10 |
+| PERF                                 |       20 |
+| INFO                                 |       30 |
+| NONE                                 | 100      |
+
 ## Gotchas
 
 - Requires Android SDK 26 level support

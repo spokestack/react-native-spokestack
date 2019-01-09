@@ -6,7 +6,18 @@ import {
 const { Spokestack } = NativeModules
 const spokestackEmitter = new NativeEventEmitter(Spokestack)
 
+const TraceLevel = Object.freeze({
+  DEBUG: 10,
+  PERF: 20,
+  INFO: 30,
+  NONE: 100
+})
+
 class RNSpokestack {
+  get TraceLevel () {
+    return TraceLevel
+  }
+
   // Class methods
 
   constructor () {
