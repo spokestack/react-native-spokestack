@@ -59,18 +59,18 @@ class RNSpokestack {
   _onSpeechEvent (e) {
     switch (e.event.toLowerCase()) {
       case 'activate':
-        if (this.onSpeechStarted) {
-          this.onSpeechStarted(e)
+        if (this.onActivate) {
+          this.onActivate(e)
         }
         break
       case 'deactivate':
-        if (this.onSpeechEnded) {
-          this.onSpeechEnded(e)
+        if (this.onDeactivate) {
+          this.onDeactivate(e)
         }
         break
       case 'recognize':
-        if (this.onSpeechRecognized) {
-          this.onSpeechRecognized(e)
+        if (this.onRecognize) {
+          this.onRecognize(e)
         }
         break
       case 'trace':

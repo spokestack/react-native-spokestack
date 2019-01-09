@@ -107,8 +107,8 @@ Spokestack.stop(); // stop voice activity detection and speech recognition. can 
 
 // Binding events
 const logEvent = e => console.log(e);
-Spokestack.onSpeechStarted = logEvent;
-Spokestack.onSpeechEnded = logEvent;
+Spokestack.onActivate = logEvent;
+Spokestack.onDeactivate = logEvent;
 Spokestack.onError = e => {
   Spokestack.stop();
   logEvent(e);
@@ -117,7 +117,7 @@ Spokestack.onTrace = e => { // subscribe to tracing events according to the trac
   logEvent(e);
   console.log(e.message);
 }
-Spokestack.onSpeechRecognized = e => {
+Spokestack.onRecognize = e => {
   logEvent(e);
   console.log(e.transcript); // "Hello Spokestack"
 };
@@ -138,9 +138,9 @@ Spokestack.onSpeechRecognized = e => {
 
 | Event Name                           | Property | Description                             |
 | ------------------------------------ | -------- | --------------------------------------- |
-| Spokestack.onSpeechStarted(event)    | `null`   | Invoked when speech is recognized       |
-| Spokestack.onSpeechEnded(event)      | `null`   | Invoked when speech has stopped         |
-| Spokestack.onSpeechRecognized(event) | `transcript`:`string` | Invoked when speech has been recognized |
+| Spokestack.onActivate(event)           | `null`   | Invoked when the speech pipeline is activated, which enables the speech recognizer and begins a new dialogue session                          |
+| Spokestack.onDeactivate(event)       | `null`   | Invoked when the speech pipeline has been deactivated |
+| Spokestack.onRecognize(event)        | `transcript`:`string` | Invoked when speech has been recognized |
 | Spokestack.onTrace(event)            | `message`:`string` | Invoked when a trace message become available |
 | Spokestack.onError(event)            | `error`:`string`       | Invoked upon an error in the speech pipeline execution |
 
