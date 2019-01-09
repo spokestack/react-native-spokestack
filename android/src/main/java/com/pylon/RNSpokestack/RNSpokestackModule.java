@@ -77,6 +77,16 @@ public class RNSpokestackModule extends ReactContextBaseJavaModule implements On
     pipeline.stop();
   }
 
+  @ReactMethod
+  public void activate () {
+    pipeline.getContext().setActive(true);
+  }
+
+  @ReactMethod
+  public void deactivate () {
+    pipeline.getContext().setActive(false);
+  }
+
   public void onEvent(SpeechContext.Event event, SpeechContext context) {
     WritableMap react_event = Arguments.createMap();
     react_event.putString("event", event.name());

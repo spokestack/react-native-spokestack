@@ -101,9 +101,11 @@ Spokestack.initialize({
   }
 });
 
-// Start and stop the speech pipeline. start() and stop() can be called repeatedly.
-Spokestack.start(); // start voice activity detection and speech recognition. can only start after initialize is called.
-Spokestack.stop(); // stop voice activity detection and speech recognition. can only start after initialize is called
+// Start and stop the speech pipeline. All methods can be called repeatedly.
+Spokestack.start(); // start speech pipeline. can only start after initialize is called.
+Spokestack.stop(); // stop speech pipeline
+Spokestack.activate() // manually activate the speech pipeline. The speech pipeline is now actively listening for speech to recognize.
+Spokestack.deactivate() // manually deactivate the speech pipeline. The speech pipeline is now passively waiting for an activation trigger.
 
 // Binding events
 const logEvent = e => console.log(e);
@@ -128,11 +130,13 @@ Spokestack.onRecognize = e => {
 
 ### Methods
 
-| Method Name                | Description                                                                     | Platform |
-| -------------------------- | ------------------------------------------------------------------------------- | -------- |
-| Spokestack.initialize()    | Initialize the Spokestack VAD/ASR pipeline; required for `start()` and `stop()` | Android  |
-| Spokestack.start()         | Starts listening for speech activity                                            | Android  |
-| Spokestack.stop()          | Stops listening for speech activity                                             | Android  |
+| Method Name                | Description                                                                     |
+| -------------------------- | ------------------------------------------------------------------------------- |
+| Spokestack.initialize()    | Initialize the speech pipeline; required for all other methods                        |
+| Spokestack.start()         | Starts the speech pipeline. The speech pipeline starts in the `deactivate` state. |
+| Spokestack.stop()          | Stops the speech pipeline                                                       |
+| Spokestack.activate()      | Manually activate the speech pipeline                                           |
+| Spokestack.deactivate()    | Manually deactivate the speech pipeline                                         |
 
 ### Events
 

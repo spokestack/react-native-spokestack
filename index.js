@@ -54,6 +54,14 @@ class RNSpokestack {
     Spokestack.stop()
   }
 
+  activate () {
+    Spokestack.activate()
+  }
+
+  deactivate () {
+    Spokestack.deactivate()
+  }
+
   // Events
 
   _onSpeechEvent (e) {
