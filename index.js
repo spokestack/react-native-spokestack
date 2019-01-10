@@ -6,7 +6,18 @@ import {
 const { Spokestack } = NativeModules
 const spokestackEmitter = new NativeEventEmitter(Spokestack)
 
+const TraceLevel = Object.freeze({
+  DEBUG: 10,
+  PERF: 20,
+  INFO: 30,
+  NONE: 100
+})
+
 class RNSpokestack {
+  get TraceLevel () {
+    return TraceLevel
+  }
+
   // Class methods
 
   constructor () {
@@ -43,23 +54,31 @@ class RNSpokestack {
     Spokestack.stop()
   }
 
+  activate () {
+    Spokestack.activate()
+  }
+
+  deactivate () {
+    Spokestack.deactivate()
+  }
+
   // Events
 
   _onSpeechEvent (e) {
     switch (e.event.toLowerCase()) {
       case 'activate':
-        if (this.onSpeechStarted) {
-          this.onSpeechStarted(e)
+        if (this.onActivate) {
+          this.onActivate(e)
         }
         break
       case 'deactivate':
-        if (this.onSpeechEnded) {
-          this.onSpeechEnded(e)
+        if (this.onDeactivate) {
+          this.onDeactivate(e)
         }
         break
       case 'recognize':
-        if (this.onSpeechRecognized) {
-          this.onSpeechRecognized(e)
+        if (this.onRecognize) {
+          this.onRecognize(e)
         }
         break
       case 'trace':
