@@ -60,7 +60,7 @@ public class RNSpokestackModule extends ReactContextBaseJavaModule implements On
     if (config.hasKey("properties")) {
       Map<String, Object> map = config.getMap("properties").toHashMap();
       for (String k: map.keySet())
-        builder.setProperty(k, map.get(k))
+        builder.setProperty(k, map.get(k));
     }
     builder.addOnSpeechEventListener(this);
 
