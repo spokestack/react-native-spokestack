@@ -12,9 +12,10 @@ Pod::Spec.new do |s|
   s.license = {:type => 'Apache', :file => 'LICENSE'}
   s.ios.deployment_target = '11.0'
   s.swift_version = '4.2'
-  s.platform = :ios, "11.0"
-  s.source_files  = "ios/*.{h,m}"
+  s.platform = :ios, '11.0'
+  s.source_files  = 'ios/*.{h,m}'
   s.requires_arc = true
 
   s.dependency "SpokeStack", "0.0.2"
+  s.dependency 'React'
 end
