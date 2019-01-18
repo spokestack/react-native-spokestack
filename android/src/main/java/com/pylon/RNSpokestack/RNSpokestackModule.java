@@ -9,6 +9,7 @@ import com.pylon.spokestack.OnSpeechEventListener;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import java.util.Locale;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.ReadableMap;
@@ -76,10 +77,24 @@ public class RNSpokestackModule extends ReactContextBaseJavaModule implements On
     pipeline.stop();
   }
 
+  @ReactMethod
+  public void activate () {
+    pipeline.getContext().setActive(true);
+    pipeline.getContext().dispatch(SpeechContext.Event.ACTIVATE);
+  }
+
+  @ReactMethod
+  public void deactivate () {
+    pipeline.getContext().setActive(false);
+    pipeline.getContext().dispatch(SpeechContext.Event.DEACTIVATE);
+  }
+
   public void onEvent(SpeechContext.Event event, SpeechContext context) {
     WritableMap react_event = Arguments.createMap();
     react_event.putString("event", event.name());
     react_event.putString("transcript", context.getTranscript());
+    react_event.putString("message", context.getMessage());
+    react_event.putString("error", Log.getStackTraceString(context.getError()));
     react_event.putBoolean("isActive", context.isActive());
     sendEvent("onSpeechEvent", react_event);
   }

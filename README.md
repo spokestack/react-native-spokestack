@@ -83,56 +83,79 @@ exclude 'META-INF/DEPENDENCIES'
 ```javascript
 import Spokestack from "react-native-spokestack";
 
-// There are three events that can be bound with callbacks
-
 // initialize the Spokestack pipeline.
 // The pipeline has three required top-level keys: 'input', 'stages', and 'properties'.
 // For further examples, see https://github.com/pylon/spokestack-android#configuration
 Spokestack.initialize({
   input: "com.pylon.spokestack.android.MicrophoneInput", // required, provides audio input into the stages
   stages: [
-    "com.pylon.spokestack.libfvad.VADTrigger", // enable voice activity detection. necessary to trigger speech recognition.
+    "com.pylon.spokestack.webrtc.VoiceActivityDetector", // voice activity detection. necessary to trigger speech recognition.
     "com.pylon.spokestack.google.GoogleSpeechRecognizer" // one of the two supplied speech recognition services
     // 'com.pylon.spokestack.microsoft.BingSpeechRecognizer'
   ],
   properties: {
     locale: "en-US",
-    "google-credentials": YOUR_GOOGLE_VOICE_CREDENTIALS
-    // 'bing-speech-api-key': YOUR_BING_VOICE_CREDENTIALS
+    "google-credentials": YOUR_GOOGLE_VOICE_CREDENTIALS,
+    // 'bing-speech-api-key': YOUR_BING_VOICE_CREDENTIALS,
+    trace-level: Spokestack.TraceLevel.DEBUG
   }
 });
 
+// Start and stop the speech pipeline. All methods can be called repeatedly.
+Spokestack.start(); // start speech pipeline. can only start after initialize is called.
+Spokestack.stop(); // stop speech pipeline
+Spokestack.activate() // manually activate the speech pipeline. The speech pipeline is now actively listening for speech to recognize.
+Spokestack.deactivate() // manually deactivate the speech pipeline. The speech pipeline is now passively waiting for an activation trigger.
+
 // Binding events
 const logEvent = e => console.log(e);
-Spokestack.onSpeechStarted = logEvent;
-Spokestack.onSpeechEnded = logEvent;
-Spokestack.onSpeechError = e => {
+Spokestack.onActivate = logEvent;
+Spokestack.onDeactivate = logEvent;
+Spokestack.onError = e => {
   Spokestack.stop();
   logEvent(e);
 };
-Spokestack.onSpeechRecognized = e => {
+Spokestack.onTrace = e => { // subscribe to tracing events according to the trace-level property
+  logEvent(e);
+  console.log(e.message);
+}
+Spokestack.onRecognize = e => {
   logEvent(e);
   console.log(e.transcript); // "Hello Spokestack"
 };
 
-Spokestack.start(); // start voice activity detection and speech recognition. can only start after initialize is called.
-Spokestack.stop(); // stop voice activity detection and speech recognition. can only start after initialize is called
-// NB start() and stop() can be called repeatedly.
 ```
 
 ## API
 
-| Method Name                | Description                                                                     | Platform |
-| -------------------------- | ------------------------------------------------------------------------------- | -------- |
-| Spokestack.initialize()    | Initialize the Spokestack VAD/ASR pipeline; required for `start()` and `stop()` | Android  |
-| Spokestack.start()         | Starts listening for speech activity                                            | Android  |
-| Spokestack.stop()          | Stops listening for speech activity                                             | Android  |
+### Methods
 
-| Event Name                           | Description                             | Event    |
-| ------------------------------------ | --------------------------------------- | -------- |
-| Spokestack.onSpeechStarted(event)    | Invoked when speech is recognized       | `null`   |
-| Spokestack.onSpeechEnded(event)      | Invoked when speech has stopped         | `null`   |
-| Spokestack.onSpeechRecognized(event) | Invoked when speech has been recognized | `string` |
+| Method Name                | Description                                                                     |
+| -------------------------- | ------------------------------------------------------------------------------- |
+| Spokestack.initialize()    | Initialize the speech pipeline; required for all other methods                        |
+| Spokestack.start()         | Starts the speech pipeline. The speech pipeline starts in the `deactivate` state. |
+| Spokestack.stop()          | Stops the speech pipeline                                                       |
+| Spokestack.activate()      | Manually activate the speech pipeline                                           |
+| Spokestack.deactivate()    | Manually deactivate the speech pipeline                                         |
+
+### Events
+
+| Event Name                           | Property | Description                             |
+| ------------------------------------ | -------- | --------------------------------------- |
+| Spokestack.onActivate(event)           | `null`   | Invoked when the speech pipeline is activated, which enables the speech recognizer and begins a new dialogue session                          |
+| Spokestack.onDeactivate(event)       | `null`   | Invoked when the speech pipeline has been deactivated |
+| Spokestack.onRecognize(event)        | `transcript`:`string` | Invoked when speech has been recognized |
+| Spokestack.onTrace(event)            | `message`:`string` | Invoked when a trace message become available |
+| Spokestack.onError(event)            | `error`:`string`       | Invoked upon an error in the speech pipeline execution |
+
+### Enums
+
+| TraceLevel                           |    Value |
+| ------------------------------------ | -------- |
+| DEBUG                                |       10 |
+| PERF                                 |       20 |
+| INFO                                 |       30 |
+| NONE                                 | 100      |
 
 ## Gotchas
 
