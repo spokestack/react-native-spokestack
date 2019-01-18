@@ -1,5 +1,6 @@
 
 #import "RNSpokestack.h"
+#import <React/RCTConvert.h>
 #import <React/RCTLog.h>
 #import <SpokeStack/SpokeStack.h>
 
@@ -26,60 +27,61 @@ RCT_EXPORT_MODULE();
 
 - (NSArray<NSString *> *)supportedEvents
 {
-    return @[onSpeechRecognized, onSpeechStarted, onSpeechEnded];
+    return @[@"onSpeechRecognized", @"onSpeechStarted", @"onSpeechEnded", @"onSpeechError"];
+}
+
+- (void)didFinish {
+    if (hasListeners)
+    {
+        [self sendEventWithName:@"onSpeechEnded" body:@{}];
+    }
+}
+
+- (void)didRecognize:(SPSpeechContext * _Nonnull)results {
+    if (hasListeners)
+    {
+        [self sendEventWithName:@"onSpeechRecognized" body:@{@"transcript": @[results.transcript]}];
+    }
+}
+
+- (void)didStart {
+    if (hasListeners)
+    {
+        [self sendEventWithName:@"onSpeechStarted" body:@{}];
+    }
+}
+
+- (void)didError:(NSString * _Nonnull)error {
+    if (hasListeners)
+    {
+        [self sendEventWithName:@"onSpeechError" body:@{@"error": error}];
+    }
 }
 
 SpeechPipeline* _pipeline;
 
 RCT_EXPORT_METHOD(initialize:(NSDictionary *)config)
 {
-    RCTLogInfo(@"Pretending to initialize with config %@", config);
     GoogleRecognizerConfiguration *_recognizerConfig = [[GoogleRecognizerConfiguration alloc] init];
-    _recognizerConfig.host = config["host"];
-    _recognizerConfig.enableWordTimeOffsets = config["enableWordTimeOffsets"];
-    _recognizerConfig.singleUtterance = config["singleUtterance"];
-    _recognizerConfig.maxAlternatives = config["maxAlternatives"];
-    _recognizerConfig.interimResults = config["interimResults"];
-    _recognizerConfig.apiKey = config["apiKey"];
-    _pipeline = [[SpeechPipeline alloc] init:google
+    NSError *error;
+    _recognizerConfig.apiKey = [RCTConvert NSString:[config valueForKeyPath:@"properties.google-api-key"]];
+    _pipeline = [[SpeechPipeline alloc] init:RecognizerServiceGoogle
                                configuration:_recognizerConfig
-                                    delegate:self];
+                                    delegate:self
+                                       error:&error];
+    if (error) {
+        [self didError:[error localizedDescription]];
+    }
 }
 
-RCT_EXPORT_METHOD(start:(NSString*)foo)
+RCT_EXPORT_METHOD(start)
 {
-    RCTLogInfo(@"Pretending to start");
-    _pipeline.start();
+    [_pipeline start];
 }
 
 RCT_EXPORT_METHOD(stop)
 {
-    RCTLogInfo(@"Pretending to stop");
-    _pipeline.stop();
-}
-
-- (void)didFinish {
-    RCTLogInfo(@"Pretending speech finished");
-    if (hasListeners)
-    {
-        [self sendEventWithName:onSpeechEnded];
-    }
-}
-
-- (void)didRecognize:(SPSpeechContext * _Nonnull)results {
-    RCTLogInfo(@"Pretending speech recognized as %@", result.transcript);
-    if (hasListeners)
-    {
-        [self sendEventWithName:onSpeechRecognized body:@{@"transcript": result.transcript}];
-    }
-}
-
-- (void)didStart {
-    RCTLogInfo(@"Pretending speech started");
-    if (hasListeners)
-    {
-        [self sendEventWithName:onSpeechStarted];
-    }
+    [_pipeline stop];
 }
 
 @end

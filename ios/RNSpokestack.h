@@ -1,12 +1,14 @@
+//
+//  RNEventBridge.h
+//  RNSpokestack
+//
+//  Created by Noel Weichbrodt on 11/26/18.
+//  Copyright © 2018 Pylon AI, Inc. All rights reserved.
+//
 
-#if __has_include("RCTBridgeModule.h")
-#import "RCTBridgeModule.h"
-#else
 #import <React/RCTBridgeModule.h>
-#endif
 #import <React/RCTEventEmitter.h>
-#import "SpokeStack/SpokeStack-Swift.h"
+#import <SpokeStack/SpokeStack-Swift.h>
 
 @interface RNSpokestack : RCTEventEmitter <RCTBridgeModule, SpeechRecognizer>
-
 @end
