@@ -27,34 +27,34 @@ RCT_EXPORT_MODULE();
 
 - (NSArray<NSString *> *)supportedEvents
 {
-    return @[@"onSpeechRecognized", @"onSpeechStarted", @"onSpeechEnded", @"onSpeechError"];
+    return @[@"onRecognize", @"onActivate", @"onDeactivate", @"onError"];
 }
 
 - (void)didFinish {
     if (hasListeners)
     {
-        [self sendEventWithName:@"onSpeechEnded" body:@{}];
+        [self sendEventWithName:@"onDeactivate" body:@{}];
     }
 }
 
 - (void)didRecognize:(SPSpeechContext * _Nonnull)results {
     if (hasListeners)
     {
-        [self sendEventWithName:@"onSpeechRecognized" body:@{@"transcript": @[results.transcript]}];
+        [self sendEventWithName:@"onRecognize" body:@{@"transcript": @[results.transcript]}];
     }
 }
 
 - (void)didStart {
     if (hasListeners)
     {
-        [self sendEventWithName:@"onSpeechStarted" body:@{}];
+        [self sendEventWithName:@"onActivate" body:@{}];
     }
 }
 
 - (void)didError:(NSString * _Nonnull)error {
     if (hasListeners)
     {
-        [self sendEventWithName:@"onSpeechError" body:@{@"error": error}];
+        [self sendEventWithName:@"onError" body:@{@"error": error}];
     }
 }
 
@@ -64,7 +64,7 @@ RCT_EXPORT_METHOD(initialize:(NSDictionary *)config)
 {
     GoogleRecognizerConfiguration *_recognizerConfig = [[GoogleRecognizerConfiguration alloc] init];
     NSError *error;
-    _recognizerConfig.apiKey = [RCTConvert NSString:[config valueForKeyPath:@"properties.google-api-key"]];
+a    _recognizerConfig.apiKey = [RCTConvert NSString:[config valueForKeyPath:@"properties.google-api-key"]];
     _pipeline = [[SpeechPipeline alloc] init:RecognizerServiceGoogle
                                configuration:_recognizerConfig
                                     delegate:self
