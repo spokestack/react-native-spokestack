@@ -3,12 +3,49 @@
 React Native wrapper for the [Spokestack](https://github.com/pylon/spokestack-android) speech activity detection/automated speech recognition project.
 
 ## Getting started
-
+[![](https://img.shields.io/npm/v/react-native-spokestack.svg)](https://www.npmjs.com/package/react-native-spokestack)
 `$ npm install react-native-spokestack --save`
 
-### Mostly automatic installation
+### (Mostly) automatic installation
+
+#### Android
 
 `$ react-native link react-native-spokestack`
+
+#### iOS
+[![](https://img.shields.io/cocoapods/v/RNSpokestack.svg)](https://cocoapods.org/pods/RNSpokestack)
+
+0. install CocoaPods
+1. create a `podfile` in the `ios` directory with the following contents:
+```
+platform :ios, '11.0'
+
+target 'YOUR_PROJECT' do
+  use_frameworks!
+
+  pod 'RNSpokestack', :path => '../node_modules/react-native-spokestack'
+  pod 'yoga', path: '../node_modules/react-native/ReactCommon/yoga'
+  pod 'DoubleConversion', :podspec => '../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec'
+  pod 'Folly', :podspec => '../node_modules/react-native/third-party-podspecs/Folly.podspec'
+  pod 'glog', :podspec => '../node_modules/react-native/third-party-podspecs/GLog.podspec'
+  pod 'React', path: '../node_modules/react-native', subspecs: [
+  'Core',
+  'jschelpers',
+  'cxxreact',
+  'CxxBridge',
+  'DevSupport',
+  'RCTText',
+  'RCTImage',
+  'RCTNetwork',
+  'RCTActionSheet',
+  'RCTAnimation',
+  'RCTWebSocket',
+  ]
+end
+
+```
+2. `pod install`
+3. `$ react-native link react-native-spokestack`
 
 ### Manual installation
 
@@ -29,7 +66,34 @@ React Native wrapper for the [Spokestack](https://github.com/pylon/spokestack-an
      implementation project(':react-native-spokestack')
    ```
 
-### Gradle Setup
+#### iOS
+
+  - Currently only buildable on an `amd_64` target
+
+  - Drag the RNSpokestack.xcodeproj from the react-native-spokestack/ios folder to the Libraries group on Xcode in your poject.
+
+  - Click on your main project file (the one that represents the .xcodeproj) select Build Phases and drag the static library, libRNSpokestack.a, from the Libraries/RNSpokestack.xcodeproj/Products folder to Link Binary With Libraries
+
+##### Link the necessary libraries:
+  - Project Build Phases
+    - Link Binary with Libraries:
+      - /node_modules/react-native-spokestack/Frameworks
+      - AVFoundation
+      - SpokeStack.framework
+
+    - Copy Bundle Resources:
+      - gRCPCertificate.bundle
+
+  - General
+    - Always Embed Swift Standard Libraries: Yes
+    - Embedded Binaries:
+      - /node_modules/react-native-spokestack/Frameworks
+      - SpokeStack.framework
+      - Linked Frameworks and Binaries:
+      - /node_modules/react-native-spokestack/Frameworks
+      - SpokeStack.framework
+
+### Android Support
 
 #### `android/build.gradle`
 
@@ -95,7 +159,8 @@ Spokestack.initialize({
   ],
   properties: {
     locale: "en-US",
-    "google-credentials": YOUR_GOOGLE_VOICE_CREDENTIALS,
+    "google-credentials": YOUR_GOOGLE_VOICE_CREDENTIALS, // Android-supported api
+    "google-api-key": YOUR_GOOGLE_API_KEY, // iOS supported google api
     // 'bing-speech-api-key': YOUR_BING_VOICE_CREDENTIALS,
     trace-level: Spokestack.TraceLevel.DEBUG
   }
@@ -130,23 +195,23 @@ Spokestack.onRecognize = e => {
 
 ### Methods
 
-| Method Name                | Description                                                                     |
-| -------------------------- | ------------------------------------------------------------------------------- |
-| Spokestack.initialize()    | Initialize the speech pipeline; required for all other methods                        |
-| Spokestack.start()         | Starts the speech pipeline. The speech pipeline starts in the `deactivate` state. |
-| Spokestack.stop()          | Stops the speech pipeline                                                       |
-| Spokestack.activate()      | Manually activate the speech pipeline                                           |
-| Spokestack.deactivate()    | Manually deactivate the speech pipeline                                         |
+| Method Name                | Description                                                                     | OS |
+| -------------------------- | ------------------------------------------------------------------------------- | -- |
+| Spokestack.initialize()    | Initialize the speech pipeline; required for all other methods                        | Android, iOS |
+| Spokestack.start()         | Starts the speech pipeline. The speech pipeline starts in the `deactivate` state. | Android, iOS |
+| Spokestack.stop()          | Stops the speech pipeline                                                       | Android, iOS |
+| Spokestack.activate()      | Manually activate the speech pipeline                                           | Android |
+| Spokestack.deactivate()    | Manually deactivate the speech pipeline                                         | Android |
 
 ### Events
 
-| Event Name                           | Property | Description                             |
-| ------------------------------------ | -------- | --------------------------------------- |
-| Spokestack.onActivate(event)           | `null`   | Invoked when the speech pipeline is activated, which enables the speech recognizer and begins a new dialogue session                          |
-| Spokestack.onDeactivate(event)       | `null`   | Invoked when the speech pipeline has been deactivated |
-| Spokestack.onRecognize(event)        | `transcript`:`string` | Invoked when speech has been recognized |
-| Spokestack.onTrace(event)            | `message`:`string` | Invoked when a trace message become available |
-| Spokestack.onError(event)            | `error`:`string`       | Invoked upon an error in the speech pipeline execution |
+| Event Name                           | Property | Description                             | OS |
+| ------------------------------------ | -------- | --------------------------------------- | -- |
+| Spokestack.onActivate(event)           | `null`   | Invoked when the speech pipeline is activated, which enables the speech recognizer and begins a new dialogue session                          | Android      |
+| Spokestack.onDeactivate(event)       | `null`   | Invoked when the speech pipeline has been deactivated | Android |
+| Spokestack.onRecognize(event)        | `transcript`:`string` | Invoked when speech has been recognized | Android, iOS |
+| Spokestack.onTrace(event)            | `message`:`string` | Invoked when a trace message become available | Android      |
+| Spokestack.onError(event)            | `error`:`string`       | Invoked upon an error in the speech pipeline execution | Android, iOS |
 
 ### Enums
 

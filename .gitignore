@@ -26,3 +26,7 @@ buck-out/
 
 # Used in development (see wml node package)
 .watchmanconfig
+
+# ios
+ios/RNSpokestack.xcodeproj/project.xcworkspace/xcuserdata/
+ios/RNSpokestack.xcodeproj/xcuserdata/
