@@ -4,6 +4,7 @@ React Native wrapper for the [Spokestack](https://github.com/pylon/spokestack-an
 
 ## Getting started
 [![](https://img.shields.io/npm/v/react-native-spokestack.svg)](https://www.npmjs.com/package/react-native-spokestack)
+
 `$ npm install react-native-spokestack --save`
 
 ### (Mostly) automatic installation
