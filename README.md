@@ -16,7 +16,7 @@ React Native wrapper for the [Spokestack](https://github.com/pylon/spokestack-an
 #### iOS
 [![](https://img.shields.io/cocoapods/v/RNSpokestack.svg)](https://cocoapods.org/pods/RNSpokestack)
 
-1. install CocoaPods
+1. install [CocoaPods](https://guides.cocoapods.org/using/using-cocoapods.html#adding-pods-to-an-xcode-project)
 1. `cd ios && pod init`
 1. edit the resulting `podfile` and add the following contents:
 ```
