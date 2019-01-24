@@ -64,7 +64,7 @@ RCT_EXPORT_METHOD(initialize:(NSDictionary *)config)
 {
     GoogleRecognizerConfiguration *_recognizerConfig = [[GoogleRecognizerConfiguration alloc] init];
     NSError *error;
-a    _recognizerConfig.apiKey = [RCTConvert NSString:[config valueForKeyPath:@"properties.google-api-key"]];
+    _recognizerConfig.apiKey = [RCTConvert NSString:[config valueForKeyPath:@"properties.google-api-key"]];
     _pipeline = [[SpeechPipeline alloc] init:RecognizerServiceGoogle
                                configuration:_recognizerConfig
                                     delegate:self

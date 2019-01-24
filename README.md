@@ -7,6 +7,10 @@ React Native wrapper for the [Spokestack](https://github.com/pylon/spokestack-an
 
 `$ npm install react-native-spokestack --save`
 
+
+- *Android*: Android SDK 26+
+- *iOS*: iOS 11+
+
 ### (Mostly) automatic installation
 
 #### Android
@@ -15,6 +19,12 @@ React Native wrapper for the [Spokestack](https://github.com/pylon/spokestack-an
 
 #### iOS
 [![](https://img.shields.io/cocoapods/v/RNSpokestack.svg)](https://cocoapods.org/pods/RNSpokestack)
+
+#### Prerequistes
+1. iOS 11+, Swift 4.2
+2. No simulator support due to [dependencies](https://github.com/grpc/grpc-swift/issues/111). Debug/run on physical iOS devices only.
+
+#### Installation
 
 1. install [CocoaPods](https://guides.cocoapods.org/using/using-cocoapods.html#adding-pods-to-an-xcode-project)
 2. `cd ios && pod init`
@@ -68,7 +78,7 @@ end
      implementation project(':react-native-spokestack')
    ```
 
-#### iOS
+#### iOS (not using CocoaPods)
 
   - Currently only buildable on an `amd_64` target
 
@@ -226,8 +236,14 @@ Spokestack.onRecognize = e => {
 
 ## Gotchas
 
+### Android
+
 - Requires Android SDK 26 level support
 - Requires Gradle 3.0.1+ (`classpath 'com.android.tools.build:gradle:3.0.1'` in root `build.gradle` `dependencies`)
+- Enable app setting for microphone permission
+
+### iOS
+
 - Enable app setting for microphone permission
 
 ## License
