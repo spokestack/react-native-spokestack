@@ -26,7 +26,7 @@ React Native wrapper for the [Spokestack](https://github.com/pylon/spokestack-an
 
 #### Installation
 
-1. install [CocoaPods](https://guides.cocoapods.org/using/using-cocoapods.html#adding-pods-to-an-xcode-project)
+1. install [CocoaPods](https://guides.cocoapods.org/using/using-cocoapods.html#adding-pods-to-an-xcode-project), v1.6.0+
 2. `cd ios && pod init`
 3. edit the resulting `podfile` and add the following contents:
 ```
@@ -39,7 +39,7 @@ target 'YOUR_PROJECT' do
   pod 'yoga', path: '../node_modules/react-native/ReactCommon/yoga'
   pod 'DoubleConversion', :podspec => '../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec'
   pod 'Folly', :podspec => '../node_modules/react-native/third-party-podspecs/Folly.podspec'
-  pod 'glog', :podspec => '../node_modules/react-native/third-party-podspecs/GLog.podspec'
+  pod 'glog', :podspec => '../node_modules/react-native/third-party-podspecs/glog.podspec'
   pod 'React', path: '../node_modules/react-native', subspecs: [
   'Core',
   'jschelpers',
