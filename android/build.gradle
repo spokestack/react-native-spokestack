@@ -34,6 +34,8 @@ repositories {
 
 dependencies {
     annotationProcessor 'com.google.auto.value:auto-value:1.2'
+    implementation('org.tensorflow:tensorflow-lite:1.10.0')
+    implementation('com.github.wendykierp:JTransforms:3.0')
     implementation 'io.grpc:grpc-okhttp:1.16.1'
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'com.google.cloud:google-cloud-speech:0.69.0-beta'
