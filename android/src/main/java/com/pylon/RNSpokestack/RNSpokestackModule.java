@@ -38,11 +38,21 @@ public class RNSpokestackModule extends ReactContextBaseJavaModule implements On
   public String getName() {
     return "Spokestack";
   }
+  
+  @Override
+  public void onCatalystInstanceDestroy() {
+    super.onCatalystInstanceDestroy();
+    if (pipeline != null && pipeline.isRunning()) {
+      pipeline.stop();
+    }
+  }
 
   private void sendEvent(String eventName, @Nullable WritableMap params) {
-    this.reactContext
-      .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
-      .emit(eventName, params);
+    if (this.reactContext.hasActiveCatalystInstance()) {
+      this.reactContext
+              .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+              .emit(eventName, params);
+    }
   }
 
   @ReactMethod
