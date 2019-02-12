@@ -8,20 +8,23 @@ buildscript {
 }
 
 apply plugin: 'com.android.library'
+def safeExtGet(prop, fallback) {
+    rootProject.ext.has(prop) ? rootProject.ext.get(prop) : fallback
+}
 
 android {
-    compileSdkVersion 27
+    compileSdkVersion safeExtGet("compileSdkVersion", 27)
 
     defaultConfig {
-        minSdkVersion 16
-        targetSdkVersion 26
+        minSdkVersion safeExtGet('minSdkVersion', 16)
+        targetSdkVersion safeExtGet('targetSdkVersion', 27)
         versionCode 1
         versionName "1.0"
     }
     lintOptions {
         abortOnError false
     }
-	compileOptions {
+    compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
@@ -39,6 +42,7 @@ dependencies {
     implementation 'io.grpc:grpc-okhttp:1.16.1'
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'com.google.cloud:google-cloud-speech:0.69.0-beta'
-	implementation 'com.facebook.react:react-native:+'
+    implementation 'com.facebook.react:react-native:+'
     implementation 'com.pylon:spokestack:0.2.1'
 }
+
