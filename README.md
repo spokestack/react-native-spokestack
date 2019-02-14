@@ -28,7 +28,7 @@ React Native wrapper for the [Spokestack](https://github.com/pylon/spokestack-an
 
 1. install [CocoaPods](https://guides.cocoapods.org/using/using-cocoapods.html#adding-pods-to-an-xcode-project), v1.6.0+
 2. `cd ios && pod init`
-3. edit the resulting `podfile` and add the following contents:
+3. edit the resulting `Podfile` and add the following contents:
 ```
 platform :ios, '11.0'
 
@@ -48,6 +48,7 @@ target 'YOUR_PROJECT' do
   'DevSupport',
   'RCTText',
   'RCTImage',
+  'RCTLinkingIOS',
   'RCTNetwork',
   'RCTActionSheet',
   'RCTAnimation',
@@ -57,7 +58,6 @@ end
 
 ```
 4. `pod install`
-5. `$ react-native link react-native-spokestack`
 
 ### Manual installation
 
@@ -210,7 +210,7 @@ Spokestack.onRecognize = e => {
 | Method Name                | Description                                                                     | OS |
 | -------------------------- | ------------------------------------------------------------------------------- | -- |
 | Spokestack.initialize()    | Initialize the speech pipeline; required for all other methods                        | Android, iOS |
-| Spokestack.start()         | Starts the speech pipeline. The speech pipeline starts in the `deactivate` state. | Android, iOS |
+| Spokestack.start()           | Starts the speech pipeline. The speech pipeline starts in the `deactivate` state. | Android, iOS |
 | Spokestack.stop()          | Stops the speech pipeline                                                       | Android, iOS |
 | Spokestack.activate()      | Manually activate the speech pipeline                                           | Android |
 | Spokestack.deactivate()    | Manually deactivate the speech pipeline                                         | Android |

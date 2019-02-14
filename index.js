@@ -3,8 +3,8 @@ import {
     NativeModules
 } from 'react-native'
 
-const { Spokestack } = NativeModules
-const spokestackEmitter = new NativeEventEmitter(Spokestack)
+const { RNSpokestack } = NativeModules
+const spokestackEmitter = new NativeEventEmitter(RNSpokestack)
 
 const TraceLevel = Object.freeze({
   DEBUG: 10,
@@ -13,7 +13,7 @@ const TraceLevel = Object.freeze({
   NONE: 100
 })
 
-class RNSpokestack {
+class Spokestack {
   get TraceLevel () {
     return TraceLevel
   }
@@ -43,23 +43,23 @@ class RNSpokestack {
 
     // I also don’t want to have to provide a fixed list of aliases inside the framework. so we may just have to set up a mapping section inside the config that maps logical names to ios/android component names
 
-    Spokestack.initialize(pipelineConfig)
+    RNSpokestack.initialize(pipelineConfig)
   }
 
   start () {
-    Spokestack.start()
+    RNSpokestack.start()
   }
 
   stop () {
-    Spokestack.stop()
+    RNSpokestack.stop()
   }
 
   activate () {
-    Spokestack.activate()
+    RNSpokestack.activate()
   }
 
   deactivate () {
-    Spokestack.deactivate()
+    RNSpokestack.deactivate()
   }
 
   // Events
@@ -91,10 +91,20 @@ class RNSpokestack {
           this.onError(e)
         }
         break
+      case 'start':
+        if (this.onStart) {
+          this.onStart(e)
+        }
+        break
+      case 'stop':
+        if (this.onStop) {
+          this.onStop(e)
+        }
+        break
       default:
         break
     }
   }
 }
 
-module.exports = new RNSpokestack()
+module.exports = new Spokestack()
