@@ -28,7 +28,7 @@ React Native wrapper for the [Spokestack](https://github.com/pylon/spokestack-an
 
 1. install [CocoaPods](https://guides.cocoapods.org/using/using-cocoapods.html#adding-pods-to-an-xcode-project), v1.6.0+
 2. `cd ios && pod init`
-3. edit the resulting `podfile` and add the following contents:
+3. edit the resulting `Podfile` and add the following contents:
 ```
 platform :ios, '11.0'
 
@@ -48,6 +48,7 @@ target 'YOUR_PROJECT' do
   'DevSupport',
   'RCTText',
   'RCTImage',
+  'RCTLinkingIOS',
   'RCTNetwork',
   'RCTActionSheet',
   'RCTAnimation',
@@ -57,7 +58,6 @@ end
 
 ```
 4. `pod install`
-5. `$ react-native link react-native-spokestack`
 
 ### Manual installation
 
@@ -157,7 +157,7 @@ exclude 'META-INF/DEPENDENCIES'
 ### Javascript
 
 ```javascript
-import Spokestack from "react-native-spokestack";
+import RNSpokestack from "react-native-spokestack";
 
 // initialize the Spokestack pipeline.
 // The pipeline has three required top-level keys: 'input', 'stages', and 'properties'.
@@ -179,24 +179,24 @@ Spokestack.initialize({
 });
 
 // Start and stop the speech pipeline. All methods can be called repeatedly.
-Spokestack.start(); // start speech pipeline. can only start after initialize is called.
-Spokestack.stop(); // stop speech pipeline
-Spokestack.activate() // manually activate the speech pipeline. The speech pipeline is now actively listening for speech to recognize.
-Spokestack.deactivate() // manually deactivate the speech pipeline. The speech pipeline is now passively waiting for an activation trigger.
+RNSpokestack.start(); // start speech pipeline. can only start after initialize is called.
+RNSpokestack.stop(); // stop speech pipeline
+RNSpokestack.activate() // manually activate the speech pipeline. The speech pipeline is now actively listening for speech to recognize.
+RNSpokestack.deactivate() // manually deactivate the speech pipeline. The speech pipeline is now passively waiting for an activation trigger.
 
 // Binding events
 const logEvent = e => console.log(e);
-Spokestack.onActivate = logEvent;
-Spokestack.onDeactivate = logEvent;
-Spokestack.onError = e => {
+RNSpokestack.onActivate = logEvent;
+RNSpokestack.onDeactivate = logEvent;
+RNSpokestack.onError = e => {
   Spokestack.stop();
   logEvent(e);
 };
-Spokestack.onTrace = e => { // subscribe to tracing events according to the trace-level property
+RNSpokestack.onTrace = e => { // subscribe to tracing events according to the trace-level property
   logEvent(e);
   console.log(e.message);
 }
-Spokestack.onRecognize = e => {
+RNSpokestack.onRecognize = e => {
   logEvent(e);
   console.log(e.transcript); // "Hello Spokestack"
 };
@@ -209,21 +209,21 @@ Spokestack.onRecognize = e => {
 
 | Method Name                | Description                                                                     | OS |
 | -------------------------- | ------------------------------------------------------------------------------- | -- |
-| Spokestack.initialize()    | Initialize the speech pipeline; required for all other methods                        | Android, iOS |
-| Spokestack.start()         | Starts the speech pipeline. The speech pipeline starts in the `deactivate` state. | Android, iOS |
-| Spokestack.stop()          | Stops the speech pipeline                                                       | Android, iOS |
-| Spokestack.activate()      | Manually activate the speech pipeline                                           | Android |
-| Spokestack.deactivate()    | Manually deactivate the speech pipeline                                         | Android |
+| RNSpokestack.initialize()  | Initialize the speech pipeline; required for all other methods                        | Android, iOS |
+| RNSpokestack.start()         | Starts the speech pipeline. The speech pipeline starts in the `deactivate` state. | Android, iOS |
+| RNSpokestack.stop()        | Stops the speech pipeline                                                       | Android, iOS |
+| RNSpokestack.activate()    | Manually activate the speech pipeline                                           | Android |
+| RNSpokestack.deactivate()  | Manually deactivate the speech pipeline                                         | Android |
 
 ### Events
 
 | Event Name                           | Property | Description                             | OS |
 | ------------------------------------ | -------- | --------------------------------------- | -- |
-| Spokestack.onActivate(event)           | `null`   | Invoked when the speech pipeline is activated, which enables the speech recognizer and begins a new dialogue session                          | Android      |
-| Spokestack.onDeactivate(event)       | `null`   | Invoked when the speech pipeline has been deactivated | Android |
-| Spokestack.onRecognize(event)        | `transcript`:`string` | Invoked when speech has been recognized | Android, iOS |
-| Spokestack.onTrace(event)            | `message`:`string` | Invoked when a trace message become available | Android      |
-| Spokestack.onError(event)            | `error`:`string`       | Invoked upon an error in the speech pipeline execution | Android, iOS |
+| RNSpokestack.onActivate(event)         | `null`   | Invoked when the speech pipeline is activated, which enables the speech recognizer and begins a new dialogue session                          | Android      |
+| RNSpokestack.onDeactivate(event)     | `null`   | Invoked when the speech pipeline has been deactivated | Android |
+| RNSpokestack.onRecognize(event)      | `transcript`:`string` | Invoked when speech has been recognized | Android, iOS |
+| RNSpokestack.onTrace(event)          | `message`:`string` | Invoked when a trace message become available | Android      |
+| RNSpokestack.onError(event)          | `error`:`string`       | Invoked upon an error in the speech pipeline execution | Android, iOS |
 
 ### Enums
 
