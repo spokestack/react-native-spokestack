@@ -38,7 +38,7 @@ public class RNSpokestackModule extends ReactContextBaseJavaModule implements On
   public String getName() {
     return "Spokestack";
   }
-  
+
   @Override
   public void onCatalystInstanceDestroy() {
     super.onCatalystInstanceDestroy();

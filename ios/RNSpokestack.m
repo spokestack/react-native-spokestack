@@ -2,7 +2,7 @@
 #import "RNSpokestack.h"
 #import <React/RCTConvert.h>
 #import <React/RCTLog.h>
-#import <SpokeStack/SpokeStack.h>
+#import <SpokeStack/SpokeStack-Swift.h>
 
 @implementation RNSpokestack
 {
@@ -27,34 +27,48 @@ RCT_EXPORT_MODULE();
 
 - (NSArray<NSString *> *)supportedEvents
 {
-    return @[@"onRecognize", @"onActivate", @"onDeactivate", @"onError"];
+    return @[@"recognize", @"activate", @"deactivate", @"error", @"start", @"finish"];
 }
 
-- (void)didFinish {
+- (void)deactivate {
     if (hasListeners)
     {
-        [self sendEventWithName:@"onDeactivate" body:@{}];
+        [self sendEventWithName:@"deactivate" body:@{}];
     }
 }
 
-- (void)didRecognize:(SPSpeechContext * _Nonnull)results {
+- (void)didRecognize:(SpeechContext * _Nonnull)results {
     if (hasListeners)
     {
-        [self sendEventWithName:@"onRecognize" body:@{@"transcript": @[results.transcript]}];
+        [self sendEventWithName:@"recognize" body:@{@"transcript": @[results.transcript]}];
     }
 }
 
-- (void)didStart {
+- (void)activate {
     if (hasListeners)
     {
-        [self sendEventWithName:@"onActivate" body:@{}];
+        [self sendEventWithName:@"activate" body:@{}];
     }
 }
 
 - (void)didError:(NSString * _Nonnull)error {
     if (hasListeners)
     {
-        [self sendEventWithName:@"onError" body:@{@"error": error}];
+        [self sendEventWithName:@"error" body:@{@"error": error}];
+    }
+}
+
+- (void)didStart {
+    if (hasListeners)
+    {
+        [self sendEventWithName:@"start" body:@{}];
+    }
+}
+
+- (void)didFinish {
+    if (hasListeners)
+    {
+        [self sendEventWithName:@"finish" body:@{}];
     }
 }
 
@@ -62,13 +76,39 @@ SpeechPipeline* _pipeline;
 
 RCT_EXPORT_METHOD(initialize:(NSDictionary *)config)
 {
-    GoogleRecognizerConfiguration *_recognizerConfig = [[GoogleRecognizerConfiguration alloc] init];
+    RecognizerService _recognizerService;
+    RecognizerConfiguration *_recognizerConfig;
+    WakewordService _wakewordService;
+    WakewordConfiguration *_wakewordConfig = [[WakewordConfiguration alloc] init];
+
     NSError *error;
-    _recognizerConfig.apiKey = [RCTConvert NSString:[config valueForKeyPath:@"properties.google-api-key"]];
-    _pipeline = [[SpeechPipeline alloc] init:RecognizerServiceGoogle
-                               configuration:_recognizerConfig
-                                    delegate:self
-                                       error:&error];
+
+    // Speech
+
+    if ([[config valueForKey:@"stages"] containsObject:@"com.pylon.spokestack.google.GoogleSpeechRecognizer"]) { // For now, override RecognizerServiceGoogleSpeech;
+        _recognizerConfig = [[RecognizerConfiguration alloc] init]; //[[GoogleRecognizerConfiguration alloc] init];
+        // _recognizerConfig.apiKey = [RCTConvert NSString:[config valueForKeyPath:@"properties.google-api-key"]];
+        _recognizerService = RecognizerServiceAppleSpeech; // RecognizerServiceGoogleSpeech;
+    } else {
+        _recognizerConfig = [[RecognizerConfiguration alloc] init];
+        _recognizerService = RecognizerServiceAppleSpeech;
+    }
+
+    // Wakeword
+
+    if ([[config valueForKey:@"stages"] containsObject:@"com.pylon.spokestack.wakeword.WakewordTrigger"]) {
+        _wakewordService = WakewordServiceAppleWakeword; // for now, override WakewordServiceModelWakeword
+    } else {
+        _wakewordService = WakewordServiceAppleWakeword;
+    }
+
+    _pipeline = [[SpeechPipeline alloc] init: _recognizerService
+                         speechConfiguration: _recognizerConfig
+                              speechDelegate: self
+                             wakewordService: _wakewordService
+                       wakewordConfiguration: _wakewordConfig
+                            wakewordDelegate: self
+                                       error: &error];
     if (error) {
         [self didError:[error localizedDescription]];
     }
@@ -83,5 +123,15 @@ RCT_EXPORT_METHOD(stop)
 {
     [_pipeline stop];
 }
+
+//RCT_EXPORT_METHOD(activate)
+//{
+//  [_pipeline activate];
+//}
+//
+//RCT_EXPORT_METHOD(deactivate)
+//{
+//  [_pipeline deactivate];
+//}
 
 @end

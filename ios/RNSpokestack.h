@@ -10,5 +10,5 @@
 #import <React/RCTEventEmitter.h>
 #import <SpokeStack/SpokeStack-Swift.h>
 
-@interface RNSpokestack : RCTEventEmitter <RCTBridgeModule, SpeechRecognizer>
+@interface RNSpokestack : RCTEventEmitter <RCTBridgeModule, SpeechRecognizer, WakewordRecognizer>
 @end
