@@ -36,7 +36,7 @@ public class RNSpokestackModule extends ReactContextBaseJavaModule implements On
 
   @Override
   public String getName() {
-    return "Spokestack";
+    return "RNSpokestack";
   }
 
   @Override
