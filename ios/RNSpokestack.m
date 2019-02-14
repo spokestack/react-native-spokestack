@@ -9,7 +9,7 @@
     bool hasListeners;
 }
 
-RCT_EXPORT_MODULE();
+RCT_EXPORT_MODULE(Spokestack);
 
 - (dispatch_queue_t)methodQueue
 {
