@@ -25,54 +25,54 @@ RCT_EXPORT_MODULE();
     hasListeners = NO;
 }
 
+SpeechPipeline* _pipeline;
+
 - (NSArray<NSString *> *)supportedEvents
 {
-    return @[@"recognize", @"activate", @"deactivate", @"error", @"start", @"finish"];
+    return @[@"onSpeechEvent"];
 }
 
 - (void)deactivate {
     if (hasListeners)
     {
-        [self sendEventWithName:@"deactivate" body:@{}];
+        [self sendEventWithName:@"onSpeechEvent" body:@{@"event": @"deactivate", @"transcript": @[], @"error": @""}];
     }
 }
 
 - (void)didRecognize:(SpeechContext * _Nonnull)results {
     if (hasListeners)
     {
-        [self sendEventWithName:@"recognize" body:@{@"transcript": @[results.transcript]}];
+        [self sendEventWithName:@"onSpeechEvent" body:@{@"event": @"recognize", @"transcript": @[results.transcript], @"error": @""}];
     }
 }
 
 - (void)activate {
     if (hasListeners)
     {
-        [self sendEventWithName:@"activate" body:@{}];
+        [self sendEventWithName:@"onSpeechEvent" body:@{@"event": @"activate", @"transcript": @[], @"error": @""}];
     }
 }
 
-- (void)didError:(NSString * _Nonnull)error {
-    if (hasListeners)
+- (void)didError:(NSError * _Nonnull)error {
+    if (![[error localizedDescription] hasPrefix: @"The operation couldn’t be completed. (kAFAssistantErrorDomain error 216.)"] && hasListeners)
     {
-        [self sendEventWithName:@"error" body:@{@"error": error}];
+        [self sendEventWithName:@"onSpeechEvent" body:@{@"event": @"error", @"transcript": @[], @"error": [error localizedDescription]}];
     }
 }
 
 - (void)didStart {
     if (hasListeners)
     {
-        [self sendEventWithName:@"start" body:@{}];
+        [self sendEventWithName:@"onSpeechEvent" body:@{@"event": @"start", @"transcript": @[], @"error": @""}];
     }
 }
 
 - (void)didFinish {
     if (hasListeners)
     {
-        [self sendEventWithName:@"finish" body:@{}];
+        [self sendEventWithName:@"onSpeechEvent" body:@{@"event": @"finish", @"transcript": @[], @"error": @""}];
     }
 }
-
-SpeechPipeline* _pipeline;
 
 RCT_EXPORT_METHOD(initialize:(NSDictionary *)config)
 {
@@ -110,7 +110,7 @@ RCT_EXPORT_METHOD(initialize:(NSDictionary *)config)
                             wakewordDelegate: self
                                        error: &error];
     if (error) {
-        [self didError:[error localizedDescription]];
+        [self didError: error];
     }
 }
 
@@ -124,14 +124,14 @@ RCT_EXPORT_METHOD(stop)
     [_pipeline stop];
 }
 
-//RCT_EXPORT_METHOD(activate)
-//{
-//  [_pipeline activate];
-//}
-//
-//RCT_EXPORT_METHOD(deactivate)
-//{
-//  [_pipeline deactivate];
-//}
+RCT_REMAP_METHOD(activate, makeActive)
+{
+  [_pipeline activate];
+}
+
+RCT_REMAP_METHOD(deactivate, makeDeactive)
+{
+  [_pipeline deactivate];
+}
 
 @end
