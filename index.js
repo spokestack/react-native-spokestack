@@ -65,7 +65,6 @@ class Spokestack {
   // Events
 
   _onSpeechEvent (e) {
-    console.log('_onSpeechEvent: ' + e.event + ' ' + e.transcript)
     switch (e.event.toLowerCase()) {
       case 'activate':
         if (this.onActivate) {
