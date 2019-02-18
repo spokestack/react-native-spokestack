@@ -217,15 +217,15 @@ Spokestack.onRecognize = e => {
 
 ### Events
 
-| Property              | Event Name                           | Description                                                                                                          | OS           |
-| --------              | ------------------------------------ | ---------------------------------------                                                                              | --           |
-| `null`                | Spokestack.onActivate(event)         | Invoked when the speech pipeline is activated, which enables the speech recognizer and begins a new dialogue session | Android, iOS |
-| `null`                | Spokestack.onDeactivate(event)       | Invoked when the speech pipeline has been deactivated                                                                | Android, iOS |
-| `null`                | Spokestack.onStart(event)            | Invoked when the speech pipeline is started                                                                          | Android, iOS |
-| `null`                | Spokestack.onStop(event)             | Invoked when the speech pipeline has been stopped                                                                    | Android, iOS |
-| `transcript`:`string` | Spokestack.onRecognize(event)        | Invoked when speech has been recognized                                                                              | Android, iOS |
-| `message`:`string`    | Spokestack.onTrace(event)            | Invoked when a trace message become available                                                                        | Android      |
-| `error`:`string`      | Spokestack.onError(event)            | Invoked upon an error in the speech pipeline execution                                                               | Android, iOS |
+| Event Name                           | Property              | Description                                                                                                          | OS           |
+| ------------------------------------ | --------              | ---------------------------------------                                                                              | --           |
+| Spokestack.onActivate(event)         | `null`                | Invoked when the speech pipeline is activated, which enables the speech recognizer and begins a new dialogue session | Android, iOS |
+| Spokestack.onDeactivate(event)       | `null`                | Invoked when the speech pipeline has been deactivated                                                                | Android, iOS |
+| Spokestack.onStart(event)            | `null`                | Invoked when the speech pipeline is started                                                                          | Android, iOS |
+| Spokestack.onStop(event)             | `null`                | Invoked when the speech pipeline has been stopped                                                                    | Android, iOS |
+| Spokestack.onRecognize(event)        | `transcript`:`string` | Invoked when speech has been recognized                                                                              | Android, iOS |
+| Spokestack.onTrace(event)            | `message`:`string`    | Invoked when a trace message become available                                                                        | Android      |
+| Spokestack.onError(event)            | `error`:`string`      | Invoked upon an error in the speech pipeline execution                                                               | Android, iOS |
 
 ### Enums
 
