@@ -3,13 +3,13 @@
 React Native wrapper for the [Spokestack](https://github.com/pylon/spokestack-android) speech activity detection/automated speech recognition project.
 
 ## Getting started
+
 [![](https://img.shields.io/npm/v/react-native-spokestack.svg)](https://www.npmjs.com/package/react-native-spokestack)
 
 `$ npm install react-native-spokestack --save`
 
-
-- *Android*: Android SDK 26+
-- *iOS*: iOS 11+
+- _Android_: Android SDK 26+
+- _iOS_: iOS 11+
 
 ### (Mostly) automatic installation
 
@@ -18,9 +18,11 @@ React Native wrapper for the [Spokestack](https://github.com/pylon/spokestack-an
 `$ react-native link react-native-spokestack`
 
 #### iOS
+
 [![](https://img.shields.io/cocoapods/v/RNSpokestack.svg)](https://cocoapods.org/pods/RNSpokestack)
 
 #### Prerequistes
+
 1. iOS 11+, Swift 4.2
 2. No simulator support due to [dependencies](https://github.com/grpc/grpc-swift/issues/111). Debug/run on physical iOS devices only.
 
@@ -29,6 +31,7 @@ React Native wrapper for the [Spokestack](https://github.com/pylon/spokestack-an
 1. install [CocoaPods](https://guides.cocoapods.org/using/using-cocoapods.html#adding-pods-to-an-xcode-project), v1.6.0+
 2. `cd ios && pod init`
 3. edit the resulting `Podfile` and add the following contents:
+
 ```
 platform :ios, '11.0'
 
@@ -57,7 +60,18 @@ target 'YOUR_PROJECT' do
 end
 
 ```
+
 4. `pod install`
+5. Remove all `lib*` files from **Link Binary with Libraries** under your project target in xCode.†
+
+† My assumption here is that this prevents dueling installations of React as referenced in this Sandstorm [blog](https://sandstorm.de/de/blog/post/react-native-managing-native-dependencies-using-xcode-and-cocoapods.html) article.
+
+> thus we need to ensure that they reference the same React Native library which you link to from the outer project
+
+#### RN 0.58 notes
+
+- In the `Podfile` remove `jschelpers` from the React subspec. ([reference](https://github.com/facebook/react-native/commit/f85692cf8fb19d1334998ea647a25953dc849eee#diff-66230b3e029caa37b0fbdc8cbd47f4ab))
+- An additional header path needs to be added to the `jsiexecutor` subspec in `node_modules/react-native/React.podspec`. You may use [patch-package](https://www.npmjs.com/package/patch-package) as a solution. This issue is being addressed in [RN 0.59](https://github.com/facebook/react-native/commit/2aa24017667721ba17a859ca4e13d43e52d86bc5#diff-66230b3e029caa37b0fbdc8cbd47f4ab).
 
 ### Manual installation
 
@@ -80,30 +94,33 @@ end
 
 #### iOS (not using CocoaPods)
 
-  - Currently only buildable on an `amd_64` target
+- Currently only buildable on an `amd_64` target
 
-  - Drag the RNSpokestack.xcodeproj from the react-native-spokestack/ios folder to the Libraries group on Xcode in your poject.
+- Drag the RNSpokestack.xcodeproj from the react-native-spokestack/ios folder to the Libraries group on Xcode in your poject.
 
-  - Click on your main project file (the one that represents the .xcodeproj) select Build Phases and drag the static library, libRNSpokestack.a, from the Libraries/RNSpokestack.xcodeproj/Products folder to Link Binary With Libraries
+- Click on your main project file (the one that represents the .xcodeproj) select Build Phases and drag the static library, libRNSpokestack.a, from the Libraries/RNSpokestack.xcodeproj/Products folder to Link Binary With Libraries
 
 ##### Link the necessary libraries:
-  - Project Build Phases
-    - Link Binary with Libraries:
-      - /node_modules/react-native-spokestack/Frameworks
-      - AVFoundation
-      - SpokeStack.framework
 
-    - Copy Bundle Resources:
-      - gRCPCertificate.bundle
+- Project Build Phases
 
-  - General
-    - Always Embed Swift Standard Libraries: Yes
-    - Embedded Binaries:
-      - /node_modules/react-native-spokestack/Frameworks
-      - SpokeStack.framework
-      - Linked Frameworks and Binaries:
-      - /node_modules/react-native-spokestack/Frameworks
-      - SpokeStack.framework
+  - Link Binary with Libraries:
+
+    - /node_modules/react-native-spokestack/Frameworks
+    - AVFoundation
+    - SpokeStack.framework
+
+  - Copy Bundle Resources:
+    - gRCPCertificate.bundle
+
+- General
+  - Always Embed Swift Standard Libraries: Yes
+  - Embedded Binaries:
+    - /node_modules/react-native-spokestack/Frameworks
+    - SpokeStack.framework
+    - Linked Frameworks and Binaries:
+    - /node_modules/react-native-spokestack/Frameworks
+    - SpokeStack.framework
 
 ### Android Support
 
@@ -229,12 +246,12 @@ Spokestack.onRecognize = e => {
 
 ### Enums
 
-| TraceLevel                           |    Value |
-| ------------------------------------ | -------- |
-| DEBUG                                |       10 |
-| PERF                                 |       20 |
-| INFO                                 |       30 |
-| NONE                                 | 100      |
+| TraceLevel | Value |
+| ---------- | ----- |
+| DEBUG      | 10    |
+| PERF       | 20    |
+| INFO       | 30    |
+| NONE       | 100   |
 
 ## Gotchas
 
