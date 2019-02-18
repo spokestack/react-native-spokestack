@@ -44,6 +44,7 @@ SpeechPipeline* _pipeline;
     {
         [self sendEventWithName:@"onSpeechEvent" body:@{@"event": @"recognize", @"transcript": @[results.transcript], @"error": @""}];
     }
+    [_pipeline start];
 }
 
 - (void)activate {
@@ -51,6 +52,7 @@ SpeechPipeline* _pipeline;
     {
         [self sendEventWithName:@"onSpeechEvent" body:@{@"event": @"activate", @"transcript": @[], @"error": @""}];
     }
+    [_pipeline activate];
 }
 
 - (void)didError:(NSError * _Nonnull)error {
