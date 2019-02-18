@@ -70,7 +70,7 @@ SpeechPipeline* _pipeline;
 - (void)didFinish {
     if (hasListeners)
     {
-        [self sendEventWithName:@"onSpeechEvent" body:@{@"event": @"finish", @"transcript": @[], @"error": @""}];
+        [self sendEventWithName:@"onSpeechEvent" body:@{@"event": @"stop", @"transcript": @[], @"error": @""}];
     }
 }
 
