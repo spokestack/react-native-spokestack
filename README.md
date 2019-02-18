@@ -62,11 +62,9 @@ end
 ```
 
 4. `pod install`
-5. Remove all `lib*` files from **Link Binary with Libraries** under your project target in xCode.†
+5. Remove all `lib*` files from **Link Binary with Libraries** under your project target in xCode. This prevents [dueling installations of React](https://sandstorm.de/de/blog/post/react-native-managing-native-dependencies-using-xcode-and-cocoapods.html).
 
-† My assumption here is that this prevents dueling installations of React as referenced in this Sandstorm [blog](https://sandstorm.de/de/blog/post/react-native-managing-native-dependencies-using-xcode-and-cocoapods.html) article.
-
-> thus we need to ensure that they reference the same React Native library which you link to from the outer project
+> ...thus we need to ensure that they reference the same React Native library which you link to from the outer project.
 
 #### RN 0.58 notes
 
@@ -259,11 +257,11 @@ Spokestack.onRecognize = e => {
 
 - Requires Android SDK 26 level support
 - Requires Gradle 3.0.1+ (`classpath 'com.android.tools.build:gradle:3.0.1'` in root `build.gradle` `dependencies`)
-- Enable app setting for microphone permission
+- Add app setting for microphone permission
 
 ### iOS
 
-- Enable app setting for microphone permission
+- Add app setting for microphone permission (`NSMicrophoneUsageDescription`) and speech recognition (`NSSpeechRecognitionUsageDescription`)
 
 ## License
 
