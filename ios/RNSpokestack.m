@@ -54,7 +54,12 @@ SpeechPipeline* _pipeline;
 }
 
 - (void)didError:(NSError * _Nonnull)error {
-    if (![[error localizedDescription] hasPrefix: @"The operation couldn’t be completed. (kAFAssistantErrorDomain error 216.)"] && hasListeners)
+    /*
+     A `Error Domain=kAFAssistantErrorDomain Code=216 "(null)"` (although sometimes it’s a `209` instead of `216`) is an error on Apple's service side that should be ignored. For discussion sees https://stackoverflow.com/questions/53037789/sfspeechrecognizer-216-error-with-multiple-requests?noredirect=1&lq=1
+     */
+    if (!([[error localizedDescription] hasPrefix: @"The operation couldn’t be completed. (kAFAssistantErrorDomain error 216.)"]
+          || [[error localizedDescription] hasPrefix: @"The operation couldn’t be completed. (kAFAssistantErrorDomain error 209.)"])
+        && hasListeners)
     {
         [self sendEventWithName:@"onSpeechEvent" body:@{@"event": @"error", @"transcript": @[], @"error": [error localizedDescription]}];
     }
