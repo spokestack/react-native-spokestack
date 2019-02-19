@@ -191,15 +191,15 @@ Spokestack.initialize({
     "google-credentials": YOUR_GOOGLE_VOICE_CREDENTIALS, // Android-supported api
     "google-api-key": YOUR_GOOGLE_API_KEY, // iOS supported google api
     // 'bing-speech-api-key': YOUR_BING_VOICE_CREDENTIALS,
-    trace-level: Spokestack.TraceLevel.DEBUG
+    "trace-level": Spokestack.TraceLevel.DEBUG
   }
 });
 
 // Start and stop the speech pipeline. All methods can be called repeatedly.
 Spokestack.start(); // start speech pipeline. can only start after initialize is called.
 Spokestack.stop(); // stop speech pipeline
-Spokestack.activate() // manually activate the speech pipeline. The speech pipeline is now actively listening for speech to recognize.
-Spokestack.deactivate() // manually deactivate the speech pipeline. The speech pipeline is now passively waiting for an activation trigger.
+Spokestack.activate(); // manually activate the speech pipeline. The speech pipeline is now actively listening for speech to recognize.
+Spokestack.deactivate(); // manually deactivate the speech pipeline. The speech pipeline is now passively waiting for an activation trigger.
 
 // Binding events
 const logEvent = e => console.log(e);
@@ -212,7 +212,7 @@ Spokestack.onError = e => {
 Spokestack.onTrace = e => { // subscribe to tracing events according to the trace-level property
   logEvent(e);
   console.log(e.message);
-}
+};
 Spokestack.onRecognize = e => {
   logEvent(e);
   console.log(e.transcript); // "Hello Spokestack"
