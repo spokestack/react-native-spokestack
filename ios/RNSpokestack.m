@@ -33,6 +33,7 @@ SpeechPipeline* _pipeline;
 }
 
 - (void)deactivate {
+    NSLog(@"RNSpokestack deactivate");
     if (hasListeners)
     {
         [self sendEventWithName:@"onSpeechEvent" body:@{@"event": @"deactivate", @"transcript": @[], @"error": @""}];
@@ -40,45 +41,46 @@ SpeechPipeline* _pipeline;
 }
 
 - (void)didRecognize:(SpeechContext * _Nonnull)results {
+    NSLog(@"RNSpokestack didRecognize");
     if (hasListeners)
     {
-        [self sendEventWithName:@"onSpeechEvent" body:@{@"event": @"recognize", @"transcript": @[results.transcript], @"error": @""}];
+        [self sendEventWithName:@"onSpeechEvent" body:@{@"event": @"recognize", @"transcript": results.transcript, @"error": @""}];
     }
     [_pipeline start];
 }
 
 - (void)activate {
+    NSLog(@"RNSpokestack activate");
     if (hasListeners)
     {
-        [self sendEventWithName:@"onSpeechEvent" body:@{@"event": @"activate", @"transcript": @[], @"error": @""}];
+        [self sendEventWithName:@"onSpeechEvent" body:@{@"event": @"activate", @"transcript": @"", @"error": @""}];
     }
     [_pipeline activate];
 }
 
 - (void)didError:(NSError * _Nonnull)error {
-    /*
-     A `Error Domain=kAFAssistantErrorDomain Code=216 "(null)"` (although sometimes it’s a `209` instead of `216`) is an error on Apple's service side that should be ignored. For discussion sees https://stackoverflow.com/questions/53037789/sfspeechrecognizer-216-error-with-multiple-requests?noredirect=1&lq=1
-     */
-    if (!([[error localizedDescription] hasPrefix: @"The operation couldn’t be completed. (kAFAssistantErrorDomain error 216.)"]
-          || [[error localizedDescription] hasPrefix: @"The operation couldn’t be completed. (kAFAssistantErrorDomain error 209.)"])
-        && hasListeners)
+    NSLog(@"RNSpokestack didError");
+    if (hasListeners)
     {
-        [self sendEventWithName:@"onSpeechEvent" body:@{@"event": @"error", @"transcript": @[], @"error": [error localizedDescription]}];
+        [self sendEventWithName:@"onSpeechEvent" body:@{@"event": @"error", @"transcript": @"", @"error": [error localizedDescription]}];
     }
 }
 
 - (void)didStart {
+    NSLog(@"RNSpokestack didStart");
     if (hasListeners)
     {
-        [self sendEventWithName:@"onSpeechEvent" body:@{@"event": @"start", @"transcript": @[], @"error": @""}];
+        [self sendEventWithName:@"onSpeechEvent" body:@{@"event": @"start", @"transcript": @"", @"error": @""}];
     }
 }
 
 - (void)didFinish {
+    NSLog(@"RNSpokestack didFinish");
     if (hasListeners)
     {
-        [self sendEventWithName:@"onSpeechEvent" body:@{@"event": @"stop", @"transcript": @[], @"error": @""}];
+        [self sendEventWithName:@"onSpeechEvent" body:@{@"event": @"deactivate", @"transcript": @"", @"error": @""}];
     }
+    [_pipeline start];
 }
 
 RCT_EXPORT_METHOD(initialize:(NSDictionary *)config)
