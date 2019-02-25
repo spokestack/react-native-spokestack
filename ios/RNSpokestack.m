@@ -36,8 +36,9 @@ SpeechPipeline* _pipeline;
     NSLog(@"RNSpokestack deactivate");
     if (hasListeners)
     {
-        [self sendEventWithName:@"onSpeechEvent" body:@{@"event": @"deactivate", @"transcript": @[], @"error": @""}];
+        [self sendEventWithName:@"onSpeechEvent" body:@{@"event": @"deactivate", @"transcript": @"", @"error": @""}];
     }
+    [_pipeline deactivate];
 }
 
 - (void)didRecognize:(SpeechContext * _Nonnull)results {
@@ -46,7 +47,6 @@ SpeechPipeline* _pipeline;
     {
         [self sendEventWithName:@"onSpeechEvent" body:@{@"event": @"recognize", @"transcript": results.transcript, @"error": @""}];
     }
-    [_pipeline start];
 }
 
 - (void)activate {
@@ -72,15 +72,6 @@ SpeechPipeline* _pipeline;
     {
         [self sendEventWithName:@"onSpeechEvent" body:@{@"event": @"start", @"transcript": @"", @"error": @""}];
     }
-}
-
-- (void)didFinish {
-    NSLog(@"RNSpokestack didFinish");
-    if (hasListeners)
-    {
-        [self sendEventWithName:@"onSpeechEvent" body:@{@"event": @"deactivate", @"transcript": @"", @"error": @""}];
-    }
-    [_pipeline start];
 }
 
 RCT_EXPORT_METHOD(initialize:(NSDictionary *)config)
