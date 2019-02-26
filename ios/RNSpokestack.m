@@ -93,6 +93,7 @@ RCT_EXPORT_METHOD(initialize:(NSDictionary *)config)
         _recognizerConfig = [[RecognizerConfiguration alloc] init];
         _recognizerService = RecognizerServiceAppleSpeech;
     }
+    _recognizerConfig.vadFallDelay = ([config valueForKeyPath:@"properties.vad-fall-delay"]) ? [RCTConvert NSInteger:[config valueForKeyPath:@"properties.vad-fall-delay"]] : _recognizerConfig.vadFallDelay;
 
     // Wakeword
 
@@ -101,7 +102,9 @@ RCT_EXPORT_METHOD(initialize:(NSDictionary *)config)
     } else {
         _wakewordService = WakewordServiceAppleWakeword;
     }
-
+    _wakewordConfig.wakePhrases = ([config valueForKeyPath:@"properties.wake-phrases"]) ? [RCTConvert NSString:[config valueForKeyPath:@"properties.wake-phrases"]] : _wakewordConfig.wakePhrases;
+    _wakewordConfig.wakeWords = ([config valueForKeyPath:@"properties.wake-words"]) ? [RCTConvert NSString:[config valueForKeyPath:@"properties.wake-words"]] : _wakewordConfig.wakeWords;
+    
     _pipeline = [[SpeechPipeline alloc] init: _recognizerService
                          speechConfiguration: _recognizerConfig
                               speechDelegate: self
