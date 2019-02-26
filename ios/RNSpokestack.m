@@ -116,6 +116,10 @@ RCT_EXPORT_METHOD(initialize:(NSDictionary *)config)
 
 RCT_EXPORT_METHOD(start)
 {
+    if (![_pipeline status]) {
+        NSLog(@"RNSpokestack start status was false");
+        [_pipeline setDelegates: self wakewordDelegate: self];
+    }
     [_pipeline start];
 }
 
