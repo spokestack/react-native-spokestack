@@ -69,7 +69,7 @@ end
 #### RN 0.58 notes
 
 - In the `Podfile` remove `jschelpers` from the React subspec. ([reference](https://github.com/facebook/react-native/commit/f85692cf8fb19d1334998ea647a25953dc849eee#diff-66230b3e029caa37b0fbdc8cbd47f4ab))
-- An additional header path needs to be added to the `jsiexecutor` subspec in `node_modules/react-native/React.podspec`. You may use [patch-package](https://www.npmjs.com/package/patch-package) as a solution. This issue is being addressed in [RN 0.59](https://github.com/facebook/react-native/commit/2aa24017667721ba17a859ca4e13d43e52d86bc5#diff-66230b3e029caa37b0fbdc8cbd47f4ab).
+- If using Rn 0.58.0 - 0.58.4, an additional header [path](https://github.com/amccarri/react-native/commit/4e18338365175c1e7cceb784e98bf540b991c190#diff-66230b3e029caa37b0fbdc8cbd47f4ab) needs to be added to the `jsiexecutor` subspec in `node_modules/react-native/React.podspec`. You may use [patch-package](https://www.npmjs.com/package/patch-package) as a solution. This issue is was addressed and fixed in RN 0.58.5
 
 ### Manual installation
 
