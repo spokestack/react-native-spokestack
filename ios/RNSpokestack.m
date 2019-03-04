@@ -134,21 +134,21 @@ RCT_EXPORT_METHOD(stop)
 RCT_REMAP_METHOD(activate, makeActive)
 {
     NSLog(@"RNSpokestack activate()");
+    [_pipeline activate];
     if (hasListeners)
     {
         [self sendEventWithName:@"onSpeechEvent" body:@{@"event": @"activate", @"transcript": @"", @"error": @""}];
     }
-    [_pipeline activate];
 }
 
 RCT_REMAP_METHOD(deactivate, makeDeactive)
 {
     NSLog(@"RNSpokestack deactivate()");
+    [_pipeline deactivate];
     if (hasListeners)
     {
         [self sendEventWithName:@"onSpeechEvent" body:@{@"event": @"deactivate", @"transcript": @"", @"error": @""}];
     }
-    [_pipeline deactivate];
 }
 
 @end
