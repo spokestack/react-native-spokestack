@@ -76,6 +76,9 @@ SpeechPipeline* _pipeline;
 
 RCT_EXPORT_METHOD(initialize:(NSDictionary *)config)
 {
+    if (_pipeline != nil) {
+        return;
+    }
     RecognizerService _recognizerService;
     RecognizerConfiguration *_recognizerConfig;
     WakewordService _wakewordService;
@@ -104,7 +107,7 @@ RCT_EXPORT_METHOD(initialize:(NSDictionary *)config)
     }
     _wakewordConfig.wakePhrases = ([config valueForKeyPath:@"properties.wake-phrases"]) ? [RCTConvert NSString:[config valueForKeyPath:@"properties.wake-phrases"]] : _wakewordConfig.wakePhrases;
     _wakewordConfig.wakeWords = ([config valueForKeyPath:@"properties.wake-words"]) ? [RCTConvert NSString:[config valueForKeyPath:@"properties.wake-words"]] : _wakewordConfig.wakeWords;
-    
+
     _pipeline = [[SpeechPipeline alloc] init: _recognizerService
                          speechConfiguration: _recognizerConfig
                               speechDelegate: self
