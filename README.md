@@ -239,7 +239,7 @@ Spokestack.onRecognize = e => {
 | Spokestack.onStart(event)            | `null`                | Invoked when the speech pipeline is started                                                                          | Android, iOS |
 | Spokestack.onStop(event)             | `null`                | Invoked when the speech pipeline has been stopped                                                                    | Android, iOS |
 | Spokestack.onRecognize(event)        | `transcript`:`string` | Invoked when speech has been recognized                                                                              | Android, iOS |
-| Spokestack.onTimeout(event)           | `null`                | Invoked when no speech has been detected for `wake-active-max` after activation                                | Android, iOS |
+| Spokestack.onTimeout(event)          | `null`                | Invoked when no speech has been detected for `wake-active-max` after activation                                      | Android, iOS |
 | Spokestack.onTrace(event)            | `message`:`string`    | Invoked when a trace message become available                                                                        | Android      |
 | Spokestack.onError(event)            | `error`:`string`      | Invoked upon an error in the speech pipeline execution                                                               | Android, iOS |
 
