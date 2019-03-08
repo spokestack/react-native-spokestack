@@ -32,6 +32,14 @@ SpeechPipeline* _pipeline;
     return @[@"onSpeechEvent"];
 }
 
+- (void)timeout {
+    NSLog(@"RNSpokestack timeout");
+    if (hasListeners)
+    {
+        [self sendEventWithName:@"onSpeechEvent" body:@{@"event": @"timeout", @"transcript": @"", @"error": @""}];
+    }
+}
+
 - (void)deactivate {
     NSLog(@"RNSpokestack deactivate");
     if (hasListeners)
