@@ -96,14 +96,8 @@ RCT_EXPORT_METHOD(initialize:(NSDictionary *)config)
 
     // Speech
 
-    if ([[config valueForKey:@"stages"] containsObject:@"com.pylon.spokestack.google.GoogleSpeechRecognizer"]) { // For now, override RecognizerServiceGoogleSpeech;
-        _recognizerConfig = [[RecognizerConfiguration alloc] init]; //[[GoogleRecognizerConfiguration alloc] init];
-        // _recognizerConfig.apiKey = [RCTConvert NSString:[config valueForKeyPath:@"properties.google-api-key"]];
-        _recognizerService = RecognizerServiceAppleSpeech; // RecognizerServiceGoogleSpeech;
-    } else {
-        _recognizerConfig = [[RecognizerConfiguration alloc] init];
-        _recognizerService = RecognizerServiceAppleSpeech;
-    }
+    _recognizerConfig = [[RecognizerConfiguration alloc] init];
+    _recognizerService = RecognizerServiceAppleSpeech;
     _recognizerConfig.vadFallDelay = ([config valueForKeyPath:@"properties.vad-fall-delay"]) ? [RCTConvert NSInteger:[config valueForKeyPath:@"properties.vad-fall-delay"]] : _recognizerConfig.vadFallDelay;
 
     // Wakeword
