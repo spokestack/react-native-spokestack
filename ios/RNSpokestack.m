@@ -42,11 +42,11 @@ SpeechPipeline* _pipeline;
 
 - (void)deactivate {
     NSLog(@"RNSpokestack deactivate");
+    [_pipeline deactivate];
     if (hasListeners)
     {
         [self sendEventWithName:@"onSpeechEvent" body:@{@"event": @"deactivate", @"transcript": @"", @"error": @""}];
     }
-    [_pipeline deactivate];
 }
 
 - (void)didRecognize:(SpeechContext * _Nonnull)results {
@@ -59,11 +59,11 @@ SpeechPipeline* _pipeline;
 
 - (void)activate {
     NSLog(@"RNSpokestack activate");
+    [_pipeline activate];
     if (hasListeners)
     {
         [self sendEventWithName:@"onSpeechEvent" body:@{@"event": @"activate", @"transcript": @"", @"error": @""}];
     }
-    [_pipeline activate];
 }
 
 - (void)didError:(NSError * _Nonnull)error {
