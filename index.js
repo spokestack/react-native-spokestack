@@ -101,6 +101,11 @@ class Spokestack {
           this.onStop(e)
         }
         break
+      case 'init':
+        if (this.onInit) {
+          this.onInit(e)
+        }
+        break
       case 'timeout':
         if (this.onTimeout) {
           this.onTimeout(e)

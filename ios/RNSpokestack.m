@@ -82,6 +82,22 @@ SpeechPipeline* _pipeline;
     }
 }
 
+- (void)didStop {
+    NSLog(@"RNSpokestack didStop");
+    if (hasListeners)
+    {
+        [self sendEventWithName:@"onSpeechEvent" body:@{@"event": @"stop", @"transcript": @"", @"error": @""}];
+    }
+}
+
+- (void)didInit {
+    NSLog(@"RNSpokestack didInit");
+    if (hasListeners)
+    {
+        [self sendEventWithName:@"onSpeechEvent" body:@{@"event": @"init", @"transcript": @"", @"error": @""}];
+    }
+}
+
 RCT_EXPORT_METHOD(initialize:(NSDictionary *)config)
 {
     if (_pipeline != nil) {
@@ -116,6 +132,7 @@ RCT_EXPORT_METHOD(initialize:(NSDictionary *)config)
                              wakewordService: _wakewordService
                        wakewordConfiguration: _wakewordConfig
                             wakewordDelegate: self
+                            pipelineDelegate: self
                                        error: &error];
     if (error) {
         [self didError: error];
