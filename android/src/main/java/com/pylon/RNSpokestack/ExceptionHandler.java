@@ -4,7 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 /* Our very own exception handler for all threads with us as the parent process.
- * https://github.com/pylon/react-native-spokestack/pull/43 necessitates this.
+ * https://github.com/googleapis/google-cloud-java/issues/4727 necessitates this.
  * Hence we silently swallow the specific exception, and let the default exception handler
  * do its thing otherwise.
  */
