@@ -75,16 +75,19 @@ public class RNSpokestackModule extends ReactContextBaseJavaModule implements On
     builder.addOnSpeechEventListener(this);
 
     pipeline = builder.build();
+    onEvent("init", pipeline.getContext().isActive());
   }
 
   @ReactMethod
   public void start() throws Exception {
     pipeline.start();
+    onEvent("start", pipeline.getContext().isActive());
   }
 
   @ReactMethod
   public void stop () {
     pipeline.stop();
+    onEvent("stop", pipeline.getContext().isActive());
   }
 
   @ReactMethod
@@ -106,6 +109,16 @@ public class RNSpokestackModule extends ReactContextBaseJavaModule implements On
     react_event.putString("message", context.getMessage());
     react_event.putString("error", Log.getStackTraceString(context.getError()));
     react_event.putBoolean("isActive", context.isActive());
+    sendEvent("onSpeechEvent", react_event);
+  }
+
+  public void onEvent(String event, Boolean active) {
+    WritableMap react_event = Arguments.createMap();
+    react_event.putString("event", event);
+    react_event.putString("transcript", "");
+    react_event.putString("message", "");
+    react_event.putString("error", "");
+    react_event.putBoolean("isActive", active);
     sendEvent("onSpeechEvent", react_event);
   }
 }

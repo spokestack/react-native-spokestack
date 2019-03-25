@@ -42,11 +42,11 @@ SpeechPipeline* _pipeline;
 
 - (void)deactivate {
     NSLog(@"RNSpokestack deactivate");
+    [_pipeline deactivate];
     if (hasListeners)
     {
         [self sendEventWithName:@"onSpeechEvent" body:@{@"event": @"deactivate", @"transcript": @"", @"error": @""}];
     }
-    [_pipeline deactivate];
 }
 
 - (void)didRecognize:(SpeechContext * _Nonnull)results {
@@ -59,11 +59,11 @@ SpeechPipeline* _pipeline;
 
 - (void)activate {
     NSLog(@"RNSpokestack activate");
+    [_pipeline activate];
     if (hasListeners)
     {
         [self sendEventWithName:@"onSpeechEvent" body:@{@"event": @"activate", @"transcript": @"", @"error": @""}];
     }
-    [_pipeline activate];
 }
 
 - (void)didError:(NSError * _Nonnull)error {
@@ -79,6 +79,22 @@ SpeechPipeline* _pipeline;
     if (hasListeners)
     {
         [self sendEventWithName:@"onSpeechEvent" body:@{@"event": @"start", @"transcript": @"", @"error": @""}];
+    }
+}
+
+- (void)didStop {
+    NSLog(@"RNSpokestack didStop");
+    if (hasListeners)
+    {
+        [self sendEventWithName:@"onSpeechEvent" body:@{@"event": @"stop", @"transcript": @"", @"error": @""}];
+    }
+}
+
+- (void)didInit {
+    NSLog(@"RNSpokestack didInit");
+    if (hasListeners)
+    {
+        [self sendEventWithName:@"onSpeechEvent" body:@{@"event": @"init", @"transcript": @"", @"error": @""}];
     }
 }
 
@@ -116,6 +132,7 @@ RCT_EXPORT_METHOD(initialize:(NSDictionary *)config)
                              wakewordService: _wakewordService
                        wakewordConfiguration: _wakewordConfig
                             wakewordDelegate: self
+                            pipelineDelegate: self
                                        error: &error];
     if (error) {
         [self didError: error];
