@@ -13,7 +13,7 @@ public class ExceptionHandler implements Thread.UncaughtExceptionHandler {
   private Context context;
   private Thread.UncaughtExceptionHandler rootHandler;
 
-  public GlobalExceptionHandler(Context context) {
+  public ExceptionHandler(Context context) {
     this.context = context;
     this.rootHandler = Thread.getDefaultUncaughtExceptionHandler();
     Thread.setDefaultUncaughtExceptionHandler(this);
@@ -25,11 +25,11 @@ public class ExceptionHandler implements Thread.UncaughtExceptionHandler {
   @Override
   public void uncaughtException(final Thread thread, final Throwable ex) {
     if (this.rootHandler != null && ex instanceof java.util.concurrent.RejectedExecutionException) {
-      Log.i("react-native-spokestack","ignoring known exception: " + ex.toString());
+      Log.d("react-native-spokestack","ignoring known exception: " + ex.toString());
     } else if (this.rootHandler != null) {
       this.rootHandler.uncaughtException(thread, ex);
     } else {
-      Log.e("react-native-spokestack","no root handlerfor uncaught exception, killing process and exiting.");
+      Log.e("react-native-spokestack","no root handler for uncaught exception, killing process and exiting.");
       android.os.Process.killProcess(android.os.Process.myPid());
       System.exit(0);
     }
