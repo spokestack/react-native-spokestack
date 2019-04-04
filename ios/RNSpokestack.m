@@ -74,6 +74,14 @@ SpeechPipeline* _pipeline;
     }
 }
 
+- (void)setupFailed:(NSString * _Nonnull)error {
+    NSLog(@"RNSpokestack setupFailed");
+    if (hasListeners)
+    {
+        [self sendEventWithName:@"onSpeechEvent" body:@{@"event": @"error", @"transcript": @"", @"error": error}];
+    }
+}
+
 - (void)didStart {
     NSLog(@"RNSpokestack didStart");
     if (hasListeners)
