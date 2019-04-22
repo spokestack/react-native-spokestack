@@ -24,7 +24,6 @@ React Native wrapper for the [Spokestack](https://github.com/pylon/spokestack-an
 #### Prerequistes
 
 1. iOS 11+, Swift 4.2
-2. No simulator support due to [dependencies](https://github.com/grpc/grpc-swift/issues/111). Debug/run on physical iOS devices only.
 
 #### Installation
 
@@ -66,7 +65,7 @@ end
 
 > ...thus we need to ensure that they reference the same React Native library which you link to from the outer project.
 
-#### RN 0.58 notes
+#### RN 0.58+ notes
 
 - In the `Podfile` remove `jschelpers` from the React subspec. ([reference](https://github.com/facebook/react-native/commit/f85692cf8fb19d1334998ea647a25953dc849eee#diff-66230b3e029caa37b0fbdc8cbd47f4ab))
 - If using Rn 0.58.0 - 0.58.4, an additional header [path](https://github.com/amccarri/react-native/commit/4e18338365175c1e7cceb784e98bf540b991c190#diff-66230b3e029caa37b0fbdc8cbd47f4ab) needs to be added to the `jsiexecutor` subspec in `node_modules/react-native/React.podspec`. You may use [patch-package](https://www.npmjs.com/package/patch-package) as a solution. This issue is was addressed and fixed in RN 0.58.5
@@ -263,7 +262,11 @@ Spokestack.onRecognize = e => {
 ### iOS
 
 - Add app setting for microphone permission (`NSMicrophoneUsageDescription`) and speech recognition (`NSSpeechRecognitionUsageDescription`)
-
+- Spokestack on iOS does not manage `AudioSession` settings. The client app is required to implement whatever `AudioSession` category and options are necessary. At minimum, the session category should allow for recording, eg `AVAudioSessionCategoryRecord` or `AVAudioSessionCategoryPlayAndRecord`. A simple `AudioSession` setting, suitable for insertion in `AppDelegate.m`, could be:
+```
+  [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayAndRecord mode:AVAudioSessionModeDefault options:AVAudioSessionCategoryOptionDefaultToSpeaker  error:nil];
+  [[AVAudioSession sharedInstance] setActive:YES error:nil];
+```
 ## License
 
 Copyright 2018 Pylon, Inc.
