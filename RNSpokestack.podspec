@@ -16,6 +16,6 @@ Pod::Spec.new do |s|
   s.source_files  = 'ios/*.{h,m}'
   s.requires_arc = true
 
-  s.dependency "SpokeStack", "1.0.9"
+  s.dependency "SpokeStack", "1.0.10"
   s.dependency 'React'
 end
