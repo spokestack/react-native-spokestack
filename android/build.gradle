@@ -43,6 +43,6 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'com.google.cloud:google-cloud-speech:0.69.0-beta'
     implementation 'com.facebook.react:react-native:+'
-    implementation 'com.pylon:spokestack:2.0.0'
+    implementation 'com.pylon:spokestack:2.0.1'
 }
 
