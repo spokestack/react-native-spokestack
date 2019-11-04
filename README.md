@@ -3,12 +3,13 @@
 React Native wrapper for the [Spokestack](https://github.com/pylon/spokestack-android) speech activity detection/automated speech recognition project.
 
 <!--ts-->
-      * [Getting started](#getting-started)
-      * [Usage](#usage)
-      * [API](#api)
-      * [Gotchas](#gotchas)
-      * [Release](#release)
-      * [License](#license)
+## Table of Contents
+  * [Getting started](#getting-started)
+  * [Usage](#usage)
+  * [API](#api)
+  * [Gotchas](#gotchas)
+  * [Release](#release)
+  * [License](#license)
 <!--te-->
 
 ## Getting started
