@@ -1,6 +1,6 @@
 # react-native-spokestack
 
-React Native wrapper for the [Spokestack](https://github.com/pylon/spokestack-android) speech activity detection/automated speech recognition project.
+React Native wrapper for the [Spokestack](https://spokestack.io) speech activity detection/automated speech recognition project.
 
 <!--ts-->
 ## Table of Contents
