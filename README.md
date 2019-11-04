@@ -2,6 +2,15 @@
 
 React Native wrapper for the [Spokestack](https://github.com/pylon/spokestack-android) speech activity detection/automated speech recognition project.
 
+<!--ts-->
+      * [Getting started](#getting-started)
+      * [Usage](#usage)
+      * [API](#api)
+      * [Gotchas](#gotchas)
+      * [Release](#release)
+      * [License](#license)
+<!--te-->
+
 ## Getting started
 
 [![](https://img.shields.io/npm/v/react-native-spokestack.svg)](https://www.npmjs.com/package/react-native-spokestack)
@@ -267,6 +276,21 @@ Spokestack.onRecognize = e => {
   [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayAndRecord mode:AVAudioSessionModeDefault options:AVAudioSessionCategoryOptionDefaultToSpeaker  error:nil];
   [[AVAudioSession sharedInstance] setActive:YES error:nil];
 ```
+
+## Release
+  1. Ensure that CocoaPods has been installed via `gem`, not via `brew`
+  2. Increment `version` in `package.json`
+  3. `git commit -a -m 'YOUR_COMMIT_MESSAGE' && git tag YOUR_VERSION && git push --origin`
+  4. `pod spec lint --use-libraries --allow-warnings --use-modular-headers`,  which should pass all but one checks (expect `ERROR | [iOS] xcodebuild: Returned an unsuccessful exit code. You can use `--verbose` for more information.`)
+  5. edit `/Library/Ruby/Gems/YOUR_RUBY_VERSION/gems/cocoapods-trunk-YOUR_COCOAPODS_VERSION/lib/pod/command/trunk/push.rb`, comment out `validate_podspec_files` (https://github.com/CocoaPods/CocoaPods/blob/master/lib/cocoapods/command/repo/push.rb#L77)* 
+  6. `pod trunk register YOUR_EMAIL --description='release YOUR_PODSPEC_VERSION'`
+  7. `npm publish` to release on NPM
+  8. `pod trunk push --use-libraries --allow-warnings --use-modular-headers`
+
+* Since `RNSpokestack` iOS requires React Native headers, but does not include any React Native dependencies, it will not compile by itself, needing a client library that does include the React Native dependency.
+
+
+
 ## License
 
 Copyright 2018 Pylon, Inc.
