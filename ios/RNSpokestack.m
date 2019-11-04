@@ -207,7 +207,7 @@ RCT_EXPORT_METHOD(stop)
 
 RCT_REMAP_METHOD(activate, makeActive)
 {
-    NSLog(@"RNSpokestack activate");
+    NSLog(@"RNSpokestack activate()");
     [self.pipeline activate];
     if (hasListeners)
     {
@@ -217,7 +217,7 @@ RCT_REMAP_METHOD(activate, makeActive)
 
 RCT_REMAP_METHOD(deactivate, makeDeactive)
 {
-    NSLog(@"RNSpokestack deactivate");
+    NSLog(@"RNSpokestack deactivate()");
     [self.pipeline deactivate];
     if (hasListeners)
     {
