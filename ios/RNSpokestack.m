@@ -124,27 +124,59 @@ RCT_EXPORT_MODULE();
 
 RCT_EXPORT_METHOD(initialize:(NSDictionary *)config)
 {
+    NSLog(@"RNSpokestack initialize");
     if (self.pipeline != nil) {
         return;
     }
     self.speechConfig = [[SpeechConfiguration alloc] init];
 
     NSError *error;
+        
+    // Tracing
 
+    self.speechConfig.tracing = ([config valueForKeyPath:@"properties.trace-level"]) ? [RCTConvert NSInteger:[config valueForKeyPath:@"properties.trace-level"]] : self.speechConfig.tracing;
+    
     // Speech
 
     self.asrService = [AppleSpeechRecognizer sharedInstance];
     self.speechConfig.vadFallDelay = ([config valueForKeyPath:@"properties.vad-fall-delay"]) ? [RCTConvert NSInteger:[config valueForKeyPath:@"properties.vad-fall-delay"]] : self.speechConfig.vadFallDelay;
 
-    // Wakeword
+    // Wakeword signal processing
     
+    self.speechConfig.rmsTarget = ([config valueForKeyPath:@"properties.rms-target"]) ? [[RCTConvert NSNumber:[config valueForKeyPath:@"properties.rms-target"]] floatValue] : self.speechConfig.rmsTarget;
+    self.speechConfig.rmsAlpha = ([config valueForKeyPath:@"properties.rms-alpha"]) ? [[RCTConvert NSNumber:[config valueForKeyPath:@"properties.rms-alpha"]] floatValue] : self.speechConfig.rmsAlpha;
+    self.speechConfig.fftWindowSize = ([config valueForKeyPath:@"properties.fft-window-size"]) ? [RCTConvert NSInteger:[config valueForKeyPath:@"properties.fft-window-size"]] : self.speechConfig.fftWindowSize;
+    self.speechConfig.fftHopLength = ([config valueForKeyPath:@"properties.fft-hop-length"]) ? [RCTConvert NSInteger:[config valueForKeyPath:@"properties.fft-hop-length"]] : self.speechConfig.fftHopLength;
+    self.speechConfig.melFrameLength = ([config valueForKeyPath:@"properties.mel-frame-length"]) ? [RCTConvert NSInteger:[config valueForKeyPath:@"properties.mel-frame-length"]] : self.speechConfig.melFrameLength;
+    self.speechConfig.melFrameWidth = ([config valueForKeyPath:@"properties.mel-frame-width"]) ? [RCTConvert NSInteger:[config valueForKeyPath:@"properties.mel-frame-width"]] : self.speechConfig.melFrameWidth;
+    self.speechConfig.stateWidth = ([config valueForKeyPath:@"properties.state-width"]) ? [RCTConvert NSInteger:[config valueForKeyPath:@"properties.state-width"]] : self.speechConfig.stateWidth;
+    self.speechConfig.encodeLength = ([config valueForKeyPath:@"properties.wake-encode-length"]) ? [RCTConvert NSInteger:[config valueForKeyPath:@"properties.wake-encode-length"]] : self.speechConfig.encodeLength;
+    self.speechConfig.encodeWidth = ([config valueForKeyPath:@"properties.wake-encode-width"]) ? [RCTConvert NSInteger:[config valueForKeyPath:@"properties.wake-encode-width"]] : self.speechConfig.encodeWidth;
+    self.speechConfig.wakeActiveMin = ([config valueForKeyPath:@"properties.wake-active-min"]) ? [RCTConvert NSInteger:[config valueForKeyPath:@"properties.wake-active-min"]] : self.speechConfig.wakeActiveMin;
+    self.speechConfig.wakeActiveMax = ([config valueForKeyPath:@"properties.wake-active-max"]) ? [RCTConvert NSInteger:[config valueForKeyPath:@"properties.wake-active-max"]] : self.speechConfig.wakeActiveMax;
+    self.speechConfig.frameWidth = ([config valueForKeyPath:@"properties.frame-width"]) ? [RCTConvert NSInteger:[config valueForKeyPath:@"properties.frame-width"]] : self.speechConfig.frameWidth;
+    self.speechConfig.preEmphasis = ([config valueForKeyPath:@"properties.pre-emphasis"]) ? [[RCTConvert NSNumber:[config valueForKeyPath:@"properties.pre-emphasis"]] floatValue] : self.speechConfig.preEmphasis;
+
+    // Wakeword models
+    
+    // TFLite
     if ([[config valueForKey:@"stages"] containsObject:@"com.pylon.spokestack.wakeword.WakewordTrigger"]) {
-        self.wakewordService = [AppleWakewordRecognizer sharedInstance]; // for now, override WakewordServiceModelWakeword
+        self.wakewordService = [TFLiteWakewordRecognizer sharedInstance];
+        self.speechConfig.filterModelPath = ([config valueForKeyPath:@"properties.wake-filter-path"]) ? [RCTConvert NSString:[config valueForKeyPath:@"properties.wake-filter-path"]] : self.speechConfig.filterModelPath;
+        self.speechConfig.encodeModelPath = ([config valueForKeyPath:@"properties.wake-encode-path"]) ? [RCTConvert NSString:[config valueForKeyPath:@"properties.wake-encode-path"]] : self.speechConfig.encodeModelPath;
+        self.speechConfig.detectModelPath = ([config valueForKeyPath:@"properties.wake-detect-path"]) ? [RCTConvert NSString:[config valueForKeyPath:@"properties.wake-detect-path"]] : self.speechConfig.detectModelPath;
+        self.speechConfig.wakeThreshold = ([config valueForKeyPath:@"properties.wake-threshold"]) ? [[RCTConvert NSNumber:[config valueForKeyPath:@"properties.wake-threshold"]] floatValue] : self.speechConfig.wakeThreshold;
+    // CoreML
+    } else if ([[config valueForKey:@"stages"] containsObject:@"io.spokestack.wakeword.CoreMLWakewordRecognizer"]) {
+        self.wakewordService = [CoreMLWakewordRecognizer sharedInstance];
+        self.speechConfig.wakeWords = ([config valueForKeyPath:@"properties.wake-words"]) ? [RCTConvert NSString:[config valueForKeyPath:@"properties.wake-words"]] : self.speechConfig.wakeWords;
+        self.speechConfig.wakePhrases = ([config valueForKeyPath:@"properties.wake-phrases"]) ? [RCTConvert NSString:[config valueForKeyPath:@"properties.wake-phrases"]] : self.speechConfig.wakePhrases;
+    // Apple ASR
     } else {
         self.wakewordService = [AppleWakewordRecognizer sharedInstance];
+        self.speechConfig.wakePhrases = ([config valueForKeyPath:@"properties.wake-phrases"]) ? [RCTConvert NSString:[config valueForKeyPath:@"properties.wake-phrases"]] : self.speechConfig.wakePhrases;
+        self.speechConfig.wakewordRequestTimeout = ([config valueForKeyPath:@"properties.wake-request-timeout"]) ? [RCTConvert NSInteger:[config valueForKeyPath:@"properties.wake-request-timeout"]] : self.speechConfig.wakewordRequestTimeout;
     }
-    self.speechConfig.wakePhrases = ([config valueForKeyPath:@"properties.wake-phrases"]) ? [RCTConvert NSString:[config valueForKeyPath:@"properties.wake-phrases"]] : self.speechConfig.wakePhrases;
-    self.speechConfig.wakeWords = ([config valueForKeyPath:@"properties.wake-words"]) ? [RCTConvert NSString:[config valueForKeyPath:@"properties.wake-words"]] : self.speechConfig.wakeWords;
 
     self.pipeline = [[SpeechPipeline alloc] init: self.asrService
                          speechConfiguration: self.speechConfig
@@ -154,6 +186,7 @@ RCT_EXPORT_METHOD(initialize:(NSDictionary *)config)
                             pipelineDelegate: self
                                        error: &error];
     if (error) {
+        NSLog(@"RNSpokestack initialize error: %@", error);
         [self didError: error];
     }
 }
