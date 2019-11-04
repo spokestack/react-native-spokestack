@@ -8,7 +8,7 @@
 
 #import <React/RCTBridgeModule.h>
 #import <React/RCTEventEmitter.h>
-#import <SpokeStack/SpokeStack-Swift.h>
+#import <Spokestack_iOS/Spokestack_iOS-Swift.h>
 
 @interface RNSpokestack : RCTEventEmitter <RCTBridgeModule, SpeechEventListener, PipelineDelegate>
 @property (nonatomic) SpeechPipeline *pipeline;

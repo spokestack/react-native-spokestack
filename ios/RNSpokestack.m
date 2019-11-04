@@ -2,7 +2,7 @@
 #import "RNSpokestack.h"
 #import <React/RCTConvert.h>
 #import <React/RCTLog.h>
-#import <SpokeStack/SpokeStack-Swift.h>
+#import <Spokestack_iOS/Spokestack_iOS-Swift.h>
 
 @implementation RNSpokestack
 {
