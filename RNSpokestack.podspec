@@ -5,10 +5,10 @@ package = JSON.parse(File.read(File.join(__dir__, 'package.json')))
 Pod::Spec.new do |s|
   s.name = 'RNSpokestack'
   s.version = package['version']
-  s.summary = 'React Native bridge for Pylon\'s Spokestack speech processing pipeline'
-  s.homepage = 'https://www.pylon.com'
-  s.authors = { 'RNSpokestack' => 'support@pylon.com' }
-  s.source = { :git => 'https://github.com/pylon/react-native-spokestack.git', :tag => package['version'] }
+  s.summary = 'React Native bridge for the Spokestack speech processing pipeline'
+  s.homepage = 'https://www.spokestack.io'
+  s.authors = { 'RNSpokestack' => 'support@spokestack.com' }
+  s.source = { :git => 'https://github.com/spokestack/react-native-spokestack.git', :tag => package['version'] }
   s.license = {:type => 'Apache', :file => 'LICENSE'}
   s.ios.deployment_target = '11.0'
   s.swift_version = '4.2'
