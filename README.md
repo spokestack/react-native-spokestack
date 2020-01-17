@@ -196,7 +196,6 @@ Spokestack.initialize({
   properties: {
     locale: "en-US",
     "google-credentials": YOUR_GOOGLE_VOICE_CREDENTIALS, // Android-supported api
-    "google-api-key": YOUR_GOOGLE_API_KEY, // iOS supported google api
     // 'bing-speech-api-key': YOUR_BING_VOICE_CREDENTIALS,
     "trace-level": Spokestack.TraceLevel.DEBUG
   }
