@@ -3,14 +3,14 @@
 //  RNSpokestack
 //
 //  Created by Noel Weichbrodt on 11/26/18.
-//  Copyright © 2018 Pylon AI, Inc. All rights reserved.
+//  Copyright © 2020 Spokestack, Inc. All rights reserved.
 //
 
 #import <React/RCTBridgeModule.h>
 #import <React/RCTEventEmitter.h>
-#import <Spokestack_iOS/Spokestack_iOS-Swift.h>
+#import <Spokestack/Spokestack-Swift.h>
 
-@interface RNSpokestack : RCTEventEmitter <RCTBridgeModule, SpeechEventListener, PipelineDelegate>
+@interface RNSpokestack : RCTEventEmitter <RCTBridgeModule>//, SpeechEventListener, PipelineDelegate>
 @property (nonatomic) SpeechPipeline *pipeline;
 @property (weak, nonatomic) id <SpeechProcessor> asrService;
 @property (weak, nonatomic) id <SpeechProcessor> wakewordService;

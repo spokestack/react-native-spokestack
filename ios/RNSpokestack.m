@@ -2,7 +2,7 @@
 #import "RNSpokestack.h"
 #import <React/RCTConvert.h>
 #import <React/RCTLog.h>
-#import <Spokestack_iOS/Spokestack_iOS-Swift.h>
+#import <Spokestack/Spokestack-Swift.h>
 
 @implementation RNSpokestack
 {
@@ -166,11 +166,6 @@ RCT_EXPORT_METHOD(initialize:(NSDictionary *)config)
         self.speechConfig.encodeModelPath = ([config valueForKeyPath:@"properties.wake-encode-path"]) ? [RCTConvert NSString:[config valueForKeyPath:@"properties.wake-encode-path"]] : self.speechConfig.encodeModelPath;
         self.speechConfig.detectModelPath = ([config valueForKeyPath:@"properties.wake-detect-path"]) ? [RCTConvert NSString:[config valueForKeyPath:@"properties.wake-detect-path"]] : self.speechConfig.detectModelPath;
         self.speechConfig.wakeThreshold = ([config valueForKeyPath:@"properties.wake-threshold"]) ? [[RCTConvert NSNumber:[config valueForKeyPath:@"properties.wake-threshold"]] floatValue] : self.speechConfig.wakeThreshold;
-    // CoreML
-    } else if ([[config valueForKey:@"stages"] containsObject:@"io.spokestack.wakeword.CoreMLWakewordRecognizer"]) {
-        self.wakewordService = [CoreMLWakewordRecognizer sharedInstance];
-        self.speechConfig.wakeWords = ([config valueForKeyPath:@"properties.wake-words"]) ? [RCTConvert NSString:[config valueForKeyPath:@"properties.wake-words"]] : self.speechConfig.wakeWords;
-        self.speechConfig.wakePhrases = ([config valueForKeyPath:@"properties.wake-phrases"]) ? [RCTConvert NSString:[config valueForKeyPath:@"properties.wake-phrases"]] : self.speechConfig.wakePhrases;
     // Apple ASR
     } else {
         self.wakewordService = [AppleWakewordRecognizer sharedInstance];
@@ -182,9 +177,7 @@ RCT_EXPORT_METHOD(initialize:(NSDictionary *)config)
                          speechConfiguration: self.speechConfig
                               speechDelegate: self
                              wakewordService: self.wakewordService
-                            wakewordDelegate: self
-                            pipelineDelegate: self
-                                       error: &error];
+                            pipelineDelegate: self];
     if (error) {
         NSLog(@"RNSpokestack initialize error: %@", error);
         [self didError: error];
@@ -195,7 +188,7 @@ RCT_EXPORT_METHOD(start)
 {
     if (![self.pipeline status]) {
         NSLog(@"RNSpokestack start status was false");
-        [self.pipeline setDelegates: self wakewordDelegate: self];
+        [self.pipeline setDelegates: self pipelineDelegate: self];
     }
     [self.pipeline start];
 }
