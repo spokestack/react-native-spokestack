@@ -33,7 +33,7 @@ React Native wrapper for the [Spokestack](https://spokestack.io) speech activity
 
 #### Prerequistes
 
-1. iOS 11+, Swift 4.2
+1. iOS 11, Swift 5.0
 
 #### Installation
 
@@ -43,29 +43,49 @@ React Native wrapper for the [Spokestack](https://spokestack.io) speech activity
 
 ```
 platform :ios, '11.0'
+require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
 
 target 'YOUR_PROJECT' do
   use_frameworks!
 
   pod 'RNSpokestack', :path => '../node_modules/react-native-spokestack'
-  pod 'yoga', path: '../node_modules/react-native/ReactCommon/yoga'
-  pod 'DoubleConversion', :podspec => '../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec'
-  pod 'Folly', :podspec => '../node_modules/react-native/third-party-podspecs/Folly.podspec'
-  pod 'glog', :podspec => '../node_modules/react-native/third-party-podspecs/glog.podspec'
-  pod 'React', path: '../node_modules/react-native', subspecs: [
-  'Core',
-  'jschelpers',
-  'cxxreact',
-  'CxxBridge',
-  'DevSupport',
-  'RCTText',
-  'RCTImage',
-  'RCTLinkingIOS',
-  'RCTNetwork',
-  'RCTActionSheet',
-  'RCTAnimation',
-  'RCTWebSocket',
-  ]
+
+  pod 'FBLazyVector', :path => "../node_modules/react-native/Libraries/FBLazyVector"
+  pod 'FBReactNativeSpec', :path => "../node_modules/react-native/Libraries/FBReactNativeSpec"
+  pod 'RCTRequired', :path => "../node_modules/react-native/Libraries/RCTRequired"
+  pod 'RCTTypeSafety', :path => "../node_modules/react-native/Libraries/TypeSafety"
+  pod 'React', :path => '../node_modules/react-native/'
+  pod 'React-Core', :path => '../node_modules/react-native/'
+  pod 'React-CoreModules', :path => '../node_modules/react-native/React/CoreModules'
+  pod 'React-Core/DevSupport', :path => '../node_modules/react-native/'
+  pod 'React-RCTActionSheet', :path => '../node_modules/react-native/Libraries/ActionSheetIOS'
+  pod 'React-RCTAnimation', :path => '../node_modules/react-native/Libraries/NativeAnimation'
+  pod 'React-RCTBlob', :path => '../node_modules/react-native/Libraries/Blob'
+  pod 'React-RCTImage', :path => '../node_modules/react-native/Libraries/Image'
+  pod 'React-RCTLinking', :path => '../node_modules/react-native/Libraries/LinkingIOS'
+  pod 'React-RCTNetwork', :path => '../node_modules/react-native/Libraries/Network'
+  pod 'React-RCTSettings', :path => '../node_modules/react-native/Libraries/Settings'
+  pod 'React-RCTText', :path => '../node_modules/react-native/Libraries/Text'
+  pod 'React-RCTVibration', :path => '../node_modules/react-native/Libraries/Vibration'
+  pod 'React-Core/RCTWebSocket', :path => '../node_modules/react-native/'
+  pod 'React-cxxreact', :path => '../node_modules/react-native/ReactCommon/cxxreact'
+  pod 'React-jsi', :path => '../node_modules/react-native/ReactCommon/jsi'
+  pod 'React-jsiexecutor', :path => '../node_modules/react-native/ReactCommon/jsiexecutor'
+  pod 'React-jsinspector', :path => '../node_modules/react-native/ReactCommon/jsinspector'
+  pod 'ReactCommon/callinvoker', :path => "../node_modules/react-native/ReactCommon"
+  pod 'ReactCommon/turbomodule/core', :path => "../node_modules/react-native/ReactCommon"
+  pod 'Yoga', :path => '../node_modules/react-native/ReactCommon/yoga'
+
+  use_native_modules!
+
+end
+
+pre_install do |installer|
+  installer.analysis_result.specifications.each do |s|
+    if s.name == 'TensorFlowLiteSwift'
+      s.swift_version = '4.2'
+    end
+  end
 end
 
 ```
@@ -222,6 +242,13 @@ Spokestack.onTrace = e => { // subscribe to tracing events according to the trac
 Spokestack.onRecognize = e => {
   logEvent(e);
   console.log(e.transcript); // "Hello Spokestack"
+
+  // Get a URL to a real-time synthesized voice speaking the transcript
+  Spokestack.synthesize({'id': '1234567890', 'input': e.transcript, 'format': 0, 'voice': 0})
+};
+Spokestack.onSuccess = e => {
+  logEvent(e)
+  console.log(e.url); // https://api.spokestack.io/stream/g2dkABVnYXRld2F5QDE3Mi4yNy4xMi4yNDQAACeUAAAAAgE
 };
 
 ```
@@ -230,14 +257,14 @@ Spokestack.onRecognize = e => {
 
 ### Methods
 
-| Method Name                | Description                                                                     | OS |
-| -------------------------- | ------------------------------------------------------------------------------- | -- |
-| Spokestack.initialize()    | Initialize the speech pipeline; required for all other methods                        | Android, iOS |
-| Spokestack.start()           | Starts the speech pipeline. The speech pipeline starts in the `deactivate` state. | Android, iOS |
-| Spokestack.stop()          | Stops the speech pipeline                                                       | Android, iOS |
-| Spokestack.activate()      | Manually activate the speech pipeline                                           | Android, iOS |
-| Spokestack.deactivate()    | Manually deactivate the speech pipeline                                         | Android, iOS |
-
+| Method Name                | Description                                                                       | OS           |
+| -------------------------- | -------------------------------------------------------------------------------   | --           |
+| Spokestack.initialize()    | Initialize the speech pipeline; required for all other methods                    | Android, iOS |
+| Spokestack.start()         | Starts the speech pipeline. The speech pipeline starts in the `deactivate` state. | Android, iOS |
+| Spokestack.stop()          | Stops the speech pipeline                                                         | Android, iOS |
+| Spokestack.activate()      | Manually activate the speech pipeline                                             | Android, iOS |
+| Spokestack.deactivate()    | Manually deactivate the speech pipeline                                           | Android, iOS |
+| Spokestack.synthesize({'id': string, 'input': string, 'format': int, 'voice': int})             | Request a URL to a audio file of the specified voice speaking the input | iOS          |
 ### Events
 
 | Event Name                           | Property              | Description                                                                                                          | OS           |
@@ -250,6 +277,8 @@ Spokestack.onRecognize = e => {
 | Spokestack.onTimeout(event)          | `null`                | Invoked when no speech has been detected for `wake-active-max` after activation                                      | Android, iOS |
 | Spokestack.onTrace(event)            | `message`:`string`    | Invoked when a trace message become available                                                                        | Android      |
 | Spokestack.onError(event)            | `error`:`string`      | Invoked upon an error in the speech pipeline execution                                                               | Android, iOS |
+| Spokestack.onSuccess(event)          | `url`:`string`   | Invoked upon a successful TTS synthesis request                | iOS          |
+| Spokestack.onFailure(event)          | `error`:`string` | Invoked upon a failed TTS synthesis request                    | iOS          |
 
 ### Enums
 
@@ -259,6 +288,11 @@ Spokestack.onRecognize = e => {
 | PERF       | 20    |
 | INFO       | 30    |
 | NONE       | 100   |
+
+| format | value |
+| text   | 0     |
+| ssml   | 1     |
+| speechmarkup | 2     |
 
 ## Gotchas
 
