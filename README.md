@@ -214,10 +214,13 @@ Spokestack.initialize({
     // 'com.pylon.spokestack.microsoft.BingSpeechRecognizer'
   ],
   properties: {
-    locale: "en-US",
+    "locale": "en-US",
     "google-credentials": YOUR_GOOGLE_VOICE_CREDENTIALS, // Android-supported api
     // 'bing-speech-api-key': YOUR_BING_VOICE_CREDENTIALS,
-    "trace-level": Spokestack.TraceLevel.DEBUG
+    "trace-level": Spokestack.TraceLevel.DEBUG,
+    // TTS API account properties. Only set these if you have a Spokestack account.
+    "api-id": "YOUR_SPOKESTACK_API_ID",
+    "api-secret": "YOUR_SPOKESTACK_API_SECRET"
   }
 });
 
