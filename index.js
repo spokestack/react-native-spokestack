@@ -24,7 +24,8 @@ class Spokestack {
     this._loaded = false
     this._listeners = null
     this._events = {
-      'onSpeechEvent': this._onSpeechEvent.bind(this)
+      'onSpeechEvent': this._onSpeechEvent.bind(this),
+      'onTTSEvent': this._onTTSEvent.bind(this)
     }
   }
 
@@ -40,8 +41,6 @@ class Spokestack {
       this._listeners = Object.keys(this._events)
         .map((key, index) => spokestackEmitter.addListener(key, this._events[key]))
     }
-
-    // I also don’t want to have to provide a fixed list of aliases inside the framework. so we may just have to set up a mapping section inside the config that maps logical names to ios/android component names
 
     RNSpokestack.initialize(pipelineConfig)
   }
@@ -62,7 +61,28 @@ class Spokestack {
     RNSpokestack.deactivate()
   }
 
+  synthesize (ttsInput) {
+    RNSpokestack.synthesize(ttsInput)
+  }
+
   // Events
+
+  _onTTSEvent (e) {
+    switch (e.event.toLowerCase()) {
+    case 'success':
+      if (this.onSuccess) {
+        this.onSuccess(e)
+      }
+      break
+    case 'failure':
+      if (this.onFailure) {
+        this.onFailure(e)
+      }
+      break
+    default:
+      break
+    }
+  }
 
   _onSpeechEvent (e) {
     switch (e.event.toLowerCase()) {

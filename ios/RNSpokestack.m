@@ -33,7 +33,7 @@ RCT_EXPORT_MODULE();
 
 - (NSArray<NSString *> *)supportedEvents
 {
-    return @[@"onSpeechEvent"];
+    return @[@"onSpeechEvent", @"onTTSEvent"];
 }
 
 - (void)activate {
@@ -41,7 +41,8 @@ RCT_EXPORT_MODULE();
     [self.pipeline activate];
     if (hasListeners)
     {
-        [self sendEventWithName:@"onSpeechEvent" body:@{@"event": @"activate", @"transcript": @"", @"error": @""}];
+        [self sendEventWithName:@"onSpeechEvent" body:@{
+            @"event": @"activate", @"transcript": @"", @"error": @""}];
     }
 }
 
@@ -50,7 +51,8 @@ RCT_EXPORT_MODULE();
     [self.pipeline deactivate];
     if (hasListeners)
     {
-        [self sendEventWithName:@"onSpeechEvent" body:@{@"event": @"deactivate", @"transcript": @"", @"error": @""}];
+        [self sendEventWithName:@"onSpeechEvent" body:@{
+            @"event": @"deactivate", @"transcript": @"", @"error": @""}];
     }
 }
 
@@ -58,7 +60,8 @@ RCT_EXPORT_MODULE();
     NSLog(@"RNSpokestack didError");
     if (hasListeners)
     {
-        [self sendEventWithName:@"onSpeechEvent" body:@{@"event": @"error", @"transcript": @"", @"error": [error localizedDescription]}];
+        [self sendEventWithName:@"onSpeechEvent" body:@{
+            @"event": @"error", @"transcript": @"", @"error": [error localizedDescription]}];
     }
 }
 
@@ -66,7 +69,8 @@ RCT_EXPORT_MODULE();
     NSLog(@"RNSpokestack didTrace");
     if (hasListeners)
     {
-        [self sendEventWithName:@"onSpeechEvent" body:@{@"event": @"trace", @"transcript": @"", @"error": @"", @"trace": trace}];
+        [self sendEventWithName:@"onSpeechEvent" body:@{
+            @"event": @"trace", @"transcript": @"", @"error": @"", @"trace": trace}];
     }
 }
 
@@ -74,7 +78,8 @@ RCT_EXPORT_MODULE();
     NSLog(@"RNSpokestack didStop");
     if (hasListeners)
     {
-        [self sendEventWithName:@"onSpeechEvent" body:@{@"event": @"stop", @"transcript": @"", @"error": @""}];
+        [self sendEventWithName:@"onSpeechEvent" body:@{
+            @"event": @"stop", @"transcript": @"", @"error": @""}];
     }
 }
 
@@ -82,7 +87,8 @@ RCT_EXPORT_MODULE();
     NSLog(@"RNSpokestack didStart");
     if (hasListeners)
     {
-        [self sendEventWithName:@"onSpeechEvent" body:@{@"event": @"start", @"transcript": @"", @"error": @""}];
+        [self sendEventWithName:@"onSpeechEvent" body:@{
+            @"event": @"start", @"transcript": @"", @"error": @""}];
     }
 }
 
@@ -90,7 +96,8 @@ RCT_EXPORT_MODULE();
     NSLog(@"RNSpokestack didRecognize");
     if (hasListeners)
     {
-        [self sendEventWithName:@"onSpeechEvent" body:@{@"event": @"recognize", @"transcript": results.transcript, @"error": @""}];
+        [self sendEventWithName:@"onSpeechEvent" body:@{
+            @"event": @"recognize", @"transcript": results.transcript, @"error": @""}];
     }
 }
 
@@ -100,7 +107,8 @@ RCT_EXPORT_MODULE();
     NSLog(@"RNSpokestack didTimeout");
     if (hasListeners)
     {
-        [self sendEventWithName:@"onSpeechEvent" body:@{@"event": @"timeout", @"transcript": @"", @"error": @""}];
+        [self sendEventWithName:@"onSpeechEvent" body:@{
+            @"event": @"timeout", @"transcript": @"", @"error": @""}];
     }
 }
 
@@ -108,7 +116,8 @@ RCT_EXPORT_MODULE();
     NSLog(@"RNSpokestack setupFailed");
     if (hasListeners)
     {
-        [self sendEventWithName:@"onSpeechEvent" body:@{@"event": @"error", @"transcript": @"", @"error": error}];
+        [self sendEventWithName:@"onSpeechEvent" body:@{
+            @"event": @"error", @"transcript": @"", @"error": error}];
     }
 }
 
@@ -116,7 +125,38 @@ RCT_EXPORT_MODULE();
     NSLog(@"RNSpokestack didInit");
     if (hasListeners)
     {
-        [self sendEventWithName:@"onSpeechEvent" body:@{@"event": @"init", @"transcript": @"", @"error": @""}];
+        [self sendEventWithName:@"onSpeechEvent" body:@{
+            @"event": @"init", @"transcript": @"", @"error": @""}];
+    }
+}
+
+/// MARK: TextToSpeechDelegate implementation
+
+- (void)didBeginSpeaking {
+    NSLog(@"RNSpokestack didBeginSpeaking");
+    // this event is not implemented in JavaScript
+}
+
+- (void)didFinishSpeaking {
+    NSLog(@"RNSpokestack didFinishSpeaking");
+    // this event is not implemented in JavaScript
+}
+
+- (void)failureWithError:(NSError * _Nonnull)error {
+    NSLog(@"RNSpokestack failureWithError");
+    if (hasListeners)
+    {
+        [self sendEventWithName:@"onTTSEvent" body:@{
+            @"event": @"failure", @"url": @"", @"error": [error localizedDescription]}];
+    }
+}
+
+- (void)successWithResult:(TextToSpeechResult * _Nonnull)result {
+    NSLog(@"RNSpokestack successWithResult");
+    if (hasListeners)
+    {
+        [self sendEventWithName:@"onTTSEvent" body:@{
+            @"event": @"success", @"url": result.url.absoluteString, @"error": @""}];
     }
 }
 
@@ -132,7 +172,7 @@ RCT_EXPORT_METHOD(initialize:(NSDictionary *)config)
 
     NSError *error;
         
-    // Tracing
+    /// MARK: Tracing
 
     self.speechConfig.tracing = ([config valueForKeyPath:@"properties.trace-level"]) ? [RCTConvert NSInteger:[config valueForKeyPath:@"properties.trace-level"]] : self.speechConfig.tracing;
     
@@ -141,7 +181,7 @@ RCT_EXPORT_METHOD(initialize:(NSDictionary *)config)
     self.asrService = [AppleSpeechRecognizer sharedInstance];
     self.speechConfig.vadFallDelay = ([config valueForKeyPath:@"properties.vad-fall-delay"]) ? [RCTConvert NSInteger:[config valueForKeyPath:@"properties.vad-fall-delay"]] : self.speechConfig.vadFallDelay;
 
-    // Wakeword signal processing
+    /// MARK: Wakeword signal processing
     
     self.speechConfig.rmsTarget = ([config valueForKeyPath:@"properties.rms-target"]) ? [[RCTConvert NSNumber:[config valueForKeyPath:@"properties.rms-target"]] floatValue] : self.speechConfig.rmsTarget;
     self.speechConfig.rmsAlpha = ([config valueForKeyPath:@"properties.rms-alpha"]) ? [[RCTConvert NSNumber:[config valueForKeyPath:@"properties.rms-alpha"]] floatValue] : self.speechConfig.rmsAlpha;
@@ -157,7 +197,7 @@ RCT_EXPORT_METHOD(initialize:(NSDictionary *)config)
     self.speechConfig.frameWidth = ([config valueForKeyPath:@"properties.frame-width"]) ? [RCTConvert NSInteger:[config valueForKeyPath:@"properties.frame-width"]] : self.speechConfig.frameWidth;
     self.speechConfig.preEmphasis = ([config valueForKeyPath:@"properties.pre-emphasis"]) ? [[RCTConvert NSNumber:[config valueForKeyPath:@"properties.pre-emphasis"]] floatValue] : self.speechConfig.preEmphasis;
 
-    // Wakeword models
+    /// MARK: Wakeword models
     
     // TFLite
     if ([[config valueForKey:@"stages"] containsObject:@"com.pylon.spokestack.wakeword.WakewordTrigger"]) {
@@ -172,12 +212,27 @@ RCT_EXPORT_METHOD(initialize:(NSDictionary *)config)
         self.speechConfig.wakePhrases = ([config valueForKeyPath:@"properties.wake-phrases"]) ? [RCTConvert NSString:[config valueForKeyPath:@"properties.wake-phrases"]] : self.speechConfig.wakePhrases;
         self.speechConfig.wakewordRequestTimeout = ([config valueForKeyPath:@"properties.wake-request-timeout"]) ? [RCTConvert NSInteger:[config valueForKeyPath:@"properties.wake-request-timeout"]] : self.speechConfig.wakewordRequestTimeout;
     }
+    
+    /// MARK: TTS configuration
+    
+    self.speechConfig.apiId = ([config valueForKeyPath:@"properties.api-id"]) ? [RCTConvert NSString:[config valueForKeyPath:@"properties.api-id"]] : self.speechConfig.apiId;
+    self.speechConfig.apiSecret = ([config valueForKeyPath:@"properties.api-id"]) ? [RCTConvert NSString:[config valueForKeyPath:@"properties.api-secret"]] : self.speechConfig.apiSecret;
+    
+    /// MARK: Pipeline & TTS init
 
     self.pipeline = [[SpeechPipeline alloc] init: self.asrService
                          speechConfiguration: self.speechConfig
                               speechDelegate: self
                              wakewordService: self.wakewordService
                             pipelineDelegate: self];
+    
+    if (@available(iOS 13.0, *)) {
+        self.tts = [[TextToSpeech alloc] init:self configuration:self.speechConfig];
+    } else {
+        NSLog(@"RNSpokestack initialize error: %@", @"Spokestack TTS is only available in iOS 13 or higher.");
+        [self didError: error];
+    }
+    
     if (error) {
         NSLog(@"RNSpokestack initialize error: %@", error);
         [self didError: error];
@@ -216,6 +271,16 @@ RCT_REMAP_METHOD(deactivate, makeDeactive)
     {
         [self sendEventWithName:@"onSpeechEvent" body:@{@"event": @"deactivate", @"transcript": @"", @"error": @""}];
     }
+}
+
+RCT_EXPORT_METHOD(synthesize:(NSDictionary *) ttsInput)
+{
+    NSLog(@"RNSpokestack synthesize()");
+    TTSInputVoice voice = ([ttsInput valueForKeyPath:@"voice"]) ? [RCTConvert NSInteger:[ttsInput valueForKeyPath:@"voice"]] : 0;
+    TTSInputFormat format = ([ttsInput valueForKeyPath:@"format"]) ? [RCTConvert NSInteger:[ttsInput valueForKeyPath:@"format"]] : 0;
+    format = format? format: TTSInputFormatText;
+    TextToSpeechInput *input = [[TextToSpeechInput alloc] init:ttsInput[@"input"] voice:voice inputFormat:format id:ttsInput[@"id"]];
+    [self.tts synthesize: input];
 }
 
 @end
