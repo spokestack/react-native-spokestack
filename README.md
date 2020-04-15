@@ -204,6 +204,7 @@ exclude 'META-INF/DEPENDENCIES'
 import Spokestack from "react-native-spokestack";
 
 // initialize the Spokestack pipeline.
+
 // The pipeline has three required top-level keys: 'input', 'stages', and 'properties'.
 // For further examples, see https://github.com/pylon/spokestack-android#configuration
 Spokestack.initialize({
@@ -221,16 +222,22 @@ Spokestack.initialize({
     // TTS API account properties. Only set these if you have a Spokestack account.
     "api-id": "YOUR_SPOKESTACK_API_ID",
     "api-secret": "YOUR_SPOKESTACK_API_SECRET"
+    // NLU settings. Only set these if you are calling `Spokestack.classify`.
+    "nlu-model-path": YOUR_NLU_MODEL_PATH // string filesystem path to nlu model
+    "nlu-metadata-path": YOUR_NLU_METADATA_PATH // string filesystem path to nlu metadata
+    "nlu-vocab-path": YOUR_NLU_VOCABULARY_PATH // string filesystem path to nlu vocab
   }
 });
 
 // Start and stop the speech pipeline. All methods can be called repeatedly.
+
 Spokestack.start(); // start speech pipeline. can only start after initialize is called.
 Spokestack.stop(); // stop speech pipeline
 Spokestack.activate(); // manually activate the speech pipeline. The speech pipeline is now actively listening for speech to recognize.
 Spokestack.deactivate(); // manually deactivate the speech pipeline. The speech pipeline is now passively waiting for an activation trigger.
 
 // Binding events
+
 const logEvent = e => console.log(e);
 Spokestack.onActivate = logEvent;
 Spokestack.onDeactivate = logEvent;
@@ -244,14 +251,25 @@ Spokestack.onTrace = e => { // subscribe to tracing events according to the trac
 };
 Spokestack.onRecognize = e => {
   logEvent(e);
-  console.log(e.transcript); // "Hello Spokestack"
+  console.log(e.transcript) // "Hello Spokestack"
 
-  // Get a URL to a real-time synthesized voice speaking the transcript
+  // Classify the intent and slot of the transcript
+  Spokestack.classify(e.transcript, {})
+
+  // Get a URL to a real-time synthesize
   Spokestack.synthesize({'id': '1234567890', 'input': e.transcript, 'format': 0, 'voice': 0})
 };
+
+// Receive the transcript classifcation result
+Spokestack.onClassification = e => {
+  logEvent(JSON.stringify(e))
+  console.log(e.result.intent)
+}
+
+// Receive the real-time transcript synthesis result
 Spokestack.onSuccess = e => {
-  logEvent(e)
-  console.log(e.url); // https://api.spokestack.io/stream/g2dkABVnYXRld2F5QDE3Mi4yNy4xMi4yNDQAACeUAAAAAgE
+  logEvent(JSON.stringify(e))
+  console.log(e.url) // https://api.spokestack.io/stream/g2dkABVnYXRld2F5QDE3Mi4yNy4xMi4yNDQAACeUAAAAAgE
 };
 
 ```
@@ -268,6 +286,8 @@ Spokestack.onSuccess = e => {
 | Spokestack.activate()      | Manually activate the speech pipeline                                             | Android, iOS |
 | Spokestack.deactivate()    | Manually deactivate the speech pipeline                                           | Android, iOS |
 | Spokestack.synthesize({'id': string, 'input': string, 'format': int, 'voice': int})             | Request a URL to a audio file of the specified voice speaking the input | iOS          |
+| Spokestack.classify(utterance, {})    | Classify the utterance with an intent/slot natural language understanding model | iOS          |
+
 ### Events
 
 | Event Name                           | Property              | Description                                                                                                          | OS           |
@@ -282,6 +302,7 @@ Spokestack.onSuccess = e => {
 | Spokestack.onError(event)            | `error`:`string`      | Invoked upon an error in the speech pipeline execution                                                               | Android, iOS |
 | Spokestack.onSuccess(event)          | `url`:`string`   | Invoked upon a successful TTS synthesis request                | iOS          |
 | Spokestack.onFailure(event)          | `error`:`string` | Invoked upon a failed TTS synthesis request                    | iOS          |
+| Spokestack.onClassification(event) | `result`:`dictionary` | Invoked upon a successful NLU utterance classification | iOS          |
 
 ### Enums
 
