@@ -25,7 +25,8 @@ class Spokestack {
     this._listeners = null
     this._events = {
       'onSpeechEvent': this._onSpeechEvent.bind(this),
-      'onTTSEvent': this._onTTSEvent.bind(this)
+      'onTTSEvent': this._onTTSEvent.bind(this),
+      'onNLUEvent': this._onNLUEvent.bind(this)
     }
   }
 
@@ -65,22 +66,39 @@ class Spokestack {
     RNSpokestack.synthesize(ttsInput)
   }
 
+  classify (utterance, context) {
+    RNSpokestack.classify(utterance, context)
+  }
+
   // Events
+
+  _onNLUEvent (e) {
+    console.log('js onNLUEvent ' + e.event)
+    switch (e.event.toLowerCase()) {
+    case 'classification':
+      if (this.onClassification) {
+        this.onClassification(e)
+      }
+      break
+      default:
+        break
+    }
+  }
 
   _onTTSEvent (e) {
     switch (e.event.toLowerCase()) {
-    case 'success':
-      if (this.onSuccess) {
-        this.onSuccess(e)
-      }
-      break
-    case 'failure':
-      if (this.onFailure) {
-        this.onFailure(e)
-      }
-      break
-    default:
-      break
+      case 'success':
+        if (this.onSuccess) {
+          this.onSuccess(e)
+        }
+        break
+      case 'failure':
+        if (this.onFailure) {
+          this.onFailure(e)
+        }
+        break
+      default:
+        break
     }
   }
 
