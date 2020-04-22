@@ -33,7 +33,7 @@ RCT_EXPORT_MODULE();
 
 - (NSArray<NSString *> *)supportedEvents
 {
-    return @[@"onSpeechEvent", @"onTTSEvent"];
+    return @[@"onSpeechEvent", @"onTTSEvent", @"onNLUEvent"];
 }
 
 - (void)activate {
@@ -160,6 +160,22 @@ RCT_EXPORT_MODULE();
     }
 }
 
+/// MARK: NLUDelegate implementation
+
+- (void)classificationWithResult:(NLUResult * _Nonnull)result {
+    NSLog(@"RNSpokestack classificationWithResult");
+    if (hasListeners)
+    {
+        // convert the typed slot dictionary into a simple dictionary of string keys and values
+        NSMutableDictionary *slots = [[NSMutableDictionary alloc] init];
+        [result.slots enumerateKeysAndObjectsUsingBlock:^(NSString *name, Slot *slot, BOOL *stop) {
+            slots[name] = @{@"type": slot.type, @"value": slot.value};
+        }];
+        // send the slots along with the rest of the result object
+        [self sendEventWithName:@"onNLUEvent" body: @{@"event": @"classification", @"result": @{@"intent":result.intent, @"confidence":[[NSNumber numberWithFloat:result.confidence] stringValue], @"slots":slots}, @"error":@""}];
+    }
+}
+
 /// MARK: Exported Methods
 
 RCT_EXPORT_METHOD(initialize:(NSDictionary *)config)
@@ -217,6 +233,13 @@ RCT_EXPORT_METHOD(initialize:(NSDictionary *)config)
     
     self.speechConfig.apiId = ([config valueForKeyPath:@"properties.api-id"]) ? [RCTConvert NSString:[config valueForKeyPath:@"properties.api-id"]] : self.speechConfig.apiId;
     self.speechConfig.apiSecret = ([config valueForKeyPath:@"properties.api-id"]) ? [RCTConvert NSString:[config valueForKeyPath:@"properties.api-secret"]] : self.speechConfig.apiSecret;
+    
+    /// MARK: NLU configuration
+    
+    self.speechConfig.nluModelPath = ([config valueForKeyPath:@"properties.nlu-model-path"]) ? [RCTConvert NSString:[config valueForKeyPath:@"properties.nlu-model-path"]] : self.speechConfig.nluModelPath;
+    self.speechConfig.nluModelMetadataPath = ([config valueForKeyPath:@"properties.nlu-metadata-path"]) ? [RCTConvert NSString:[config valueForKeyPath:@"properties.nlu-metadata-path"]] : self.speechConfig.nluModelMetadataPath;
+    self.speechConfig.nluVocabularyPath = ([config valueForKeyPath:@"properties.nlu-vocab-path"]) ? [RCTConvert NSString:[config valueForKeyPath:@"properties.nlu-vocab-path"]] : self.speechConfig.nluVocabularyPath;
+    self.nlu = [[NLUTensorflow alloc] init:self configuration:self.speechConfig error:&error];
     
     /// MARK: Pipeline & TTS init
 
@@ -281,6 +304,12 @@ RCT_EXPORT_METHOD(synthesize:(NSDictionary *) ttsInput)
     format = format? format: TTSInputFormatText;
     TextToSpeechInput *input = [[TextToSpeechInput alloc] init:ttsInput[@"input"] voice:voice inputFormat:format id:ttsInput[@"id"]];
     [self.tts synthesize: input];
+}
+
+RCT_EXPORT_METHOD(classify:(NSString *) utterance withContext:(NSDictionary *) context)
+{
+    NSLog(@"RNSpokestack classify()");
+    [self.nlu classifyWithUtterance:utterance context:context];
 }
 
 @end

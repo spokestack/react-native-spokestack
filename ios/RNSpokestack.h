@@ -11,9 +11,10 @@
 #import <Spokestack/Spokestack-Swift.h>
 
 API_AVAILABLE(ios(13.0))
-@interface RNSpokestack : RCTEventEmitter <RCTBridgeModule, SpeechEventListener, PipelineDelegate, TextToSpeechDelegate>
+@interface RNSpokestack : RCTEventEmitter <RCTBridgeModule, SpeechEventListener, PipelineDelegate, TextToSpeechDelegate, NLUDelegate>
 @property (nonatomic) SpeechPipeline *pipeline;
 @property (nonatomic) TextToSpeech *tts;
+@property (nonatomic) NLUTensorflow *nlu;
 @property (weak, nonatomic) id <SpeechProcessor> asrService;
 @property (weak, nonatomic) id <SpeechProcessor> wakewordService;
 @property (nonatomic) SpeechConfiguration *speechConfig;
