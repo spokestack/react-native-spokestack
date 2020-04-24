@@ -1,26 +1,19 @@
 
 package com.pylon.RNSpokestack;
 
-import com.pylon.spokestack.SpeechPipeline;
-import com.pylon.spokestack.SpeechContext;
-import com.pylon.spokestack.SpeechConfig;
-import com.pylon.spokestack.OnSpeechEventListener;
+import io.spokestack.spokestack.SpeechPipeline;
+import io.spokestack.spokestack.SpeechContext;
+import io.spokestack.spokestack.OnSpeechEventListener;
 
-import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
-import java.util.Locale;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.ReadableMap;
-import com.facebook.react.bridge.ReadableMapKeySetIterator;
-import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 
-import java.util.ArrayList;
 import java.util.Map;
 import javax.annotation.Nullable;
 

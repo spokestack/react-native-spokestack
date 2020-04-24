@@ -208,11 +208,11 @@ import Spokestack from "react-native-spokestack";
 // The pipeline has three required top-level keys: 'input', 'stages', and 'properties'.
 // For further examples, see https://github.com/pylon/spokestack-android#configuration
 Spokestack.initialize({
-  input: "com.pylon.spokestack.android.MicrophoneInput", // required, provides audio input into the stages
+  input: "io.spokestack.spokestack.android.MicrophoneInput", // required, provides audio input into the stages
   stages: [
-    "com.pylon.spokestack.webrtc.VoiceActivityDetector", // voice activity detection. necessary to trigger speech recognition.
-    "com.pylon.spokestack.google.GoogleSpeechRecognizer" // one of the two supplied speech recognition services
-    // 'com.pylon.spokestack.microsoft.BingSpeechRecognizer'
+    "io.spokestack.spokestack.webrtc.VoiceActivityDetector", // voice activity detection. necessary to trigger speech recognition.
+    "io.spokestack.spokestack.google.GoogleSpeechRecognizer" // one of the two supplied speech recognition services
+    // 'io.spokestack.spokestack.microsoft.BingSpeechRecognizer'
   ],
   properties: {
     "locale": "en-US",
