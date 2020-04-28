@@ -212,7 +212,7 @@ Spokestack.initialize({
   stages: [
     "io.spokestack.spokestack.webrtc.VoiceActivityDetector", // voice activity detection. necessary to trigger speech recognition.
     "io.spokestack.spokestack.google.GoogleSpeechRecognizer" // one of the two supplied speech recognition services
-    // 'io.spokestack.spokestack.microsoft.BingSpeechRecognizer'
+    // 'io.spokestack.spokestack.microsoft.AzureSpeechRecognizer'
   ],
   properties: {
     "locale": "en-US",
