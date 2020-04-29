@@ -102,14 +102,12 @@ public class RNSpokestackModule extends ReactContextBaseJavaModule implements On
 
     @ReactMethod
     public void activate () {
-        pipeline.getContext().setActive(true);
-        pipeline.getContext().dispatch(SpeechContext.Event.ACTIVATE);
+        pipeline.activate();
     }
 
     @ReactMethod
     public void deactivate () {
-        pipeline.getContext().setActive(false);
-        pipeline.getContext().dispatch(SpeechContext.Event.DEACTIVATE);
+        pipeline.deactivate();
     }
 
     @ReactMethod
