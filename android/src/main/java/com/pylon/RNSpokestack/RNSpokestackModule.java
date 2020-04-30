@@ -112,11 +112,20 @@ public class RNSpokestackModule extends ReactContextBaseJavaModule implements On
 
     @ReactMethod
     public void synthesize (ReadableMap ttsInput) {
-        SynthesisRequest req = new SynthesisRequest.Builder(ttsInput.getString("input"))
-                .withMode(SynthesisRequest.Mode.values()[ttsInput.getInt("format")])
-                .withVoice( ttsInput.getString("voice"))
-                .build();
-        tts.synthesize(req);
+        int format = ttsInput.getInt("format");
+        if (format > 2 || format < 0) {
+            TTSEvent e = new TTSEvent(TTSEvent.Type.ERROR);
+            Throwable t = new Throwable("A format of " + Integer.toString(format) +
+                    " is not supported. Please use an int between 0 and 2. Refer to documentation for further details.");
+            e.setError(t);
+            eventReceived(e);
+        } else {
+            SynthesisRequest req = new SynthesisRequest.Builder(ttsInput.getString("input"))
+                    .withMode(SynthesisRequest.Mode.values()[format])
+                    .withVoice(ttsInput.getString("voice"))
+                    .build();
+            tts.synthesize(req);
+        }
     }
 
     public void onEvent(SpeechContext.Event event, SpeechContext context) {
