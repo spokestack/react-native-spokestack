@@ -75,11 +75,16 @@ class Spokestack {
   _onNLUEvent (e) {
     console.log('js onNLUEvent ' + e.event)
     switch (e.event.toLowerCase()) {
-    case 'classification':
-      if (this.onClassification) {
-        this.onClassification(e)
-      }
-      break
+      case 'classification':
+        if (this.onClassification) {
+          this.onClassification(e)
+        }
+        break
+      case 'error':
+        if (this.onError) {
+          this.onError(e)
+        }
+        break
       default:
         break
     }
