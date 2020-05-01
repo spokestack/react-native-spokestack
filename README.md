@@ -257,7 +257,7 @@ Spokestack.onRecognize = e => {
   Spokestack.classify(e.transcript, {})
 
   // Get a URL to a real-time synthesize
-  Spokestack.synthesize({'id': '1234567890', 'input': e.transcript, 'format': 0, 'voice': 0})
+  Spokestack.synthesize({'input': e.transcript, 'format': 0, 'voice': 'demo-male'})
 };
 
 // Receive the transcript classifcation result
@@ -278,15 +278,15 @@ Spokestack.onSuccess = e => {
 
 ### Methods
 
-| Method Name                | Description                                                                       | OS           |
-| -------------------------- | -------------------------------------------------------------------------------   | --           |
-| Spokestack.initialize()    | Initialize the speech pipeline; required for all other methods                    | Android, iOS |
-| Spokestack.start()         | Starts the speech pipeline. The speech pipeline starts in the `deactivate` state. | Android, iOS |
-| Spokestack.stop()          | Stops the speech pipeline                                                         | Android, iOS |
-| Spokestack.activate()      | Manually activate the speech pipeline                                             | Android, iOS |
-| Spokestack.deactivate()    | Manually deactivate the speech pipeline                                           | Android, iOS |
-| Spokestack.synthesize({'id': string, 'input': string, 'format': int, 'voice': int})             | Request a URL to a audio file of the specified voice speaking the input | iOS          |
-| Spokestack.classify(utterance, {})    | Classify the utterance with an intent/slot natural language understanding model | iOS          |
+| Method Name                | Description                                                                     | Method Values  | OS           |
+| -------------------------- | ------------------------------------------------------------------------------- | -------------  | --           |
+| Spokestack.initialize()    | Initialize the speech pipeline; required for all other methods                  |   | Android, iOS |
+| Spokestack.start()         | Starts the speech pipeline. The speech pipeline starts in the `deactivate` state. | | Android, iOS |
+| Spokestack.stop()          | Stops the speech pipeline                                                         | | Android, iOS |
+| Spokestack.activate()      | Manually activate the speech pipeline                                             | | Android, iOS |
+| Spokestack.deactivate()    | Manually deactivate the speech pipeline                                           | | Android, iOS |
+| Spokestack.synthesize({'input': string, 'format': int, 'voice': string})             | Request a URL to a audio file of the specified voice speaking the input | format [0: text, 1: ssml, 2: speechmarkdown], voice ["demo-male"] | iOS, Android          |
+| Spokestack.classify(utterance, {})    | Classify the utterance with an intent/slot natural language understanding model |  | iOS          |
 
 ### Events
 
@@ -300,9 +300,9 @@ Spokestack.onSuccess = e => {
 | Spokestack.onTimeout(event)          | `null`                | Invoked when no speech has been detected for `wake-active-max` after activation                                      | Android, iOS |
 | Spokestack.onTrace(event)            | `message`:`string`    | Invoked when a trace message become available                                                                        | Android      |
 | Spokestack.onError(event)            | `error`:`string`      | Invoked upon an error in the speech pipeline execution                                                               | Android, iOS |
-| Spokestack.onSuccess(event)          | `url`:`string`   | Invoked upon a successful TTS synthesis request                | iOS          |
-| Spokestack.onFailure(event)          | `error`:`string` | Invoked upon a failed TTS synthesis request                    | iOS          |
-| Spokestack.onClassification(event) | `result`:`dictionary` | Invoked upon a successful NLU utterance classification | iOS          |
+| Spokestack.onSuccess(ttsEvent)          | `url`:`string`   | Invoked upon a successful TTS synthesis request                | iOS          |
+| Spokestack.onFailure(ttsEvent)          | `error`:`string` | Invoked upon a failed TTS synthesis request                    | iOS          |
+| Spokestack.onClassification(nluEvent) | `result`:`dictionary` | Invoked upon a successful NLU utterance classification | iOS          |
 
 ### Enums
 
