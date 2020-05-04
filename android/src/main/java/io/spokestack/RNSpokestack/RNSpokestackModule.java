@@ -1,10 +1,8 @@
 
-package com.pylon.RNSpokestack;
+package io.spokestack.RNSpokestack;
 
 import android.util.Log;
-import android.os.*;
 
-import io.spokestack.spokestack.SpeechConfig;
 import io.spokestack.spokestack.SpeechPipeline;
 import io.spokestack.spokestack.SpeechContext;
 import io.spokestack.spokestack.OnSpeechEventListener;
@@ -203,6 +201,7 @@ public class RNSpokestackModule extends ReactContextBaseJavaModule implements On
         WritableMap react_event = Arguments.createMap();
         react_event.putString("event", "trace");
         react_event.putString("trace", message);
+        react_event.putString("level", level.toString());
         sendEvent("onSpeechEvent", react_event);
     }
 

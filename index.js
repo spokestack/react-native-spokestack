@@ -13,9 +13,19 @@ const TraceLevel = Object.freeze({
   NONE: 100
 })
 
+const TTSFormat = Object.freeze({
+  TEXT: 0,
+  SSML: 1,
+  SPEECHMARKUP: 2
+})
+
 class Spokestack {
   get TraceLevel () {
     return TraceLevel
+  }
+
+  get TTSFormat () {
+    return TTSFormat
   }
 
   // Class methods
