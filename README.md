@@ -311,9 +311,24 @@ Spokestack.onSuccess = e => {
 
 ### Dictionaries
 #### `nluEvent`
-                                                           | Key | Value |
-                                                           | --- | ----- |
-                                                           |     |       |
+                                                           | Key        | Value  |
+                                                           | ---------- | ------ |
+                                                           | result     | dict   |
+
+##### `result`
+
+                                                           | Key        | Value  |
+                                                           | ---------- | ------ |
+                                                           | intent     | string |
+                                                           | confidence | string |
+                                                           | slots      | dict   |
+
+##### `slots`
+                                                           | Key        | Value  |
+                                                           | ---------- | ------ |
+                                                           | type       | string |
+                                                           | value      | string |
+
 
 ### Enums
 #### Trace
@@ -326,11 +341,11 @@ Spokestack.onSuccess = e => {
                                                            | NONE       | 100   |
 
 #### Format
-                                                           | TTSFormat    | Value |
-                                                           | ------------ | ----- |
-                                                           | TEXT         | 0     |
-                                                           | SSML         | 1     |
-                                                           | SPEECHMARKUP | 2     |
+                                                           | TTSFormat      | Value |
+                                                           | -------------- | ----- |
+                                                           | TEXT           | 0     |
+                                                           | SSML           | 1     |
+                                                           | SPEECHMARKDOWN | 2     |
 
 ## Gotchas
 
