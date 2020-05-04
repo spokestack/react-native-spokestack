@@ -1,13 +1,16 @@
 
-package com.pylon.RNSpokestack;
+package io.spokestack.RNSpokestack;
 
-import io.spokestack.spokestack.SpeechConfig;
+import android.util.Log;
+
 import io.spokestack.spokestack.SpeechPipeline;
 import io.spokestack.spokestack.SpeechContext;
 import io.spokestack.spokestack.OnSpeechEventListener;
+import io.spokestack.spokestack.nlu.*;
+import io.spokestack.spokestack.nlu.tensorflow.*;
 import io.spokestack.spokestack.tts.*;
+import io.spokestack.spokestack.util.*;
 
-import android.util.Log;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.ReadableMap;
@@ -17,13 +20,15 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 
 import java.util.Map;
+
 import javax.annotation.Nullable;
 
-public class RNSpokestackModule extends ReactContextBaseJavaModule implements OnSpeechEventListener, TTSListener {
+public class RNSpokestackModule extends ReactContextBaseJavaModule implements OnSpeechEventListener, TTSListener, TraceListener, Callback<NLUResult> {
 
     private final ReactApplicationContext reactContext;
     private SpeechPipeline pipeline;
     private TTSManager tts;
+    private NLUService nlu;
 
     public RNSpokestackModule(ReactApplicationContext reactContext) {
         super(reactContext);
@@ -86,6 +91,17 @@ public class RNSpokestackModule extends ReactContextBaseJavaModule implements On
                     .setAndroidContext(reactContext.getApplicationContext())
                     .build();
         }
+
+        // NLU
+        if (config.hasKey("nlu")) {
+            final TensorflowNLU.Builder nluBuilder = new TensorflowNLU.Builder();
+            nluBuilder.setConfig(pipeline.getConfig());
+            nluBuilder.addTraceListener(this);
+            Map<String, Object> map = config.getMap("nlu").toHashMap();
+            for (String k : map.keySet())
+                nluBuilder.setProperty(k, map.get(k));
+            nlu = nluBuilder.build();
+        }
     }
 
     @ReactMethod
@@ -128,13 +144,46 @@ public class RNSpokestackModule extends ReactContextBaseJavaModule implements On
         }
     }
 
+    @ReactMethod
+    public void classify (String utterance, ReadableMap context) {
+        AsyncResult<NLUResult> asyncResult = nlu.classify(utterance, new NLUContext(this.pipeline.getConfig()));
+        asyncResult.registerCallback(this);
+    }
+
+    @Override
+    public void call(NLUResult arg) {
+        WritableMap react_event = Arguments.createMap();
+        WritableMap result = Arguments.createMap();
+        WritableMap slots = Arguments.createMap();
+        for (Map.Entry<String, Slot> entry : arg.getSlots().entrySet()) {
+            WritableMap slot = Arguments.createMap();
+            Slot s = entry.getValue();
+            slot.putString("type", s.getName());
+            slot.putString("value", s.getValue().toString());
+            slots.putMap(entry.getKey(), slot);
+        }
+        result.putString("intent", arg.getIntent());
+        result.putString("confidence", Float.toString(arg.getConfidence()));
+        result.putMap("slots", slots);
+        react_event.putMap("result", result);
+        react_event.putString("event", "classification");
+        sendEvent("onNLUEvent", react_event);
+    }
+
+    @Override
+    public void onError(Throwable err) {
+        WritableMap react_event = Arguments.createMap();
+        react_event.putString("event", "error");
+        react_event.putString("error", err.getLocalizedMessage());
+        sendEvent("onNLUEvent", react_event);
+    }
+
     public void onEvent(SpeechContext.Event event, SpeechContext context) {
         WritableMap react_event = Arguments.createMap();
         react_event.putString("event", event.name());
         react_event.putString("transcript", context.getTranscript());
         react_event.putString("message", context.getMessage());
         react_event.putString("error", Log.getStackTraceString(context.getError()));
-        react_event.putBoolean("isActive", context.isActive());
         sendEvent("onSpeechEvent", react_event);
     }
 
@@ -144,7 +193,15 @@ public class RNSpokestackModule extends ReactContextBaseJavaModule implements On
         react_event.putString("transcript", "");
         react_event.putString("message", "");
         react_event.putString("error", "");
-        react_event.putBoolean("isActive", active);
+        sendEvent("onSpeechEvent", react_event);
+    }
+
+    @Override
+    public void onTrace(EventTracer.Level level, String message) {
+        WritableMap react_event = Arguments.createMap();
+        react_event.putString("event", "trace");
+        react_event.putString("trace", message);
+        react_event.putString("level", level.toString());
         sendEvent("onSpeechEvent", react_event);
     }
 

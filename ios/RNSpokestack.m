@@ -216,7 +216,7 @@ RCT_EXPORT_METHOD(initialize:(NSDictionary *)config)
     /// MARK: Wakeword models
     
     // TFLite
-    if ([[config valueForKey:@"stages"] containsObject:@"com.pylon.spokestack.wakeword.WakewordTrigger"]) {
+    if ([[config valueForKey:@"stages"] containsObject:@"io.spokestack.spokestack.wakeword.WakewordTrigger"]) {
         self.wakewordService = [TFLiteWakewordRecognizer sharedInstance];
         self.speechConfig.filterModelPath = ([config valueForKeyPath:@"properties.wake-filter-path"]) ? [RCTConvert NSString:[config valueForKeyPath:@"properties.wake-filter-path"]] : self.speechConfig.filterModelPath;
         self.speechConfig.encodeModelPath = ([config valueForKeyPath:@"properties.wake-encode-path"]) ? [RCTConvert NSString:[config valueForKeyPath:@"properties.wake-encode-path"]] : self.speechConfig.encodeModelPath;

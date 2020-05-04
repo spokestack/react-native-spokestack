@@ -13,9 +13,19 @@ const TraceLevel = Object.freeze({
   NONE: 100
 })
 
+const TTSFormat = Object.freeze({
+  TEXT: 0,
+  SSML: 1,
+  SPEECHMARKDOWN: 2
+})
+
 class Spokestack {
   get TraceLevel () {
     return TraceLevel
+  }
+
+  get TTSFormat () {
+    return TTSFormat
   }
 
   // Class methods
@@ -75,11 +85,16 @@ class Spokestack {
   _onNLUEvent (e) {
     console.log('js onNLUEvent ' + e.event)
     switch (e.event.toLowerCase()) {
-    case 'classification':
-      if (this.onClassification) {
-        this.onClassification(e)
-      }
-      break
+      case 'classification':
+        if (this.onClassification) {
+          this.onClassification(e)
+        }
+        break
+      case 'error':
+        if (this.onError) {
+          this.onError(e)
+        }
+        break
       default:
         break
     }

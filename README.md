@@ -106,7 +106,7 @@ end
 
 1. Open up `android/app/src/main/java/[...]/MainApplication.java` (could also be called `MainActivity.java` or similar)
 
-- Add `import com.pylon.RNSpokestack.RNSpokestackPackage;` to the imports at the top of the file
+- Add `import io.spokestack.RNSpokestack.RNSpokestackPackage;` to the imports at the top of the file
 - Add `new RNSpokestackPackage()` to the list returned by the `getPackages()` method
 
 2. Append the following lines to `android/settings.gradle`:
@@ -206,7 +206,7 @@ import Spokestack from "react-native-spokestack";
 // initialize the Spokestack pipeline.
 
 // The pipeline has three required top-level keys: 'input', 'stages', and 'properties'.
-// For further examples, see https://github.com/pylon/spokestack-android#configuration
+// For further examples, see https://github.com/spokestack/spokestack-android#configuration
 Spokestack.initialize({
   input: "io.spokestack.spokestack.android.MicrophoneInput", // required, provides audio input into the stages
   stages: [
@@ -219,13 +219,18 @@ Spokestack.initialize({
     "google-credentials": YOUR_GOOGLE_VOICE_CREDENTIALS, // Android-supported api
     // 'bing-speech-api-key': YOUR_BING_VOICE_CREDENTIALS,
     "trace-level": Spokestack.TraceLevel.DEBUG,
+  },
+  tts: {
+    'ttsServiceClass': 'io.spokestack.spokestack.tts.SpokestackTTSService',
     // TTS API account properties. Only set these if you have a Spokestack account.
-    "api-id": "YOUR_SPOKESTACK_API_ID",
-    "api-secret": "YOUR_SPOKESTACK_API_SECRET"
+    'spokestack-id': 'f0bc990c-e9db-4a0c-a2b1-6a6395a3d97e', // your Spokestack API ID
+    'spokestack-secret': '5BD5483F573D691A15CFA493C1782F451D4BD666E39A9E7B2EBE287E6A72C6B6' // your Spokestack API secret
+  },
+  nlu: {
     // NLU settings. Only set these if you are calling `Spokestack.classify`.
-    "nlu-model-path": YOUR_NLU_MODEL_PATH // string filesystem path to nlu model
-    "nlu-metadata-path": YOUR_NLU_METADATA_PATH // string filesystem path to nlu metadata
-    "nlu-vocab-path": YOUR_NLU_VOCABULARY_PATH // string filesystem path to nlu vocab
+    'nlu-model-path': YOUR_NLU_MODEL_PATH, // string filesystem path to nlu model
+    'nlu-metadata-path': YOUR_NLU_METADATA_PATH, // string filesystem path to nlu metadata
+    'wordpiece-vocab-path': YOUR_NLU_VOCABULARY_PATH // string filesystem path to nlu vocab
   }
 });
 
@@ -257,7 +262,7 @@ Spokestack.onRecognize = e => {
   Spokestack.classify(e.transcript, {})
 
   // Get a URL to a real-time synthesize
-  Spokestack.synthesize({'input': e.transcript, 'format': 0, 'voice': 'demo-male'})
+  Spokestack.synthesize({'input': e.transcript, 'format': Spokestack.TTSFormat.TEXT, 'voice': 'demo-male'})
 };
 
 // Receive the transcript classifcation result
@@ -278,45 +283,69 @@ Spokestack.onSuccess = e => {
 
 ### Methods
 
-| Method Name                | Description                                                                     | Method Values  | OS           |
-| -------------------------- | ------------------------------------------------------------------------------- | -------------  | --           |
-| Spokestack.initialize()    | Initialize the speech pipeline; required for all other methods                  |   | Android, iOS |
-| Spokestack.start()         | Starts the speech pipeline. The speech pipeline starts in the `deactivate` state. | | Android, iOS |
-| Spokestack.stop()          | Stops the speech pipeline                                                         | | Android, iOS |
-| Spokestack.activate()      | Manually activate the speech pipeline                                             | | Android, iOS |
-| Spokestack.deactivate()    | Manually deactivate the speech pipeline                                           | | Android, iOS |
-| Spokestack.synthesize({'input': string, 'format': int, 'voice': string})             | Request a URL to a audio file of the specified voice speaking the input | format [0: text, 1: ssml, 2: speechmarkdown], voice ["demo-male"] | iOS, Android          |
-| Spokestack.classify(utterance, {})    | Classify the utterance with an intent/slot natural language understanding model |  | iOS          |
+                                                           | Method Name                | Description                                                                     | Method Values  | OS           |
+                                                           | -------------------------- | ------------------------------------------------------------------------------- | -------------  | --           |
+                                                           | Spokestack.initialize()    | Initialize the speech pipeline; required for all other methods                  |   | Android, iOS |
+                                                           | Spokestack.start()         | Starts the speech pipeline. The speech pipeline starts in the `deactivate` state. | | Android, iOS |
+                                                           | Spokestack.stop()          | Stops the speech pipeline                                                         | | Android, iOS |
+                                                           | Spokestack.activate()      | Manually activate the speech pipeline                                             | | Android, iOS |
+                                                           | Spokestack.deactivate()    | Manually deactivate the speech pipeline                                           | | Android, iOS |
+                                                           | Spokestack.synthesize({'input': string, 'format': int, 'voice': string})             | Request a URL to a audio file of the specified voice speaking the input | format [0: text, 1: ssml, 2: speechmarkdown], voice ["demo-male"] | iOS, Android          |
+                                                           | Spokestack.classify(utterance: string, {})    | Classify the utterance with an intent/slot natural language understanding model | utterance: string | iOS, Android          |
 
 ### Events
 
-| Event Name                           | Property              | Description                                                                                                          | OS           |
-| ------------------------------------ | --------              | ---------------------------------------                                                                              | --           |
-| Spokestack.onActivate(event)         | `null`                | Invoked when the speech pipeline is activated, which enables the speech recognizer and begins a new dialogue session | Android, iOS |
-| Spokestack.onDeactivate(event)       | `null`                | Invoked when the speech pipeline has been deactivated                                                                | Android, iOS |
-| Spokestack.onStart(event)            | `null`                | Invoked when the speech pipeline is started                                                                          | Android, iOS |
-| Spokestack.onStop(event)             | `null`                | Invoked when the speech pipeline has been stopped                                                                    | Android, iOS |
-| Spokestack.onRecognize(event)        | `transcript`:`string` | Invoked when speech has been recognized                                                                              | Android, iOS |
-| Spokestack.onTimeout(event)          | `null`                | Invoked when no speech has been detected for `wake-active-max` after activation                                      | Android, iOS |
-| Spokestack.onTrace(event)            | `message`:`string`    | Invoked when a trace message become available                                                                        | Android      |
-| Spokestack.onError(event)            | `error`:`string`      | Invoked upon an error in the speech pipeline execution                                                               | Android, iOS |
-| Spokestack.onSuccess(ttsEvent)          | `url`:`string`   | Invoked upon a successful TTS synthesis request                | iOS          |
-| Spokestack.onFailure(ttsEvent)          | `error`:`string` | Invoked upon a failed TTS synthesis request                    | iOS          |
-| Spokestack.onClassification(nluEvent) | `result`:`dictionary` | Invoked upon a successful NLU utterance classification | iOS          |
+                                                           | Event Name                           | Property              | Description                                                                                                          | OS           |
+                                                           | ------------------------------------ | --------              | ---------------------------------------                                                                              | --           |
+                                                           | onActivate(event)         | `null`                | Invoked when the speech pipeline is activated, which enables the speech recognizer and begins a new dialogue session | Android, iOS |
+                                                           | onDeactivate(event)       | `null`                | Invoked when the speech pipeline has been deactivated                                                                | Android, iOS |
+                                                           | onStart(event)            | `null`                | Invoked when the speech pipeline is started                                                                          | Android, iOS |
+                                                           | onStop(event)             | `null`                | Invoked when the speech pipeline has been stopped                                                                    | Android, iOS |
+                                                           | onRecognize(event)        | `transcript`:`string` | Invoked when speech has been recognized                                                                              | Android, iOS |
+                                                           | onTimeout(event)          | `null`                | Invoked when no speech has been detected for `wake-active-max` after activation                                      | Android, iOS |
+                                                           | onTrace(event)            | `message`:`string`    | Invoked when a trace message become available                                                                        | Android      |
+                                                           | onError(event)            | `error`:`string`      | Invoked upon an error in the speech pipeline execution                                                               | Android, iOS |
+                                                           | onSuccess(ttsEvent)          | `url`:`string`   | Invoked upon a successful TTS synthesis request                | iOS          |
+                                                           | onFailure(ttsEvent)          | `error`:`string` | Invoked upon a failed TTS synthesis request                    | iOS          |
+                                                           | onClassification(nluEvent) | `result`:`dictionary` | Invoked upon a successful NLU utterance classification | iOS          |
+
+### Dictionaries
+#### `nluEvent`
+                                                           | Key        | Value  |
+                                                           | ---------- | ------ |
+                                                           | result     | dict   |
+
+##### `result`
+
+                                                           | Key        | Value  |
+                                                           | ---------- | ------ |
+                                                           | intent     | string |
+                                                           | confidence | string |
+                                                           | slots      | dict   |
+
+##### `slots`
+                                                           | Key        | Value  |
+                                                           | ---------- | ------ |
+                                                           | type       | string |
+                                                           | value      | string |
+
 
 ### Enums
+#### Trace
 
-| TraceLevel | Value |
-| ---------- | ----- |
-| DEBUG      | 10    |
-| PERF       | 20    |
-| INFO       | 30    |
-| NONE       | 100   |
+                                                           | TraceLevel | Value |
+                                                           | ---------- | ----- |
+                                                           | DEBUG      | 10    |
+                                                           | PERF       | 20    |
+                                                           | INFO       | 30    |
+                                                           | NONE       | 100   |
 
-| format | value |
-| text   | 0     |
-| ssml   | 1     |
-| speechmarkup | 2     |
+#### Format
+                                                           | TTSFormat      | Value |
+                                                           | -------------- | ----- |
+                                                           | TEXT           | 0     |
+                                                           | SSML           | 1     |
+                                                           | SPEECHMARKDOWN | 2     |
 
 ## Gotchas
 
@@ -351,7 +380,7 @@ Spokestack.onSuccess = e => {
 
 ## License
 
-Copyright 2018 Pylon, Inc.
+Copyright 2020 Spokestack, Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

@@ -1,4 +1,4 @@
-package com.pylon.RNSpokestack;
+package io.spokestack.RNSpokestack;
 
 import android.content.Context;
 import android.util.Log;

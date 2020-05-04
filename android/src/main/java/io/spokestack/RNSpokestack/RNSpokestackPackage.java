@@ -1,5 +1,5 @@
 
-package com.pylon.RNSpokestack;
+package io.spokestack.RNSpokestack;
 
 import java.util.Arrays;
 import java.util.Collections;
