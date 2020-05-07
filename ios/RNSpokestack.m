@@ -36,7 +36,7 @@ RCT_EXPORT_MODULE();
     return @[@"onSpeechEvent", @"onTTSEvent", @"onNLUEvent"];
 }
 
-- (void)activate {
+- (void)didActivate {
     NSLog(@"RNSpokestack activate");
     [self.pipeline activate];
     if (hasListeners)
@@ -46,7 +46,7 @@ RCT_EXPORT_MODULE();
     }
 }
 
-- (void)deactivate {
+- (void)didDeactivate {
     NSLog(@"RNSpokestack deactivate");
     [self.pipeline deactivate];
     if (hasListeners)
@@ -56,12 +56,12 @@ RCT_EXPORT_MODULE();
     }
 }
 
-- (void)didError:(NSError * _Nonnull)error {
-    NSLog(@"RNSpokestack didError");
+- (void)failureWithSpeechError:(NSError * _Nonnull)speechError {
+    NSLog(@"RNSpokestack failureWithSpeechError");
     if (hasListeners)
     {
         [self sendEventWithName:@"onSpeechEvent" body:@{
-            @"event": @"error", @"transcript": @"", @"error": [error localizedDescription]}];
+            @"event": @"error", @"transcript": @"", @"error": [speechError localizedDescription]}];
     }
 }
 
@@ -112,6 +112,7 @@ RCT_EXPORT_MODULE();
     }
 }
 
+
 - (void)setupFailed:(NSString * _Nonnull)error {
     NSLog(@"RNSpokestack setupFailed");
     if (hasListeners)
@@ -142,15 +143,6 @@ RCT_EXPORT_MODULE();
     // this event is not implemented in JavaScript
 }
 
-- (void)failureWithError:(NSError * _Nonnull)error {
-    NSLog(@"RNSpokestack failureWithError");
-    if (hasListeners)
-    {
-        [self sendEventWithName:@"onTTSEvent" body:@{
-            @"event": @"failure", @"url": @"", @"error": [error localizedDescription]}];
-    }
-}
-
 - (void)successWithResult:(TextToSpeechResult * _Nonnull)result {
     NSLog(@"RNSpokestack successWithResult");
     if (hasListeners)
@@ -159,6 +151,16 @@ RCT_EXPORT_MODULE();
             @"event": @"success", @"url": result.url.absoluteString, @"error": @""}];
     }
 }
+
+- (void)failureWithTtsError:(NSError * _Nonnull)ttsError {
+    NSLog(@"RNSpokestack failureWithTtsError");
+    if (hasListeners)
+    {
+        [self sendEventWithName:@"onTTSEvent" body:@{
+            @"event": @"failure", @"url": @"", @"error": [ttsError localizedDescription]}];
+    }
+}
+
 
 /// MARK: NLUDelegate implementation
 
@@ -175,6 +177,15 @@ RCT_EXPORT_MODULE();
         [self sendEventWithName:@"onNLUEvent" body: @{@"event": @"classification", @"result": @{@"intent":result.intent, @"confidence":[[NSNumber numberWithFloat:result.confidence] stringValue], @"slots":slots}, @"error":@""}];
     }
 }
+
+- (void)failureWithNluError:(NSError * _Nonnull)nluError {
+    NSLog(@"RNSpokestack failureWithNluError");
+    if (hasListeners)
+    {
+        [self sendEventWithName:@"onNLUEvent" body:@{@"event": @"error", @"result": @{}, @"error": [nluError localizedDescription]}];
+    }
+}
+
 
 /// MARK: Exported Methods
 
@@ -240,6 +251,10 @@ RCT_EXPORT_METHOD(initialize:(NSDictionary *)config)
     self.speechConfig.nluModelMetadataPath = ([config valueForKeyPath:@"properties.nlu-metadata-path"]) ? [RCTConvert NSString:[config valueForKeyPath:@"properties.nlu-metadata-path"]] : self.speechConfig.nluModelMetadataPath;
     self.speechConfig.nluVocabularyPath = ([config valueForKeyPath:@"properties.nlu-vocab-path"]) ? [RCTConvert NSString:[config valueForKeyPath:@"properties.nlu-vocab-path"]] : self.speechConfig.nluVocabularyPath;
     self.nlu = [[NLUTensorflow alloc] init:self configuration:self.speechConfig error:&error];
+    if (error) {
+        NSLog(@"RNSpokestack initialize error: %@", error);
+        [self failureWithNluError: error];
+    }
     
     /// MARK: Pipeline & TTS init
 
@@ -253,12 +268,7 @@ RCT_EXPORT_METHOD(initialize:(NSDictionary *)config)
         self.tts = [[TextToSpeech alloc] init:self configuration:self.speechConfig];
     } else {
         NSLog(@"RNSpokestack initialize error: %@", @"Spokestack TTS is only available in iOS 13 or higher.");
-        [self didError: error];
-    }
-    
-    if (error) {
-        NSLog(@"RNSpokestack initialize error: %@", error);
-        [self didError: error];
+        [self failureWithTtsError: error];
     }
 }
 
@@ -299,10 +309,9 @@ RCT_REMAP_METHOD(deactivate, makeDeactive)
 RCT_EXPORT_METHOD(synthesize:(NSDictionary *) ttsInput)
 {
     NSLog(@"RNSpokestack synthesize()");
-    TTSInputVoice voice = ([ttsInput valueForKeyPath:@"voice"]) ? [RCTConvert NSInteger:[ttsInput valueForKeyPath:@"voice"]] : 0;
     TTSInputFormat format = ([ttsInput valueForKeyPath:@"format"]) ? [RCTConvert NSInteger:[ttsInput valueForKeyPath:@"format"]] : 0;
     format = format? format: TTSInputFormatText;
-    TextToSpeechInput *input = [[TextToSpeechInput alloc] init:ttsInput[@"input"] voice:voice inputFormat:format id:ttsInput[@"id"]];
+    TextToSpeechInput *input = [[TextToSpeechInput alloc] init:ttsInput[@"input"] voice:ttsInput[@"voice"] inputFormat:format id:ttsInput[@"id"]];
     [self.tts synthesize: input];
 }
 
