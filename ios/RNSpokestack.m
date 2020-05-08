@@ -236,20 +236,20 @@ RCT_EXPORT_METHOD(initialize:(NSDictionary *)config)
     // Apple ASR
     } else {
         self.wakewordService = [AppleWakewordRecognizer sharedInstance];
-        self.speechConfig.wakePhrases = ([config valueForKeyPath:@"properties.wake-phrases"]) ? [RCTConvert NSString:[config valueForKeyPath:@"properties.wake-phrases"]] : self.speechConfig.wakePhrases;
+        self.speechConfig.wakewords = ([config valueForKeyPath:@"properties.wakewords"]) ? [RCTConvert NSString:[config valueForKeyPath:@"properties.wakewords"]] : self.speechConfig.wakewords;
         self.speechConfig.wakewordRequestTimeout = ([config valueForKeyPath:@"properties.wake-request-timeout"]) ? [RCTConvert NSInteger:[config valueForKeyPath:@"properties.wake-request-timeout"]] : self.speechConfig.wakewordRequestTimeout;
     }
     
     /// MARK: TTS configuration
     
-    self.speechConfig.apiId = ([config valueForKeyPath:@"properties.api-id"]) ? [RCTConvert NSString:[config valueForKeyPath:@"properties.api-id"]] : self.speechConfig.apiId;
-    self.speechConfig.apiSecret = ([config valueForKeyPath:@"properties.api-id"]) ? [RCTConvert NSString:[config valueForKeyPath:@"properties.api-secret"]] : self.speechConfig.apiSecret;
+    self.speechConfig.apiId = ([config valueForKeyPath:@"tts.api-id"]) ? [RCTConvert NSString:[config valueForKeyPath:@"properties.api-id"]] : self.speechConfig.apiId;
+    self.speechConfig.apiSecret = ([config valueForKeyPath:@"tts.api-id"]) ? [RCTConvert NSString:[config valueForKeyPath:@"tts.api-secret"]] : self.speechConfig.apiSecret;
     
     /// MARK: NLU configuration
     
-    self.speechConfig.nluModelPath = ([config valueForKeyPath:@"properties.nlu-model-path"]) ? [RCTConvert NSString:[config valueForKeyPath:@"properties.nlu-model-path"]] : self.speechConfig.nluModelPath;
-    self.speechConfig.nluModelMetadataPath = ([config valueForKeyPath:@"properties.nlu-metadata-path"]) ? [RCTConvert NSString:[config valueForKeyPath:@"properties.nlu-metadata-path"]] : self.speechConfig.nluModelMetadataPath;
-    self.speechConfig.nluVocabularyPath = ([config valueForKeyPath:@"properties.nlu-vocab-path"]) ? [RCTConvert NSString:[config valueForKeyPath:@"properties.nlu-vocab-path"]] : self.speechConfig.nluVocabularyPath;
+    self.speechConfig.nluModelPath = ([config valueForKeyPath:@"nlu.nlu-model-path"]) ? [RCTConvert NSString:[config valueForKeyPath:@"nlu.nlu-model-path"]] : self.speechConfig.nluModelPath;
+    self.speechConfig.nluModelMetadataPath = ([config valueForKeyPath:@"nlu.nlu-metadata-path"]) ? [RCTConvert NSString:[config valueForKeyPath:@"nlu.nlu-metadata-path"]] : self.speechConfig.nluModelMetadataPath;
+    self.speechConfig.nluVocabularyPath = ([config valueForKeyPath:@"nlu.wordpiece-vocab-path"]) ? [RCTConvert NSString:[config valueForKeyPath:@"nlu.wordpiece-vocab-path"]] : self.speechConfig.nluVocabularyPath;
     self.nlu = [[NLUTensorflow alloc] init:self configuration:self.speechConfig error:&error];
     if (error) {
         NSLog(@"RNSpokestack initialize error: %@", error);
