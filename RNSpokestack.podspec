@@ -10,13 +10,13 @@ Pod::Spec.new do |s|
   s.authors = { 'RNSpokestack' => 'support@spokestack.com' }
   s.source = { :git => 'https://github.com/spokestack/react-native-spokestack.git', :tag => package['version'] }
   s.license = {:type => 'Apache', :file => 'LICENSE'}
-  s.ios.deployment_target = '11.0'
-  s.swift_version = '4.2'
-  s.platform = :ios, '11.0'
+  s.ios.deployment_target = '13.0'
+  s.swift_version = '5.0'
+  s.platform = :ios, '13.0'
   s.source_files  = 'ios/*.{h,m}'
   s.requires_arc = true
   s.static_framework = true
 
-  s.dependency "Spokestack-iOS", "8.2.0"
+  s.dependency "Spokestack-iOS", "9.0.1"
   s.dependency 'React'
 end
