@@ -33,7 +33,7 @@ React Native wrapper for the [Spokestack](https://spokestack.io) speech activity
 
 #### Prerequistes
 
-1. iOS 11, Swift 5.0
+1. iOS 13, Swift 5.0
 
 #### Installation
 
@@ -42,7 +42,7 @@ React Native wrapper for the [Spokestack](https://spokestack.io) speech activity
 3. edit the resulting `Podfile` and add the following contents:
 
 ```
-platform :ios, '11.0'
+platform :ios, '13.0'
 require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
 
 target 'YOUR_PROJECT' do
@@ -50,6 +50,7 @@ target 'YOUR_PROJECT' do
 
   pod 'RNSpokestack', :path => '../node_modules/react-native-spokestack'
 
+  # NB: No need for the following if this is a pre-existing react native app
   pod 'FBLazyVector', :path => "../node_modules/react-native/Libraries/FBLazyVector"
   pod 'FBReactNativeSpec', :path => "../node_modules/react-native/Libraries/FBReactNativeSpec"
   pod 'RCTRequired', :path => "../node_modules/react-native/Libraries/RCTRequired"
@@ -192,8 +193,10 @@ exclude 'META-INF/DEPENDENCIES'
 #### `android/app/src/main/AndroidManifest.xml`
 
 ```
-
+// for wakeword & ASR
 <uses-permission android:name="android.permission.RECORD_AUDIO" />
+// for TTS
+<uses-permission android:name="android.permission.INTERNET" />
 ```
 
 ## Usage
@@ -204,21 +207,25 @@ exclude 'META-INF/DEPENDENCIES'
 import Spokestack from "react-native-spokestack";
 
 // initialize the Spokestack pipeline.
-
-// The pipeline has three required top-level keys: 'input', 'stages', and 'properties'.
-// For further examples, see https://github.com/spokestack/spokestack-android#configuration
+//
+// Spokestack configuration has five top-level keys: 'input', 'stages', and 'properties' for the speech pipeline, 'tts' for text to speech, and 'nlu' for natural language recognition. Keys for asr, tts, and nlu may be omitted if your app does not require them.
+// This example configures a voice-triggered speech recongnizer
+// For additional examples, see https://github.com/spokestack/spokestack-android#configuration
 Spokestack.initialize({
-  input: "io.spokestack.spokestack.android.MicrophoneInput", // required, provides audio input into the stages
+  input: "io.spokestack.spokestack.android.MicrophoneInput", // provides audio input into the pipeline
   stages: [
-    "io.spokestack.spokestack.webrtc.VoiceActivityDetector", // voice activity detection. necessary to trigger speech recognition.
-    "io.spokestack.spokestack.google.GoogleSpeechRecognizer" // one of the two supplied speech recognition services
+    "io.spokestack.spokestack.webrtc.VoiceActivityDetector", // voice activity detection
+    'io.spokestack.spokestack.webrtc.VoiceActivityTrigger', // voice activity detection triggers speech recognition
+    'io.spokestack.spokestack.ActivationTimeout', // speech recognition times out after a configurable interval when voice is no longer detected
+    "io.spokestack.spokestack.google.GoogleSpeechRecognizer" // one of the three supported speech recognition services
     // 'io.spokestack.spokestack.microsoft.AzureSpeechRecognizer'
+    // 'io.spokestack.spokestack.android.AndroidSpeechRecognizer'
   ],
   properties: {
     "locale": "en-US",
-    "google-credentials": YOUR_GOOGLE_VOICE_CREDENTIALS, // Android-supported api
-    // 'bing-speech-api-key': YOUR_BING_VOICE_CREDENTIALS,
-    "trace-level": Spokestack.TraceLevel.DEBUG,
+    'agc-compression-gain-db': 15,
+    "google-credentials": YOUR_GOOGLE_VOICE_CREDENTIALS, // only set if using `GoogleSpeechRecognizer` stage above
+    "trace-level": Spokestack.TraceLevel.DEBUG // configurable logging level
   },
   tts: {
     'ttsServiceClass': 'io.spokestack.spokestack.tts.SpokestackTTSService',
@@ -234,15 +241,14 @@ Spokestack.initialize({
   }
 });
 
-// Start and stop the speech pipeline. All methods can be called repeatedly.
+// Speech Pipeline
 
+// Start and stop the speech pipeline. All methods can be called repeatedly.
 Spokestack.start(); // start speech pipeline. can only start after initialize is called.
 Spokestack.stop(); // stop speech pipeline
 Spokestack.activate(); // manually activate the speech pipeline. The speech pipeline is now actively listening for speech to recognize.
-Spokestack.deactivate(); // manually deactivate the speech pipeline. The speech pipeline is now passively waiting for an activation trigger.
-
-// Binding events
-
+Spokestack.deactivate(); // manually deactivate the speech pipeline. The speech pipeline is now passively waiting for an activation trigger.\
+// Binding to speech pipeline events
 const logEvent = e => console.log(e);
 Spokestack.onActivate = logEvent;
 Spokestack.onDeactivate = logEvent;
@@ -258,19 +264,18 @@ Spokestack.onRecognize = e => {
   logEvent(e);
   console.log(e.transcript) // "Hello Spokestack"
 
-  // Classify the intent and slot of the transcript
-  Spokestack.classify(e.transcript, {})
+// NLU and TTS
 
-  // Get a URL to a real-time synthesize
-  Spokestack.synthesize({'input': e.transcript, 'format': Spokestack.TTSFormat.TEXT, 'voice': 'demo-male'})
+// Classify the intent and slot of the transcript
+Spokestack.classify(e.transcript, {})
+// Get a URL to a real-time synthesize
+Spokestack.synthesize({'input': e.transcript, 'format': Spokestack.TTSFormat.TEXT, 'voice': 'demo-male'})
 };
-
 // Receive the transcript classifcation result
 Spokestack.onClassification = e => {
   logEvent(JSON.stringify(e))
   console.log(e.result.intent)
 }
-
 // Receive the real-time transcript synthesis result
 Spokestack.onSuccess = e => {
   logEvent(JSON.stringify(e))

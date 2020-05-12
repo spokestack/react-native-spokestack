@@ -73,6 +73,7 @@ public class RNSpokestackModule extends ReactContextBaseJavaModule implements On
                     builder.setProperty(k, map.get(k));
             }
             builder.addOnSpeechEventListener(this);
+            builder.setAndroidContext(reactContext.getApplicationContext());
             pipeline = builder.build();
             onEvent("init", pipeline.getContext().isActive());
         }
