@@ -18,8 +18,9 @@ React Native wrapper for the [Spokestack](https://spokestack.io) speech activity
 
 `$ npm install react-native-spokestack --save`
 
+- _React Native_: 0.60.0+
 - _Android_: Android SDK 26+
-- _iOS_: iOS 11+
+- _iOS_: iOS 13+
 
 ### (Mostly) automatic installation
 
@@ -36,70 +37,31 @@ React Native wrapper for the [Spokestack](https://spokestack.io) speech activity
 1. iOS 13, Swift 5.0
 
 #### Installation
-
-1. install [CocoaPods](https://guides.cocoapods.org/using/using-cocoapods.html#adding-pods-to-an-xcode-project), v1.6.0+
-2. `cd ios && pod init`
-3. edit the resulting `Podfile` and add the following contents:
+1. Edit YOUR_PROJECT's `Podfile` and add the following contents:
 
 ```
 platform :ios, '13.0'
-require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
 
 target 'YOUR_PROJECT' do
+
   use_frameworks!
 
   pod 'RNSpokestack', :path => '../node_modules/react-native-spokestack'
-
-  # NB: No need for the following if this is a pre-existing react native app
-  pod 'FBLazyVector', :path => "../node_modules/react-native/Libraries/FBLazyVector"
-  pod 'FBReactNativeSpec', :path => "../node_modules/react-native/Libraries/FBReactNativeSpec"
-  pod 'RCTRequired', :path => "../node_modules/react-native/Libraries/RCTRequired"
-  pod 'RCTTypeSafety', :path => "../node_modules/react-native/Libraries/TypeSafety"
-  pod 'React', :path => '../node_modules/react-native/'
-  pod 'React-Core', :path => '../node_modules/react-native/'
-  pod 'React-CoreModules', :path => '../node_modules/react-native/React/CoreModules'
-  pod 'React-Core/DevSupport', :path => '../node_modules/react-native/'
-  pod 'React-RCTActionSheet', :path => '../node_modules/react-native/Libraries/ActionSheetIOS'
-  pod 'React-RCTAnimation', :path => '../node_modules/react-native/Libraries/NativeAnimation'
-  pod 'React-RCTBlob', :path => '../node_modules/react-native/Libraries/Blob'
-  pod 'React-RCTImage', :path => '../node_modules/react-native/Libraries/Image'
-  pod 'React-RCTLinking', :path => '../node_modules/react-native/Libraries/LinkingIOS'
-  pod 'React-RCTNetwork', :path => '../node_modules/react-native/Libraries/Network'
-  pod 'React-RCTSettings', :path => '../node_modules/react-native/Libraries/Settings'
-  pod 'React-RCTText', :path => '../node_modules/react-native/Libraries/Text'
-  pod 'React-RCTVibration', :path => '../node_modules/react-native/Libraries/Vibration'
-  pod 'React-Core/RCTWebSocket', :path => '../node_modules/react-native/'
-  pod 'React-cxxreact', :path => '../node_modules/react-native/ReactCommon/cxxreact'
-  pod 'React-jsi', :path => '../node_modules/react-native/ReactCommon/jsi'
-  pod 'React-jsiexecutor', :path => '../node_modules/react-native/ReactCommon/jsiexecutor'
-  pod 'React-jsinspector', :path => '../node_modules/react-native/ReactCommon/jsinspector'
-  pod 'ReactCommon/callinvoker', :path => "../node_modules/react-native/ReactCommon"
-  pod 'ReactCommon/turbomodule/core', :path => "../node_modules/react-native/ReactCommon"
-  pod 'Yoga', :path => '../node_modules/react-native/ReactCommon/yoga'
-
+  
   use_native_modules!
+  use_modular_headers!
 
 end
-
-pre_install do |installer|
-  installer.analysis_result.specifications.each do |s|
-    if s.name == 'TensorFlowLiteSwift'
-      s.swift_version = '4.2'
-    end
-  end
-end
-
 ```
 
 4. `pod install`
-5. Remove all `lib*` files from **Link Binary with Libraries** under your project target in xCode. This prevents [dueling installations of React](https://sandstorm.de/de/blog/post/react-native-managing-native-dependencies-using-xcode-and-cocoapods.html).
-
-> ...thus we need to ensure that they reference the same React Native library which you link to from the outer project.
 
 #### RN 0.58+ notes
 
 - In the `Podfile` remove `jschelpers` from the React subspec. ([reference](https://github.com/facebook/react-native/commit/f85692cf8fb19d1334998ea647a25953dc849eee#diff-66230b3e029caa37b0fbdc8cbd47f4ab))
 - If using Rn 0.58.0 - 0.58.4, an additional header [path](https://github.com/amccarri/react-native/commit/4e18338365175c1e7cceb784e98bf540b991c190#diff-66230b3e029caa37b0fbdc8cbd47f4ab) needs to be added to the `jsiexecutor` subspec in `node_modules/react-native/React.podspec`. You may use [patch-package](https://www.npmjs.com/package/patch-package) as a solution. This issue is was addressed and fixed in RN 0.58.5
+- Remove all `lib*` files from **Link Binary with Libraries** under your project target in xCode. This prevents [dueling installations of React](https://sandstorm.de/de/blog/post/react-native-managing-native-dependencies-using-xcode-and-cocoapods.html).
+> ...thus we need to ensure that they reference the same React Native library which you link to from the outer project.
 
 ### Manual installation
 

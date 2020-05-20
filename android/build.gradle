@@ -47,6 +47,7 @@ dependencies {
 //    implementation 'com.google.cloud:google-cloud-speech:0.69.0-beta'
     implementation 'io.grpc:grpc-okhttp:1.28.1'
     implementation 'com.google.cloud:google-cloud-speech:1.20.0' // NB 1.21+ fails at either build or runtime.
+    implementation 'com.microsoft.cognitiveservices.speech:client-sdk:1.9.0'
     implementation 'com.facebook.react:react-native:+'
     implementation 'io.spokestack:spokestack-android:5.3.0'
 }

@@ -5,7 +5,7 @@ package = JSON.parse(File.read(File.join(__dir__, 'package.json')))
 Pod::Spec.new do |s|
   s.name = 'RNSpokestack'
   s.version = package['version']
-  s.summary = 'React Native bridge for the Spokestack speech processing pipeline'
+  s.summary = 'React Native bridge for the Spokestack speech interface.'
   s.homepage = 'https://www.spokestack.io'
   s.authors = { 'RNSpokestack' => 'support@spokestack.com' }
   s.source = { :git => 'https://github.com/spokestack/react-native-spokestack.git', :tag => package['version'] }
@@ -17,6 +17,6 @@ Pod::Spec.new do |s|
   s.requires_arc = true
   s.static_framework = true
 
-  s.dependency "Spokestack-iOS", "9.0.1"
+  s.dependency "Spokestack-iOS", "10.0.0"
   s.dependency 'React'
 end
