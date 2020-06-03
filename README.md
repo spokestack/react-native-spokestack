@@ -119,18 +119,20 @@ end
 Make sure the Google repo is listed first
 
 ```
-buildcripts {
+buildscripts {
    ...
     repositories {
       google()
-      ...
+      maven { url 'https://csspeechstorage.blob.core.windows.net/maven/' }
+      //...
     }
 }
 
 allprojects{
       repositories {
         google()
-       ...
+        maven { url 'https://csspeechstorage.blob.core.windows.net/maven/' }
+        //...
     }
 }
 ```
