@@ -161,6 +161,7 @@ public class RNSpokestackModule extends ReactContextBaseJavaModule implements On
             Slot s = entry.getValue();
             slot.putString("type", s.getName());
             slot.putString("value", s.getValue().toString());
+            slot.putString("rawValue", s.getRawValue().toString());
             slots.putMap(entry.getKey(), slot);
         }
         result.putString("intent", arg.getIntent());

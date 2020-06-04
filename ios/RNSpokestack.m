@@ -171,7 +171,7 @@ RCT_EXPORT_MODULE();
         // convert the typed slot dictionary into a simple dictionary of string keys and values
         NSMutableDictionary *slots = [[NSMutableDictionary alloc] init];
         [result.slots enumerateKeysAndObjectsUsingBlock:^(NSString *name, Slot *slot, BOOL *stop) {
-            slots[name] = @{@"type": slot.type, @"value": slot.value};
+            slots[name] = @{@"type": slot.type, @"value": slot.value, @"rawValue": slot.rawValue};
         }];
         // send the slots along with the rest of the result object
         [self sendEventWithName:@"onNLUEvent" body: @{@"event": @"classification", @"result": @{@"intent":result.intent, @"confidence":[[NSNumber numberWithFloat:result.confidence] stringValue], @"slots":slots}, @"error":@""}];
