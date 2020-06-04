@@ -260,7 +260,7 @@ Spokestack.onSuccess = e => {
 | Spokestack.activate()      | Manually activate the speech pipeline                                             | | Android, iOS |
 | Spokestack.deactivate()    | Manually deactivate the speech pipeline                                           | | Android, iOS |
 | Spokestack.synthesize({'input': string, 'format': int, 'voice': string})             | Request a URL to a audio file of the specified voice speaking the input | format [0: text, 1: ssml, 2: speechmarkdown], voice ["demo-male"] | iOS, Android          |
-| Spokestack.classify(utterance: string, {})    | Classify the utterance with an intent/slot natural language understanding model | utterance: string | iOS, Android          |
+| Spokestack.classify(utterance: string, {})    | Classify the utterance with an intent/slot natural language understanding model | utterance: string, context: dictionary (currently unused, can be empty) | iOS, Android          |
 
 ### Events
 
