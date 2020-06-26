@@ -5,6 +5,9 @@ buildscript {
         jcenter()
         google()
     }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.6.3'
+    }
 }
 
 apply plugin: 'com.android.library'
@@ -34,16 +37,19 @@ repositories {
     mavenCentral()
     jcenter()
     google()
+    maven {
+        // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
+        url "$projectDir/../node_modules/react-native/android"
+    }
 }
 
 dependencies {
     annotationProcessor 'com.google.auto.value:auto-value:1.5.2'
-    implementation('org.tensorflow:tensorflow-lite:1.14.0')
-    implementation('com.github.wendykierp:JTransforms:3.0')
-    implementation 'com.google.code.gson:gson:2.8.5'
+    implementation 'org.tensorflow:tensorflow-lite:1.14.0'
+    implementation 'com.github.wendykierp:JTransforms:3.0'
+    implementation 'com.google.code.gson:gson:2.8.6'
     implementation 'io.grpc:grpc-okhttp:1.28.1'
     implementation 'com.google.cloud:google-cloud-speech:1.20.0' // NB 1.21+ fails at either build or runtime.
-    implementation 'com.microsoft.cognitiveservices.speech:client-sdk:1.9.0'
     implementation 'com.facebook.react:react-native:+'
     implementation 'io.spokestack:spokestack-android:5.6.0'
 }
