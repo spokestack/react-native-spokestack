@@ -47,7 +47,7 @@ target 'YOUR_PROJECT' do
   use_frameworks!
 
   pod 'RNSpokestack', :path => '../node_modules/react-native-spokestack'
-  
+
   use_native_modules!
   use_modular_headers!
 
@@ -167,6 +167,10 @@ exclude 'META-INF/DEPENDENCIES'
 
 ### Javascript
 
+The example below uses the system-provided `AndroidSpeechRecognizer` as the default since it's free to use. It's not available on 100% of devices, though; see our [ASR documentation](https://spokestack.io/docs/Concepts/asr) for more information. If you use a different ASR provider, you'll also need to change the `input` line to:
+
+`input: "io.spokestack.spokestack.android.MicrophoneInput",`
+
 ```javascript
 import Spokestack from "react-native-spokestack";
 
@@ -176,14 +180,14 @@ import Spokestack from "react-native-spokestack";
 // This example configures a voice-triggered speech recongnizer
 // For additional examples, see https://github.com/spokestack/spokestack-android#configuration
 Spokestack.initialize({
-  input: "io.spokestack.spokestack.android.MicrophoneInput", // provides audio input into the pipeline
+  input: "io.spokestack.spokestack.android.PreASRMicrophoneInput", // provides audio input into the pipeline
   stages: [
     "io.spokestack.spokestack.webrtc.VoiceActivityDetector", // voice activity detection
     'io.spokestack.spokestack.webrtc.VoiceActivityTrigger', // voice activity detection triggers speech recognition
     'io.spokestack.spokestack.ActivationTimeout', // speech recognition times out after a configurable interval when voice is no longer detected
-    "io.spokestack.spokestack.google.GoogleSpeechRecognizer" // one of the three supported speech recognition services
+      'io.spokestack.spokestack.android.AndroidSpeechRecognizer' // one of the three supported speech recognition services
+    // "io.spokestack.spokestack.google.GoogleSpeechRecognizer"
     // 'io.spokestack.spokestack.microsoft.AzureSpeechRecognizer'
-    // 'io.spokestack.spokestack.android.AndroidSpeechRecognizer'
   ],
   properties: {
     "locale": "en-US",
@@ -338,7 +342,7 @@ Spokestack.onSuccess = e => {
   2. Increment `version` in `package.json`
   3. `git commit -a -m 'YOUR_COMMIT_MESSAGE' && git tag YOUR_VERSION && git push --origin`
   4. `pod spec lint --use-libraries --allow-warnings --use-modular-headers`,  which should pass all but one checks (expect `ERROR | [iOS] xcodebuild: Returned an unsuccessful exit code. You can use `--verbose` for more information.`)
-  5. edit `/Library/Ruby/Gems/YOUR_RUBY_VERSION/gems/cocoapods-trunk-YOUR_COCOAPODS_VERSION/lib/pod/command/trunk/push.rb`, comment out `validate_podspec_files` (https://github.com/CocoaPods/CocoaPods/blob/master/lib/cocoapods/command/repo/push.rb#L77)* 
+  5. edit `/Library/Ruby/Gems/YOUR_RUBY_VERSION/gems/cocoapods-trunk-YOUR_COCOAPODS_VERSION/lib/pod/command/trunk/push.rb`, comment out `validate_podspec_files` (https://github.com/CocoaPods/CocoaPods/blob/master/lib/cocoapods/command/repo/push.rb#L77)*
   6. `pod trunk register YOUR_EMAIL --description='release YOUR_PODSPEC_VERSION'`
   7. `npm publish` to release on NPM
   8. `pod trunk push --use-libraries --allow-warnings --use-modular-headers`
