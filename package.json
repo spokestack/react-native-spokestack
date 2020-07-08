@@ -4,6 +4,7 @@
   "description": "React Native wrapper for Spokestack",
   "main": "index.js",
   "author": "Noel Weichbrodt <noel@spokestack.io>",
+  "types": "react-native-spokestack.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
