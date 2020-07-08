@@ -2,35 +2,35 @@ export = RNSpokestack;
 export as namespace RNSpokestack;
 
 declare namespace RNSpokestack {
-  export function constructor(props?: object): void;
+  function constructor(props?: object): void;
 
-  export enum TraceLevel {
+  enum TraceLevel {
     DEBUG = 10,
     PERF = 20,
     INFO = 30,
     NONE = 100,
   }
 
-  export enum TTSFormat {
+  enum TTSFormat {
     TEXT = 0,
     SSML = 1,
     SPEECHMARKDOWN = 2,
   }
 
   interface SpokestackRecognizeEvent {
-    transcript: string;
+    transcript?: string;
   }
 
   interface SpokestackErrorEvent {
-    error: string;
+    error?: string;
   }
 
   interface SpokestackTraceEvent {
-    message: string;
+    message?: string;
   }
 
   interface SpokestackTTSEvent {
-    url: string;
+    url?: string;
   }
 
   interface NLUSlot {
@@ -38,8 +38,8 @@ declare namespace RNSpokestack {
     value: string;
   }
 
-  export interface SpokestackNLUEvent {
-    result: {
+  interface SpokestackNLUEvent {
+    result?: {
       intent: string;
       confidence: string;
       slots: NLUSlot[];
@@ -52,7 +52,13 @@ declare namespace RNSpokestack {
     voice: string;
   }
 
-  export interface SpokestackConfig {
+  type SpokestackEvent = SpokestackRecognizeEvent &
+    SpokestackErrorEvent &
+    SpokestackTraceEvent &
+    SpokestackTTSEvent &
+    SpokestackNLUEvent;
+
+  interface SpokestackConfig {
     input: string;
     stages: string[];
     properties: {
@@ -75,23 +81,23 @@ declare namespace RNSpokestack {
     };
   }
 
-  export function initialize(config: SpokestackConfig): void;
-  export function activate(): void;
-  export function deactivate(): void;
-  export function start(): void;
-  export function stop(): void;
-  export function classify(transcript: string, options?: {}): Promise<string>;
-  export function synthesize(options: SynthesizeOptions): Promise<string>;
+  function initialize(config: SpokestackConfig): void;
+  function activate(): void;
+  function deactivate(): void;
+  function start(): void;
+  function stop(): void;
+  function classify(transcript: string, options?: {}): void;
+  function synthesize(options: SynthesizeOptions): void;
 
-  export function onActivate(event: {}): void;
-  export function onDeactivate(event: {}): void;
-  export function onStart(event: {}): void;
-  export function onStop(event: {}): void;
-  export function onRecognize(event: SpokestackRecognizeEvent): void;
-  export function onTimeout(event: {}): void;
-  export function onTrace(event: SpokestackTraceEvent): void;
-  export function onError(event: SpokestackErrorEvent): void;
-  export function onSuccess(event: SpokestackTTSEvent): void;
-  export function onFailure(event: SpokestackErrorEvent): void;
-  export function onClassification(event: SpokestackNLUEvent): void;
+  function onActivate(event: {}): void;
+  function onDeactivate(event: {}): void;
+  function onStart(event: {}): void;
+  function onStop(event: {}): void;
+  function onRecognize(event: SpokestackRecognizeEvent): void;
+  function onTimeout(event: {}): void;
+  function onTrace(event: SpokestackTraceEvent): void;
+  function onError(event: SpokestackErrorEvent): void;
+  function onSuccess(event: SpokestackTTSEvent): void;
+  function onFailure(event: SpokestackErrorEvent): void;
+  function onClassification(event: SpokestackNLUEvent): void;
 }
