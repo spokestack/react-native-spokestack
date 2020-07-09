@@ -61,19 +61,19 @@ declare namespace RNSpokestack {
   interface SpokestackConfig {
     input: string;
     stages: string[];
-    properties: {
+    properties?: {
       locale?: string;
       "agc-compression-gain-db"?: number;
       "google-credentials"?: string; // only set if using `GoogleSpeechRecognizer` stage above
       "trace-level"?: TraceLevel;
     };
-    tts: {
+    tts?: {
       ttsServiceClass?: string;
       // These can be generated at spokestack.io after creating an account
       "spokestack-id"?: string;
       "spokestack-secret"?: string;
     };
-    nlu: {
+    nlu?: {
       // NLU settings. Only set these if you are calling `Spokestack.classify`.
       "nlu-model-path"?: string; // string filesystem path to nlu model
       "nlu-metadata-path"?: string; // string filesystem path to nlu metadata
@@ -89,6 +89,7 @@ declare namespace RNSpokestack {
   function classify(transcript: string, options?: {}): void;
   function synthesize(options: SynthesizeOptions): void;
 
+  function onInit(event: {}): void;
   function onActivate(event: {}): void;
   function onDeactivate(event: {}): void;
   function onStart(event: {}): void;
