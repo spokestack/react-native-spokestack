@@ -49,7 +49,7 @@ declare namespace RNSpokestack {
   interface SynthesizeOptions {
     input: string;
     format: TTSFormat;
-    voice?: string;
+    voice: string;
   }
 
   type SpokestackEvent = SpokestackRecognizeEvent &
