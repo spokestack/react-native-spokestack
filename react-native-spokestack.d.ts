@@ -49,7 +49,7 @@ declare namespace RNSpokestack {
   interface SynthesizeOptions {
     input: string;
     format: TTSFormat;
-    voice: string;
+    voice?: string;
   }
 
   type SpokestackEvent = SpokestackRecognizeEvent &
@@ -62,8 +62,27 @@ declare namespace RNSpokestack {
     input: string;
     stages: string[];
     properties?: {
-      locale?: string;
       "agc-compression-gain-db"?: number;
+      "agc-target-level-dbfs"?: number;
+      "frame-width"?: number;
+      "fft-window-size"?: number;
+      "fft-hop-length"?: number;
+      locale?: string;
+      "pre-emphasis"?: number;
+      "sample-rate"?: number;
+      "vad-fall-delay"?: number;
+
+      // Wakeword
+      wakewords?: string;
+      "wake-filter-path"?: string;
+      "wake-detect-path"?: string;
+      "wake-encode-path"?: string;
+      "wake-phrase-length"?: number;
+      "wake-smooth-length"?: number;
+      "wake-threshold"?: number;
+      "wake-active-min"?: number;
+      "wake-active-max"?: number;
+
       "google-credentials"?: string; // only set if using `GoogleSpeechRecognizer` stage above
       "trace-level"?: TraceLevel;
     };
