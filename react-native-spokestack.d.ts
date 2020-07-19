@@ -2,8 +2,6 @@ export = RNSpokestack;
 export as namespace RNSpokestack;
 
 declare namespace RNSpokestack {
-  function constructor(props?: object): void;
-
   enum TraceLevel {
     DEBUG = 10,
     PERF = 20,
@@ -41,7 +39,7 @@ declare namespace RNSpokestack {
   interface SpokestackNLUEvent {
     result?: {
       intent: string;
-      confidence: string;
+      confidence: number;
       slots: NLUSlot[];
     };
   }
@@ -105,16 +103,19 @@ declare namespace RNSpokestack {
   function deactivate(): void;
   function start(): void;
   function stop(): void;
-  function classify(transcript: string, options?: {}): void;
+  function classify(
+    transcript: string,
+    options?: Record<string, unknown>
+  ): void;
   function synthesize(options: SynthesizeOptions): void;
 
-  function onInit(event: {}): void;
-  function onActivate(event: {}): void;
-  function onDeactivate(event: {}): void;
-  function onStart(event: {}): void;
-  function onStop(event: {}): void;
+  function onInit(event: Record<string, unknown>): void;
+  function onActivate(event: Record<string, unknown>): void;
+  function onDeactivate(event: Record<string, unknown>): void;
+  function onStart(event: Record<string, unknown>): void;
+  function onStop(event: Record<string, unknown>): void;
   function onRecognize(event: SpokestackRecognizeEvent): void;
-  function onTimeout(event: {}): void;
+  function onTimeout(event: Record<string, unknown>): void;
   function onTrace(event: SpokestackTraceEvent): void;
   function onError(event: SpokestackErrorEvent): void;
   function onSuccess(event: SpokestackTTSEvent): void;
