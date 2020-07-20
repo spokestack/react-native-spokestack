@@ -56,9 +56,19 @@ declare namespace RNSpokestack {
     SpokestackTTSEvent &
     SpokestackNLUEvent;
 
+  type SpokestackInput = "io.spokestack.spokestack.android.PreASRMicrophoneInput";
+
+  type SpokestackStage =
+    | "io.spokestack.spokestack.webrtc.AcousticNoiseSuppressor"
+    | "io.spokestack.spokestack.webrtc.AutomaticGainControl"
+    | "io.spokestack.spokestack.webrtc.VoiceActivityDetector"
+    | "io.spokestack.spokestack.ActivationTimeout"
+    | "io.spokestack.spokestack.wakeword.WakewordTrigger"
+    | "io.spokestack.spokestack.android.AndroidSpeechRecognizer";
+
   interface SpokestackConfig {
-    input: string;
-    stages: string[];
+    input: SpokestackInput;
+    stages: SpokestackStage[];
     properties?: {
       "agc-compression-gain-db"?: number;
       "agc-target-level-dbfs"?: number;
