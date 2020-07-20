@@ -85,6 +85,8 @@ declare namespace RNSpokestack {
    * Configuration is mostly Android-based.
    * Spokestack-iOS takes some of these values and
    * decides what they mean for iOS, as config for iOS is simpler.
+   * Spokestack-iOS reference: https://spokestack.github.io/spokestack-ios/index.html
+   * spokestack-android reference: https://javadoc.io/doc/io.spokestack/spokestack-android/latest/index.html
    */
   interface SpokestackConfig {
     /**
@@ -111,13 +113,6 @@ declare namespace RNSpokestack {
        * DEBUG, PERF, INFO, and NONE
        */
       "trace-level"?: TraceLevel;
-
-      /**
-       * Some of these properties are passed directly to spokestack-ios
-       * and spokestack-android
-       * spokestack-ios reference: https://spokestack.github.io/spokestack-ios/index.html
-       * spokestack-android reference: https://javadoc.io/doc/io.spokestack/spokestack-android/latest/index.html
-       */
       /**
        * File system path to the "filter" Tensorflow-Lite model,
        * which is used to calculate a mel spectrogram frame from the linear STFT;
@@ -146,12 +141,14 @@ declare namespace RNSpokestack {
       wakewords?: string;
 
       // Android-only AcousticNoiseSuppressor
+      // -----------------------------------------------
       /**
        * Noise policy
        */
       "ans-policy"?: "mild" | "medium" | "aggressive" | "very-aggressive";
 
       // Android-only AcousticGainControl
+      // -----------------------------------------------
       /**
        * target peak audio level, in -dBFS for example,
        * to maintain a peak of -9dBFS, configure a value of 9
@@ -163,6 +160,7 @@ declare namespace RNSpokestack {
       "agc-target-level-dbfs"?: number;
 
       // Android-only VoiceActivityDetector
+      // -----------------------------------------------
       /**
        * Detector mode
        */
@@ -178,7 +176,6 @@ declare namespace RNSpokestack {
        */
       "vad-fall-delay"?: number;
 
-      //
       // Android-only wakeword
       // -----------------------------------------------
       /**
@@ -251,7 +248,6 @@ declare namespace RNSpokestack {
        */
       "wake-threshold"?: number;
 
-      //
       // Android-only Speech Recognizer
       // -----------------------------------------------
       /**
