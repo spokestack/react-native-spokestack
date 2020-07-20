@@ -56,18 +56,45 @@ declare namespace RNSpokestack {
     SpokestackTTSEvent &
     SpokestackNLUEvent;
 
-  type SpokestackInput = "io.spokestack.spokestack.android.PreASRMicrophoneInput";
+  type SpokestackInput =
+    | "io.spokestack.spokestack.android.MicrophoneInput"
+    | "io.spokestack.spokestack.android.NoInput"
+    | "io.spokestack.spokestack.android.PreASRMicrophoneInput";
+
+  // Only specify one of these
+  type SpokestackVoiceActivity =
+    | "io.spokestack.spokestack.webrtc.VoiceActivityDetector"
+    | "io.spokestack.spokestack.webrtc.VoiceActivityTrigger";
+
+  // Only specify one of these
+  type SpokestackSpeechRecognizer =
+    | "io.spokestack.spokestack.android.AndroidSpeechRecognizer"
+    | "io.spokestack.spokestack.google.GoogleSpeechRecognizer"
+    | "io.spokestack.spokestack.microsoft.AzureSpeechRecognizer";
 
   type SpokestackStage =
     | "io.spokestack.spokestack.webrtc.AcousticNoiseSuppressor"
     | "io.spokestack.spokestack.webrtc.AutomaticGainControl"
-    | "io.spokestack.spokestack.webrtc.VoiceActivityDetector"
+    | SpokestackVoiceActivity
     | "io.spokestack.spokestack.ActivationTimeout"
     | "io.spokestack.spokestack.wakeword.WakewordTrigger"
-    | "io.spokestack.spokestack.android.AndroidSpeechRecognizer";
+    | SpokestackSpeechRecognizer;
 
+  /**
+   * Configuration is mostly Android-based.
+   * Spokestack-iOS takes some of these values and
+   * decides what they mean for iOS, as config for iOS is simpler.
+   */
   interface SpokestackConfig {
-    input: SpokestackInput;
+    /**
+     * Required for Android.
+     * Specifies which input processor to use.
+     */
+    input?: SpokestackInput;
+    /**
+     * Stages is an array of classes through which to pass input
+     * Only the wakeword stage is relevant in iOS
+     */
     stages: SpokestackStage[];
     properties?: {
       "agc-compression-gain-db"?: number;
