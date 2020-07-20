@@ -61,10 +61,11 @@ declare namespace RNSpokestack {
     | "io.spokestack.spokestack.android.NoInput"
     | "io.spokestack.spokestack.android.PreASRMicrophoneInput";
 
-  // Only specify one of these
   type SpokestackVoiceActivity =
     | "io.spokestack.spokestack.webrtc.VoiceActivityDetector"
-    | "io.spokestack.spokestack.webrtc.VoiceActivityTrigger";
+    | "io.spokestack.spokestack.webrtc.VoiceActivityTrigger"
+    // Specify the two above, the one below, or none
+    | "io.spokestack.spokestack.wakeword.WakewordTrigger";
 
   // Only specify one of these
   type SpokestackSpeechRecognizer =
@@ -72,13 +73,13 @@ declare namespace RNSpokestack {
     | "io.spokestack.spokestack.google.GoogleSpeechRecognizer"
     | "io.spokestack.spokestack.microsoft.AzureSpeechRecognizer";
 
+  // Important: follow this order when specifying stages
   type SpokestackStage =
     | "io.spokestack.spokestack.webrtc.AcousticNoiseSuppressor"
     | "io.spokestack.spokestack.webrtc.AutomaticGainControl"
     | SpokestackVoiceActivity
-    | "io.spokestack.spokestack.ActivationTimeout"
-    | "io.spokestack.spokestack.wakeword.WakewordTrigger"
-    | SpokestackSpeechRecognizer;
+    | SpokestackSpeechRecognizer
+    | "io.spokestack.spokestack.ActivationTimeout";
 
   /**
    * Configuration is mostly Android-based.
@@ -97,19 +98,14 @@ declare namespace RNSpokestack {
      */
     stages: SpokestackStage[];
     properties?: {
-      "agc-compression-gain-db"?: number;
-      "agc-target-level-dbfs"?: number;
-      "fft-hop-length"?: number;
-      "vad-fall-delay"?: number;
-      "wake-phrase-length"?: number;
-      "wake-smooth-length"?: number;
-      wakewords?: string;
-
       /**
-       * Google speech credentials.
-       * Only necessary when using the GoogleSpeechRecognizer stage
+       * Audio sampling rate, in Hz
        */
-      "google-credentials"?: string;
+      "sample-rate"?: number;
+      /**
+       * Speech frame width, in ms
+       */
+      "frame-width"?: number;
       /**
        * Trace level for logs
        * DEBUG, PERF, INFO, and NONE
@@ -142,8 +138,48 @@ declare namespace RNSpokestack {
        */
       "wake-encode-path"?: string;
 
+      /**
+       * iOS-only
+       * A comma-separated list of wakeword keywords
+       * Only necessary when not passing the filter, detect, and encode paths.
+       */
+      wakewords?: string;
+
+      // Android-only AcousticNoiseSuppressor
+      /**
+       * Noise policy
+       */
+      "ans-policy"?: "mild" | "medium" | "aggressive" | "very-aggressive";
+
+      // Android-only AcousticGainControl
+      /**
+       * target peak audio level, in -dBFS for example,
+       * to maintain a peak of -9dBFS, configure a value of 9
+       */
+      "agc-compression-gain-db"?: number;
+      /**
+       * dynamic range compression rate, in dB
+       */
+      "agc-target-level-dbfs"?: number;
+
+      // Android-only VoiceActivityDetector
+      /**
+       * Detector mode
+       */
+      "vad-mode"?: "quality" | "low-bitrate" | "aggressive" | "very-aggressive";
+      /**
+       * Rising-edge detection run length, in ms; this value determines
+       * how many positive samples must be received to flip the detector to positive
+       */
+      "vad-rise-delay"?: number;
+      /**
+       * Falling-edge detection run length, in ms; this value determines
+       * how many negative samples must be received to flip the detector to negative
+       */
+      "vad-fall-delay"?: number;
+
       //
-      // Android-only wakeword properties
+      // Android-only wakeword
       // -----------------------------------------------
       /**
        * The minimum length of an activation, in milliseconds,
@@ -185,6 +221,11 @@ declare namespace RNSpokestack {
        * The length of time to skip each time the
        * overlapping STFT is calculated, in milliseconds
        */
+      "fft-hop-length"?: number;
+      /**
+       * The length of time to skip each time the
+       * overlapping STFT is calculated, in milliseconds
+       */
       "mel-frame-length"?: number;
       /**
        * The size of each mel spectrogram frame,
@@ -211,20 +252,15 @@ declare namespace RNSpokestack {
       "wake-threshold"?: number;
 
       //
-      // Android-only AzureSpeechRecognizer properties
+      // Android-only Speech Recognizer
       // -----------------------------------------------
       /**
-       * Audio sampling rate, in Hz
-       */
-      "sample-rate"?: number;
-      /**
-       * Speech frame width, in ms
-       */
-      "frame-width"?: number;
-      /**
        * Language code for speech recognition
+       * Used in both Azure and Google Speech Recognizers
        */
       locale?: string;
+
+      // AzureSpeechRecognizer
       /**
        * API key for the Azure Speech service
        */
@@ -233,6 +269,13 @@ declare namespace RNSpokestack {
        * Azure Speech service region
        */
       "azure-region"?: string;
+
+      // GoogleSpeechRecognizer
+      /**
+       * Google speech credentials.
+       * Only necessary when using the GoogleSpeechRecognizer stage
+       */
+      "google-credentials"?: string;
     };
     tts?: {
       ttsServiceClass?: string; // Android-only
