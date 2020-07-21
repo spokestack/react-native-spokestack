@@ -61,6 +61,10 @@ declare namespace RNSpokestack {
     | "io.spokestack.spokestack.android.NoInput"
     | "io.spokestack.spokestack.android.PreASRMicrophoneInput";
 
+  type SpokestackInputProcessing =
+    | "io.spokestack.spokestack.webrtc.AcousticNoiseSuppressor"
+    | "io.spokestack.spokestack.webrtc.AutomaticGainControl";
+
   type SpokestackVoiceActivity =
     | "io.spokestack.spokestack.webrtc.VoiceActivityDetector"
     | "io.spokestack.spokestack.webrtc.VoiceActivityTrigger"
@@ -74,9 +78,9 @@ declare namespace RNSpokestack {
     | "io.spokestack.spokestack.microsoft.AzureSpeechRecognizer";
 
   // Important: follow this order when specifying stages
+  // All stages are optional
   type SpokestackStage =
-    | "io.spokestack.spokestack.webrtc.AcousticNoiseSuppressor"
-    | "io.spokestack.spokestack.webrtc.AutomaticGainControl"
+    | SpokestackInputProcessing
     | SpokestackVoiceActivity
     | SpokestackSpeechRecognizer
     | "io.spokestack.spokestack.ActivationTimeout";
@@ -108,11 +112,29 @@ declare namespace RNSpokestack {
        * Speech frame width, in ms
        */
       "frame-width"?: number;
+
+      // Voice activity options (iOS and Android)
+      /**
+       * Detector mode
+       */
+      "vad-mode"?: "quality" | "low-bitrate" | "aggressive" | "very-aggressive";
+      /**
+       * Rising-edge detection run length, in ms; this value determines
+       * how many positive samples must be received to flip the detector to positive
+       */
+      "vad-rise-delay"?: number;
+      /**
+       * Falling-edge detection run length, in ms; this value determines
+       * how many negative samples must be received to flip the detector to negative
+       */
+      "vad-fall-delay"?: number;
       /**
        * Trace level for logs
        * DEBUG, PERF, INFO, and NONE
        */
       "trace-level"?: TraceLevel;
+
+      // Wakeword: iOS and Android options
       /**
        * File system path to the "filter" Tensorflow-Lite model,
        * which is used to calculate a mel spectrogram frame from the linear STFT;
@@ -132,6 +154,16 @@ declare namespace RNSpokestack {
        * and its outputs
        */
       "wake-encode-path"?: string;
+      /**
+       * The minimum length of an activation, in milliseconds,
+       * used to ignore a VAD deactivation after the wakeword
+       */
+      "wake-active-min"?: number;
+      /**
+       * The maximum length of an activation, in milliseconds,
+       * used to time out the activation
+       */
+      "wake-active-max"?: number;
 
       /**
        * iOS-only
@@ -159,35 +191,8 @@ declare namespace RNSpokestack {
        */
       "agc-target-level-dbfs"?: number;
 
-      // Android-only VoiceActivityDetector
-      // -----------------------------------------------
-      /**
-       * Detector mode
-       */
-      "vad-mode"?: "quality" | "low-bitrate" | "aggressive" | "very-aggressive";
-      /**
-       * Rising-edge detection run length, in ms; this value determines
-       * how many positive samples must be received to flip the detector to positive
-       */
-      "vad-rise-delay"?: number;
-      /**
-       * Falling-edge detection run length, in ms; this value determines
-       * how many negative samples must be received to flip the detector to negative
-       */
-      "vad-fall-delay"?: number;
-
       // Android-only wakeword
       // -----------------------------------------------
-      /**
-       * The minimum length of an activation, in milliseconds,
-       * used to ignore a VAD deactivation after the wakeword
-       */
-      "wake-active-min"?: number;
-      /**
-       * The maximum length of an activation, in milliseconds,
-       * used to time out the activation
-       */
-      "wake-active-max"?: number;
       /**
        * The desired linear Root Mean Squared (RMS) signal energy,
        * which is used for signal normalization and should be tuned
