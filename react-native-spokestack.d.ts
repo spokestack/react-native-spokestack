@@ -82,8 +82,8 @@ declare namespace RNSpokestack {
   type SpokestackStage =
     | SpokestackInputProcessing
     | SpokestackVoiceActivity
-    | SpokestackSpeechRecognizer
-    | "io.spokestack.spokestack.ActivationTimeout";
+    | "io.spokestack.spokestack.ActivationTimeout"
+    | SpokestackSpeechRecognizer;
 
   /**
    * Configuration is mostly Android-based.
