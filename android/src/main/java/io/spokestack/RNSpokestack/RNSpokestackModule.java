@@ -19,6 +19,7 @@ import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.annotation.Nullable;
@@ -153,23 +154,30 @@ public class RNSpokestackModule extends ReactContextBaseJavaModule implements On
 
     @Override
     public void call(NLUResult arg) {
-        WritableMap react_event = Arguments.createMap();
-        WritableMap result = Arguments.createMap();
-        WritableMap slots = Arguments.createMap();
-        for (Map.Entry<String, Slot> entry : arg.getSlots().entrySet()) {
-            WritableMap slot = Arguments.createMap();
+        WritableMap reactEvent = Arguments.makeNativeMap(toEvent(arg));
+        sendEvent("onNLUEvent", reactEvent);
+    }
+
+    static Map<String, Object> toEvent(NLUResult nluResult) {
+        Map<String, Object> eventMap = new HashMap<>();
+        Map<String, Object> result = new HashMap<>();
+        Map<String, Object> slots = new HashMap<>();
+        for (Map.Entry<String, Slot> entry : nluResult.getSlots().entrySet()) {
+            Map<String, String> slot = new HashMap<>();
             Slot s = entry.getValue();
-            slot.putString("type", s.getName());
-            slot.putString("value", s.getValue().toString());
-            slot.putString("rawValue", s.getRawValue().toString());
-            slots.putMap(entry.getKey(), slot);
+            slot.put("type", s.getName());
+            Object val = s.getValue();
+            String value = (val == null) ? null : val.toString();
+            slot.put("value", value);
+            slot.put("rawValue", s.getRawValue());
+            slots.put(entry.getKey(), slot);
         }
-        result.putString("intent", arg.getIntent());
-        result.putString("confidence", Float.toString(arg.getConfidence()));
-        result.putMap("slots", slots);
-        react_event.putMap("result", result);
-        react_event.putString("event", "classification");
-        sendEvent("onNLUEvent", react_event);
+        result.put("intent", nluResult.getIntent());
+        result.put("confidence", Float.toString(nluResult.getConfidence()));
+        result.put("slots", slots);
+        eventMap.put("result", result);
+        eventMap.put("event", "classification");
+        return eventMap;
     }
 
     @Override
