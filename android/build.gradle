@@ -44,6 +44,7 @@ repositories {
 }
 
 dependencies {
+    testImplementation 'junit:junit:4.12'
     annotationProcessor 'com.google.auto.value:auto-value:1.5.2'
     implementation 'org.tensorflow:tensorflow-lite:1.14.0'
     implementation 'com.github.wendykierp:JTransforms:3.0'
