@@ -22,10 +22,23 @@ public class RNSpokestackModuleTest {
 
         validateTranslation(result);
 
-        // one slot
+        // one primitive slot
         Map<String, Slot> slots = new HashMap<>();
-        Slot numSlot = new Slot("number", "one", 1);
+        Slot numSlot = new Slot("number", "integer", "one", 1);
         slots.put("number", numSlot);
+        result = new NLUResult.Builder("test")
+              .withIntent("intent")
+              .withConfidence(0.5f)
+              .withSlots(slots)
+              .build();
+
+        validateTranslation(result);
+
+        // one non-primitive slot
+        slots.clear();
+        CustomType customVal = new CustomType();
+        Slot testSlot = new Slot("custom", "testType", "one", customVal);
+        slots.put("custom", testSlot);
         result = new NLUResult.Builder("test")
               .withIntent("intent")
               .withConfidence(0.5f)
@@ -37,7 +50,7 @@ public class RNSpokestackModuleTest {
         // two slots, one null
         slots.clear();
         slots.put("number", numSlot);
-        Slot nullSlot = new Slot("unrecognized", null, null);
+        Slot nullSlot = new Slot("unrecognized", "entity", null, null);
         slots.put("unrecognized", nullSlot);
         result = new NLUResult.Builder("test")
               .withIntent("intent")
@@ -50,7 +63,7 @@ public class RNSpokestackModuleTest {
         // two slots, both populated
         slots.clear();
         slots.put("number", numSlot);
-        Slot slotTwo = new Slot("color", "red", "red");
+        Slot slotTwo = new Slot("color", "entity", "red", "red");
         slots.put("color", slotTwo);
         result = new NLUResult.Builder("test")
               .withIntent("intent")
@@ -74,16 +87,20 @@ public class RNSpokestackModuleTest {
         Map<String, Slot> resultSlots = result.getSlots();
         for (String key : resultSlots.keySet()) {
             Slot originalSlot = resultSlots.get(key);
-            Map<String, String> translated =
-                  (Map<String, String>) slots.get(key);
-            assertEquals(originalSlot.getName(), translated.get("type"));
+            Map<String, Object> translated =
+                  (Map<String, Object>) slots.get(key);
+            String originalType = originalSlot.getType();
+            assertEquals(originalType, translated.get("type"));
             assertEquals(originalSlot.getRawValue(), translated.get("rawValue"));
-            if (originalSlot.getValue() == null) {
-                assertNull(translated.get("value"));
+            if (!originalType.equals("testType")) {
+                assertEquals(originalSlot.getValue(), translated.get("value"));
             } else {
                 assertEquals(String.valueOf(originalSlot.getValue()),
                       translated.get("value"));
             }
         }
+    }
+
+    static class CustomType {
     }
 }

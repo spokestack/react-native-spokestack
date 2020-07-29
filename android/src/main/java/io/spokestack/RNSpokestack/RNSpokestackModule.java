@@ -163,11 +163,11 @@ public class RNSpokestackModule extends ReactContextBaseJavaModule implements On
         Map<String, Object> result = new HashMap<>();
         Map<String, Object> slots = new HashMap<>();
         for (Map.Entry<String, Slot> entry : nluResult.getSlots().entrySet()) {
-            Map<String, String> slot = new HashMap<>();
+            Map<String, Object> slot = new HashMap<>();
             Slot s = entry.getValue();
-            slot.put("type", s.getName());
+            slot.put("type", s.getType());
             Object val = s.getValue();
-            String value = (val == null) ? null : val.toString();
+            Object value = isPrimitive(val) ? val : val.toString();
             slot.put("value", value);
             slot.put("rawValue", s.getRawValue());
             slots.put(entry.getKey(), slot);
@@ -178,6 +178,17 @@ public class RNSpokestackModule extends ReactContextBaseJavaModule implements On
         eventMap.put("result", result);
         eventMap.put("event", "classification");
         return eventMap;
+    }
+
+    private static boolean isPrimitive(Object val) {
+        return val == null
+            || val instanceof Boolean
+            || val instanceof Double
+            || val instanceof Float
+            || val instanceof Integer
+            || val instanceof Long
+            || val instanceof Short
+            || val instanceof String;
     }
 
     @Override
