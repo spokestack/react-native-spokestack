@@ -52,5 +52,5 @@ dependencies {
     implementation 'io.grpc:grpc-okhttp:1.28.1'
     implementation 'com.google.cloud:google-cloud-speech:1.20.0' // NB 1.21+ fails at either build or runtime.
     implementation 'com.facebook.react:react-native:+'
-    implementation 'io.spokestack:spokestack-android:8.0.0'
+    implementation 'io.spokestack:spokestack-android:8.0.1'
 }
