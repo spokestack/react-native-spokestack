@@ -101,8 +101,6 @@ RCT_EXPORT_MODULE();
     }
 }
 
-/// MARK: PipelineDelegate implementation
-
 - (void)didTimeout {
     NSLog(@"RNSpokestack didTimeout");
     if (hasListeners)
@@ -111,7 +109,6 @@ RCT_EXPORT_MODULE();
             @"event": @"timeout", @"transcript": @"", @"error": @""}];
     }
 }
-
 
 - (void)setupFailed:(NSString * _Nonnull)error {
     NSLog(@"RNSpokestack setupFailed");
@@ -196,17 +193,20 @@ RCT_EXPORT_METHOD(initialize:(NSDictionary *)config)
         return;
     }
     self.speechConfig = [[SpeechConfiguration alloc] init];
+    self.speechContext = [[SpeechContext alloc] init: self.speechConfig];
 
     NSError *error;
         
-    /// MARK: Tracing
+    // Tracing
 
     self.speechConfig.tracing = ([config valueForKeyPath:@"properties.trace-level"]) ? [RCTConvert NSInteger:[config valueForKeyPath:@"properties.trace-level"]] : self.speechConfig.tracing;
     
-    // Speech
+    /// MARK: Speech
 
-    self.asrService = [AppleSpeechRecognizer sharedInstance];
+    self.asrService = [[AppleSpeechRecognizer alloc] init: self.speechConfig context: self.speechContext];
     self.speechConfig.vadFallDelay = ([config valueForKeyPath:@"properties.vad-fall-delay"]) ? [RCTConvert NSInteger:[config valueForKeyPath:@"properties.vad-fall-delay"]] : self.speechConfig.vadFallDelay;
+    
+    WebRTCVAD *vad = [[WebRTCVAD alloc] init: self.speechConfig context: self.speechContext];
 
     /// MARK: Wakeword signal processing
     
@@ -228,14 +228,14 @@ RCT_EXPORT_METHOD(initialize:(NSDictionary *)config)
     
     // TFLite
     if ([[config valueForKey:@"stages"] containsObject:@"io.spokestack.spokestack.wakeword.WakewordTrigger"]) {
-        self.wakewordService = [TFLiteWakewordRecognizer sharedInstance];
+        self.wakewordService = [[TFLiteWakewordRecognizer alloc] init: self.speechConfig context: self.speechContext];
         self.speechConfig.filterModelPath = ([config valueForKeyPath:@"properties.wake-filter-path"]) ? [RCTConvert NSString:[config valueForKeyPath:@"properties.wake-filter-path"]] : self.speechConfig.filterModelPath;
         self.speechConfig.encodeModelPath = ([config valueForKeyPath:@"properties.wake-encode-path"]) ? [RCTConvert NSString:[config valueForKeyPath:@"properties.wake-encode-path"]] : self.speechConfig.encodeModelPath;
         self.speechConfig.detectModelPath = ([config valueForKeyPath:@"properties.wake-detect-path"]) ? [RCTConvert NSString:[config valueForKeyPath:@"properties.wake-detect-path"]] : self.speechConfig.detectModelPath;
         self.speechConfig.wakeThreshold = ([config valueForKeyPath:@"properties.wake-threshold"]) ? [[RCTConvert NSNumber:[config valueForKeyPath:@"properties.wake-threshold"]] floatValue] : self.speechConfig.wakeThreshold;
     // Apple ASR
     } else {
-        self.wakewordService = [AppleWakewordRecognizer sharedInstance];
+        self.wakewordService = [[AppleWakewordRecognizer alloc] init: self.speechConfig context: self.speechContext];
         self.speechConfig.wakewords = ([config valueForKeyPath:@"properties.wakewords"]) ? [RCTConvert NSString:[config valueForKeyPath:@"properties.wakewords"]] : self.speechConfig.wakewords;
         self.speechConfig.wakewordRequestTimeout = ([config valueForKeyPath:@"properties.wake-request-timeout"]) ? [RCTConvert NSInteger:[config valueForKeyPath:@"properties.wake-request-timeout"]] : self.speechConfig.wakewordRequestTimeout;
     }
@@ -256,13 +256,12 @@ RCT_EXPORT_METHOD(initialize:(NSDictionary *)config)
         [self failureWithNluError: error];
     }
     
+    NSArray *listeners = @[self];
+    NSArray *stages = @[vad, self.wakewordService, self.asrService];
+    
     /// MARK: Pipeline & TTS init
 
-    self.pipeline = [[SpeechPipeline alloc] init: self.asrService
-                         speechConfiguration: self.speechConfig
-                              speechDelegate: self
-                             wakewordService: self.wakewordService
-                            pipelineDelegate: self];
+    self.pipeline = [[SpeechPipeline alloc] initWithConfiguration: self.speechConfig listeners: listeners stages: stages];
     
     if (@available(iOS 13.0, *)) {
         self.tts = [[TextToSpeech alloc] init:self configuration:self.speechConfig];
@@ -274,10 +273,6 @@ RCT_EXPORT_METHOD(initialize:(NSDictionary *)config)
 
 RCT_EXPORT_METHOD(start)
 {
-    if (![self.pipeline status]) {
-        NSLog(@"RNSpokestack start status was false");
-        [self.pipeline setDelegates: self pipelineDelegate: self];
-    }
     [self.pipeline start];
 }
 
