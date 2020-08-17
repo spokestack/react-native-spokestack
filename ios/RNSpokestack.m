@@ -257,7 +257,10 @@ RCT_EXPORT_METHOD(initialize:(NSDictionary *)config)
 
     /// MARK: Pipeline & TTS init
 
-    self.pipeline = [[SpeechPipeline alloc] initWithConfiguration: self.speechConfig listeners: listeners stages: stages context: self.speechContext];
+    self.pipeline = [[SpeechPipeline alloc]
+                     initWithConfiguration: self.speechConfig
+                     listeners: listeners
+                     stages: stages context: self.speechContext];
 
     if (@available(iOS 13.0, *)) {
         self.tts = [[TextToSpeech alloc] init:self configuration:self.speechConfig];
