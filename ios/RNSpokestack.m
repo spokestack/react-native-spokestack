@@ -126,7 +126,7 @@ RCT_EXPORT_MODULE();
     }
 }
 
-/// MARK: TextToSpeechDelegate implementation
+/// MARK: TTS
 
 - (void)didBeginSpeaking {
     NSLog(@"RNSpokestack didBeginSpeaking");
@@ -157,7 +157,7 @@ RCT_EXPORT_MODULE();
 }
 
 
-/// MARK: NLUDelegate implementation
+/// MARK: NLU
 
 - (void)classificationWithResult:(NLUResult * _Nonnull)result {
     NSLog(@"RNSpokestack classificationWithResult");
@@ -246,16 +246,17 @@ RCT_EXPORT_METHOD(initialize:(NSDictionary *)config)
     self.speechConfig.nluModelPath = ([config valueForKeyPath:@"nlu.nlu-model-path"]) ? [RCTConvert NSString:[config valueForKeyPath:@"nlu.nlu-model-path"]] : self.speechConfig.nluModelPath;
     self.speechConfig.nluModelMetadataPath = ([config valueForKeyPath:@"nlu.nlu-metadata-path"]) ? [RCTConvert NSString:[config valueForKeyPath:@"nlu.nlu-metadata-path"]] : self.speechConfig.nluModelMetadataPath;
     self.speechConfig.nluVocabularyPath = ([config valueForKeyPath:@"nlu.wordpiece-vocab-path"]) ? [RCTConvert NSString:[config valueForKeyPath:@"nlu.wordpiece-vocab-path"]] : self.speechConfig.nluVocabularyPath;
-    self.nlu = [[NLUTensorflow alloc] init:self configuration:self.speechConfig error:&error];
+
+    /// MARK: Pipeline, NLU, & TTS init
+
+    NSArray *listeners = @[self];
+    NSArray *stages = @[vad, self.wakewordService, self.asrService];
+    
+    self.nlu = [[NLUTensorflow alloc] init:listeners configuration:self.speechConfig error:&error];
     if (error) {
         NSLog(@"RNSpokestack initialize error: %@", error);
         [self failureWithNluError: error];
     }
-
-    NSArray *listeners = @[self];
-    NSArray *stages = @[vad, self.wakewordService, self.asrService];
-
-    /// MARK: Pipeline & TTS init
 
     self.pipeline = [[SpeechPipeline alloc]
                      initWithConfiguration: self.speechConfig
@@ -263,7 +264,7 @@ RCT_EXPORT_METHOD(initialize:(NSDictionary *)config)
                      stages: stages context: self.speechContext];
 
     if (@available(iOS 13.0, *)) {
-        self.tts = [[TextToSpeech alloc] init:self configuration:self.speechConfig];
+        self.tts = [[TextToSpeech alloc] init:listeners configuration:self.speechConfig];
     } else {
         NSLog(@"RNSpokestack initialize error: %@", @"Spokestack TTS is only available in iOS 13 or higher.");
         [self failureWithTtsError: error];

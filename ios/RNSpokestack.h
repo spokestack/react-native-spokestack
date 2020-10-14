@@ -11,7 +11,7 @@
 #import <Spokestack/Spokestack-Swift.h>
 
 API_AVAILABLE(ios(13.0))
-@interface RNSpokestack : RCTEventEmitter <RCTBridgeModule, SpeechEventListener, TextToSpeechDelegate, NLUDelegate>
+@interface RNSpokestack : RCTEventEmitter <RCTBridgeModule, SpokestackDelegate>
 @property (nonatomic) SpeechPipeline *pipeline;
 @property (nonatomic) TextToSpeech *tts;
 @property (nonatomic) NLUTensorflow *nlu;
