@@ -196,7 +196,7 @@ public class RNSpokestackModule extends ReactContextBaseJavaModule implements On
         WritableMap react_event = Arguments.createMap();
         react_event.putString("event", "error");
         react_event.putString("error", err.getLocalizedMessage());
-        sendEvent("onNLUEvent", react_event);
+        sendEvent("onErrorEvent", react_event);
     }
 
     public void onEvent(SpeechContext.Event event, SpeechContext context) {
@@ -205,7 +205,11 @@ public class RNSpokestackModule extends ReactContextBaseJavaModule implements On
         react_event.putString("transcript", context.getTranscript());
         react_event.putString("message", context.getMessage());
         react_event.putString("error", Log.getStackTraceString(context.getError()));
-        sendEvent("onSpeechEvent", react_event);
+        if (react_event.getString("error").isEmpty()) {
+            sendEvent("onSpeechEvent", react_event);
+        } else {
+            sendEvent("onErrorEvent", react_event);
+        }
     }
 
     public void onEvent(String event, Boolean active) {
@@ -232,10 +236,11 @@ public class RNSpokestackModule extends ReactContextBaseJavaModule implements On
         if (event.getError() == null) {
             react_event.putString("event", "success");
             react_event.putString("url", event.getTtsResponse().getAudioUri().toString());
+            sendEvent("onTTSEvent", react_event);
         } else {
             react_event.putString("event", "failure");
-            react_event.putString("error" , event.getError().getLocalizedMessage());
+            react_event.putString("error", event.getError().getLocalizedMessage());
+            sendEvent("onErrorEvent", react_event);
         }
-        sendEvent("onTTSEvent", react_event);
     }
 }

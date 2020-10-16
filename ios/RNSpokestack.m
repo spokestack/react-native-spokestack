@@ -29,11 +29,22 @@ RCT_EXPORT_MODULE();
     hasListeners = NO;
 }
 
-/// MARK: SpeechEventListener implementation
+/// MARK: SpokestackDelegate implementation
+
+- (void)failureWithError:(NSError * _Nonnull)error {
+    NSLog(@"RNSpokestack failureWithError");
+    if (hasListeners)
+    {
+        [self sendEventWithName:@"onErrorEvent" body:@{
+            @"event": @"error", @"error": [error localizedDescription]}];
+    }
+}
+
+/// MARK: Pipeline
 
 - (NSArray<NSString *> *)supportedEvents
 {
-    return @[@"onSpeechEvent", @"onTTSEvent", @"onNLUEvent"];
+    return @[@"onSpeechEvent", @"onTTSEvent", @"onNLUEvent", @"onErrorEvent"];
 }
 
 - (void)didActivate {
@@ -51,15 +62,6 @@ RCT_EXPORT_MODULE();
     {
         [self sendEventWithName:@"onSpeechEvent" body:@{
             @"event": @"deactivate", @"transcript": @"", @"error": @""}];
-    }
-}
-
-- (void)failureWithSpeechError:(NSError * _Nonnull)speechError {
-    NSLog(@"RNSpokestack failureWithSpeechError");
-    if (hasListeners)
-    {
-        [self sendEventWithName:@"onSpeechEvent" body:@{
-            @"event": @"error", @"transcript": @"", @"error": [speechError localizedDescription]}];
     }
 }
 
@@ -147,16 +149,6 @@ RCT_EXPORT_MODULE();
     }
 }
 
-- (void)failureWithTtsError:(NSError * _Nonnull)ttsError {
-    NSLog(@"RNSpokestack failureWithTtsError");
-    if (hasListeners)
-    {
-        [self sendEventWithName:@"onTTSEvent" body:@{
-            @"event": @"failure", @"url": @"", @"error": [ttsError localizedDescription]}];
-    }
-}
-
-
 /// MARK: NLU
 
 - (void)classificationWithResult:(NLUResult * _Nonnull)result {
@@ -172,15 +164,6 @@ RCT_EXPORT_MODULE();
         [self sendEventWithName:@"onNLUEvent" body: @{@"event": @"classification", @"result": @{@"intent":result.intent, @"confidence":[[NSNumber numberWithFloat:result.confidence] stringValue], @"slots":slots}, @"error":@""}];
     }
 }
-
-- (void)failureWithNluError:(NSError * _Nonnull)nluError {
-    NSLog(@"RNSpokestack failureWithNluError");
-    if (hasListeners)
-    {
-        [self sendEventWithName:@"onNLUEvent" body:@{@"event": @"error", @"result": @{}, @"error": [nluError localizedDescription]}];
-    }
-}
-
 
 /// MARK: Exported Methods
 
@@ -199,47 +182,42 @@ RCT_EXPORT_METHOD(initialize:(NSDictionary *)config)
 
     /// MARK: Speech
 
-    self.asrService = [[AppleSpeechRecognizer alloc] init: self.speechConfig context: self.speechContext];
-    self.speechConfig.vadFallDelay = ([config valueForKeyPath:@"properties.vad-fall-delay"]) ? [RCTConvert NSInteger:[config valueForKeyPath:@"properties.vad-fall-delay"]] : self.speechConfig.vadFallDelay;
-
-    WebRTCVAD *vad = [[WebRTCVAD alloc] init: self.speechConfig context: self.speechContext];
-
+    self.speechConfig.vadFallDelay = ([config valueForKeyPath:@"pipeline.vad-fall-delay"]) ? [RCTConvert NSInteger:[config valueForKeyPath:@"pipeline.vad-fall-delay"]] : self.speechConfig.vadFallDelay;
+    
     /// MARK: Wakeword signal processing
 
-    self.speechConfig.rmsTarget = ([config valueForKeyPath:@"properties.rms-target"]) ? [[RCTConvert NSNumber:[config valueForKeyPath:@"properties.rms-target"]] floatValue] : self.speechConfig.rmsTarget;
-    self.speechConfig.rmsAlpha = ([config valueForKeyPath:@"properties.rms-alpha"]) ? [[RCTConvert NSNumber:[config valueForKeyPath:@"properties.rms-alpha"]] floatValue] : self.speechConfig.rmsAlpha;
-    self.speechConfig.fftWindowSize = ([config valueForKeyPath:@"properties.fft-window-size"]) ? [RCTConvert NSInteger:[config valueForKeyPath:@"properties.fft-window-size"]] : self.speechConfig.fftWindowSize;
-    self.speechConfig.fftHopLength = ([config valueForKeyPath:@"properties.fft-hop-length"]) ? [RCTConvert NSInteger:[config valueForKeyPath:@"properties.fft-hop-length"]] : self.speechConfig.fftHopLength;
-    self.speechConfig.melFrameLength = ([config valueForKeyPath:@"properties.mel-frame-length"]) ? [RCTConvert NSInteger:[config valueForKeyPath:@"properties.mel-frame-length"]] : self.speechConfig.melFrameLength;
-    self.speechConfig.melFrameWidth = ([config valueForKeyPath:@"properties.mel-frame-width"]) ? [RCTConvert NSInteger:[config valueForKeyPath:@"properties.mel-frame-width"]] : self.speechConfig.melFrameWidth;
-    self.speechConfig.stateWidth = ([config valueForKeyPath:@"properties.state-width"]) ? [RCTConvert NSInteger:[config valueForKeyPath:@"properties.state-width"]] : self.speechConfig.stateWidth;
-    self.speechConfig.encodeLength = ([config valueForKeyPath:@"properties.wake-encode-length"]) ? [RCTConvert NSInteger:[config valueForKeyPath:@"properties.wake-encode-length"]] : self.speechConfig.encodeLength;
-    self.speechConfig.encodeWidth = ([config valueForKeyPath:@"properties.wake-encode-width"]) ? [RCTConvert NSInteger:[config valueForKeyPath:@"properties.wake-encode-width"]] : self.speechConfig.encodeWidth;
-    self.speechConfig.wakeActiveMin = ([config valueForKeyPath:@"properties.wake-active-min"]) ? [RCTConvert NSInteger:[config valueForKeyPath:@"properties.wake-active-min"]] : self.speechConfig.wakeActiveMin;
-    self.speechConfig.wakeActiveMax = ([config valueForKeyPath:@"properties.wake-active-max"]) ? [RCTConvert NSInteger:[config valueForKeyPath:@"properties.wake-active-max"]] : self.speechConfig.wakeActiveMax;
-    self.speechConfig.frameWidth = ([config valueForKeyPath:@"properties.frame-width"]) ? [RCTConvert NSInteger:[config valueForKeyPath:@"properties.frame-width"]] : self.speechConfig.frameWidth;
-    self.speechConfig.preEmphasis = ([config valueForKeyPath:@"properties.pre-emphasis"]) ? [[RCTConvert NSNumber:[config valueForKeyPath:@"properties.pre-emphasis"]] floatValue] : self.speechConfig.preEmphasis;
+    self.speechConfig.rmsTarget = ([config valueForKeyPath:@"pipeline.rms-target"]) ? [[RCTConvert NSNumber:[config valueForKeyPath:@"pipeline.rms-target"]] floatValue] : self.speechConfig.rmsTarget;
+    self.speechConfig.rmsAlpha = ([config valueForKeyPath:@"pipeline.rms-alpha"]) ? [[RCTConvert NSNumber:[config valueForKeyPath:@"pipeline.rms-alpha"]] floatValue] : self.speechConfig.rmsAlpha;
+    self.speechConfig.fftWindowSize = ([config valueForKeyPath:@"pipeline.fft-window-size"]) ? [RCTConvert NSInteger:[config valueForKeyPath:@"pipeline.fft-window-size"]] : self.speechConfig.fftWindowSize;
+    self.speechConfig.fftHopLength = ([config valueForKeyPath:@"pipeline.fft-hop-length"]) ? [RCTConvert NSInteger:[config valueForKeyPath:@"pipeline.fft-hop-length"]] : self.speechConfig.fftHopLength;
+    self.speechConfig.melFrameLength = ([config valueForKeyPath:@"pipeline.mel-frame-length"]) ? [RCTConvert NSInteger:[config valueForKeyPath:@"pipeline.mel-frame-length"]] : self.speechConfig.melFrameLength;
+    self.speechConfig.melFrameWidth = ([config valueForKeyPath:@"pipeline.mel-frame-width"]) ? [RCTConvert NSInteger:[config valueForKeyPath:@"pipeline.mel-frame-width"]] : self.speechConfig.melFrameWidth;
+    self.speechConfig.stateWidth = ([config valueForKeyPath:@"pipeline.state-width"]) ? [RCTConvert NSInteger:[config valueForKeyPath:@"pipeline.state-width"]] : self.speechConfig.stateWidth;
+    self.speechConfig.encodeLength = ([config valueForKeyPath:@"pipeline.wake-encode-length"]) ? [RCTConvert NSInteger:[config valueForKeyPath:@"pipeline.wake-encode-length"]] : self.speechConfig.encodeLength;
+    self.speechConfig.encodeWidth = ([config valueForKeyPath:@"pipeline.wake-encode-width"]) ? [RCTConvert NSInteger:[config valueForKeyPath:@"pipeline.wake-encode-width"]] : self.speechConfig.encodeWidth;
+    self.speechConfig.wakeActiveMin = ([config valueForKeyPath:@"pipeline.wake-active-min"]) ? [RCTConvert NSInteger:[config valueForKeyPath:@"pipeline.wake-active-min"]] : self.speechConfig.wakeActiveMin;
+    self.speechConfig.wakeActiveMax = ([config valueForKeyPath:@"pipeline.wake-active-max"]) ? [RCTConvert NSInteger:[config valueForKeyPath:@"pipeline.wake-active-max"]] : self.speechConfig.wakeActiveMax;
+    self.speechConfig.frameWidth = ([config valueForKeyPath:@"pipeline.frame-width"]) ? [RCTConvert NSInteger:[config valueForKeyPath:@"pipeline.frame-width"]] : self.speechConfig.frameWidth;
+    self.speechConfig.preEmphasis = ([config valueForKeyPath:@"pipeline.pre-emphasis"]) ? [[RCTConvert NSNumber:[config valueForKeyPath:@"pipeline.pre-emphasis"]] floatValue] : self.speechConfig.preEmphasis;
 
     /// MARK: Wakeword models
 
     // TFLite
     if ([[config valueForKey:@"stages"] containsObject:@"io.spokestack.spokestack.wakeword.WakewordTrigger"]) {
-        self.speechConfig.filterModelPath = ([config valueForKeyPath:@"properties.wake-filter-path"]) ? [RCTConvert NSString:[config valueForKeyPath:@"properties.wake-filter-path"]] : self.speechConfig.filterModelPath;
-        self.speechConfig.encodeModelPath = ([config valueForKeyPath:@"properties.wake-encode-path"]) ? [RCTConvert NSString:[config valueForKeyPath:@"properties.wake-encode-path"]] : self.speechConfig.encodeModelPath;
-        self.speechConfig.detectModelPath = ([config valueForKeyPath:@"properties.wake-detect-path"]) ? [RCTConvert NSString:[config valueForKeyPath:@"properties.wake-detect-path"]] : self.speechConfig.detectModelPath;
-        self.speechConfig.wakeThreshold = ([config valueForKeyPath:@"properties.wake-threshold"]) ? [[RCTConvert NSNumber:[config valueForKeyPath:@"properties.wake-threshold"]] floatValue] : self.speechConfig.wakeThreshold;
-        self.wakewordService = [[TFLiteWakewordRecognizer alloc] init: self.speechConfig context: self.speechContext];
+        self.speechConfig.filterModelPath = ([config valueForKeyPath:@"pipeline.wake-filter-path"]) ? [RCTConvert NSString:[config valueForKeyPath:@"pipeline.wake-filter-path"]] : self.speechConfig.filterModelPath;
+        self.speechConfig.encodeModelPath = ([config valueForKeyPath:@"pipeline.wake-encode-path"]) ? [RCTConvert NSString:[config valueForKeyPath:@"pipeline.wake-encode-path"]] : self.speechConfig.encodeModelPath;
+        self.speechConfig.detectModelPath = ([config valueForKeyPath:@"pipeline.wake-detect-path"]) ? [RCTConvert NSString:[config valueForKeyPath:@"pipeline.wake-detect-path"]] : self.speechConfig.detectModelPath;
+        self.speechConfig.wakeThreshold = ([config valueForKeyPath:@"pipeline.wake-threshold"]) ? [[RCTConvert NSNumber:[config valueForKeyPath:@"pipeline.wake-threshold"]] floatValue] : self.speechConfig.wakeThreshold;
     // Apple ASR
     } else {
         self.speechConfig.wakewords = ([config valueForKeyPath:@"properties.wakewords"]) ? [RCTConvert NSString:[config valueForKeyPath:@"properties.wakewords"]] : self.speechConfig.wakewords;
         self.speechConfig.wakewordRequestTimeout = ([config valueForKeyPath:@"properties.wake-request-timeout"]) ? [RCTConvert NSInteger:[config valueForKeyPath:@"properties.wake-request-timeout"]] : self.speechConfig.wakewordRequestTimeout;
-        self.wakewordService = [[AppleWakewordRecognizer alloc] init: self.speechConfig context: self.speechContext];
     }
 
     /// MARK: TTS configuration
 
-    self.speechConfig.apiId = ([config valueForKeyPath:@"tts.api-id"]) ? [RCTConvert NSString:[config valueForKeyPath:@"properties.api-id"]] : self.speechConfig.apiId;
-    self.speechConfig.apiSecret = ([config valueForKeyPath:@"tts.api-id"]) ? [RCTConvert NSString:[config valueForKeyPath:@"tts.api-secret"]] : self.speechConfig.apiSecret;
+    self.speechConfig.apiId = ([config valueForKeyPath:@"properties.api-id"]) ? [RCTConvert NSString:[config valueForKeyPath:@"properties.api-id"]] : self.speechConfig.apiId;
+    self.speechConfig.apiSecret = ([config valueForKeyPath:@"properties.api-id"]) ? [RCTConvert NSString:[config valueForKeyPath:@"properties.api-secret"]] : self.speechConfig.apiSecret;
 
     /// MARK: NLU configuration
 
@@ -250,24 +228,28 @@ RCT_EXPORT_METHOD(initialize:(NSDictionary *)config)
     /// MARK: Pipeline, NLU, & TTS init
 
     NSArray *listeners = @[self];
-    NSArray *stages = @[vad, self.wakewordService, self.asrService];
     
     self.nlu = [[NLUTensorflow alloc] init:listeners configuration:self.speechConfig error:&error];
     if (error) {
         NSLog(@"RNSpokestack initialize error: %@", error);
-        [self failureWithNluError: error];
+        [self failureWithError: error];
     }
 
-    self.pipeline = [[SpeechPipeline alloc]
-                     initWithConfiguration: self.speechConfig
-                     listeners: listeners
-                     stages: stages context: self.speechContext];
+    SpeechPipelineBuilder *pipelineBuilder = [[SpeechPipelineBuilder alloc] init];
+    pipelineBuilder = [pipelineBuilder setConfiguration:self.speechConfig];
+    pipelineBuilder = [pipelineBuilder addListener: self];
+    pipelineBuilder = [pipelineBuilder useProfile: ([config valueForKeyPath:@"pipeline.profile"]) ? [RCTConvert NSInteger:[config valueForKeyPath:@"pipeline.profile"]] : 1];
+    self.pipeline = [pipelineBuilder buildAndReturnError: &error];
+    if (error) {
+        NSLog(@"RNSpokestack initialize error: %@", error);
+        [self failureWithError: error];
+    }
 
     if (@available(iOS 13.0, *)) {
         self.tts = [[TextToSpeech alloc] init:listeners configuration:self.speechConfig];
     } else {
         NSLog(@"RNSpokestack initialize error: %@", @"Spokestack TTS is only available in iOS 13 or higher.");
-        [self failureWithTtsError: error];
+        [self failureWithError: error];
     }
 }
 

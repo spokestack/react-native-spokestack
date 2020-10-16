@@ -15,8 +15,6 @@ API_AVAILABLE(ios(13.0))
 @property (nonatomic) SpeechPipeline *pipeline;
 @property (nonatomic) TextToSpeech *tts;
 @property (nonatomic) NLUTensorflow *nlu;
-@property (nonatomic) id <SpeechProcessor> asrService;
-@property (nonatomic) id <SpeechProcessor> wakewordService;
 @property (nonatomic) SpeechConfiguration *speechConfig;
 @property (nonatomic) SpeechContext *speechContext;
 @end
