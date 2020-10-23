@@ -94,6 +94,17 @@ React Native wrapper for the [Spokestack](https://spokestack.io) speech activity
 | SSML           | 1     |
 | SPEECHMARKDOWN | 2     |
 
+#### Pipeline Profiles
+| PipelineProfile                      | Value |
+| ------------------------------------ | ----- |
+| TFLITE_WAKEWORD_NATIVE_ASR           |     0  |
+| VAD_NATIVE_ASR                        |     1 |
+| PTT_NATIVE_ASR                        |     2 |
+| TFLITE_WAKEWORD_SPOKESTACK_ASR        |     3 |
+| VAD_SPOKESTACK_ASR                   |     4 |
+| PTT_SPOKESTACK_ASR                   |     5 |
+
+
 ## Gotchas
 
 ### Android
