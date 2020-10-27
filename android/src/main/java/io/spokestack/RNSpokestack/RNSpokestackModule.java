@@ -2,7 +2,6 @@
 package io.spokestack.RNSpokestack;
 
 import android.os.Build;
-import android.util.Log;
 
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -16,26 +15,26 @@ import java.util.Map;
 
 import javax.annotation.Nullable;
 
-import androidx.annotation.RequiresApi;
-import io.spokestack.spokestack.SpeechContext;
+import io.spokestack.spokestack.PipelineProfile;
 import io.spokestack.spokestack.Spokestack;
-import io.spokestack.spokestack.nlu.NLUContext;
-import io.spokestack.spokestack.nlu.NLUResult;
+import io.spokestack.spokestack.profile.PushToTalkAndroidASR;
+import io.spokestack.spokestack.profile.PushToTalkSpokestackASR;
+import io.spokestack.spokestack.profile.TFWakewordAndroidASR;
+import io.spokestack.spokestack.profile.TFWakewordSpokestackASR;
+import io.spokestack.spokestack.profile.VADTriggerAndroidASR;
+import io.spokestack.spokestack.profile.VADTriggerSpokestackASR;
 import io.spokestack.spokestack.tts.SynthesisRequest;
 import io.spokestack.spokestack.tts.TTSEvent;
-import io.spokestack.spokestack.util.AsyncResult;
 
-@RequiresApi(api = Build.VERSION_CODES.N)
 public class RNSpokestackModule extends ReactContextBaseJavaModule {
 
     private final ReactApplicationContext reactContext;
-    private final RNSpokestackAdapter adapter = new RNSpokestackAdapter();
+    private final RNSpokestackAdapter adapter = new RNSpokestackAdapter(this::sendEvent);
     private Spokestack spokestack;
 
     public RNSpokestackModule(ReactApplicationContext reactContext) {
         super(reactContext);
         this.reactContext = reactContext;
-        adapter.sendEvent = this::sendEvent;
     }
 
     @Override
@@ -46,8 +45,8 @@ public class RNSpokestackModule extends ReactContextBaseJavaModule {
     @Override
     public void onCatalystInstanceDestroy() {
         super.onCatalystInstanceDestroy();
-        if (spokestack.getSpeechPipeline() != null && spokestack.getSpeechPipeline().isRunning()) {
-            spokestack.getSpeechPipeline().stop();
+        if (spokestack.getSpeechPipeline() != null) {
+            spokestack.stop();
         }
     }
 
@@ -78,10 +77,11 @@ public class RNSpokestackModule extends ReactContextBaseJavaModule {
             Map<String, Object> map = config.getMap("pipeline").toHashMap();
             for (String k : map.keySet())
                 builder.setProperty(k, map.get(k));
-            Double p = Double.parseDouble(map.get("profile").toString());
-            PipelineProfiles profile = PipelineProfiles.values()[p.intValue()];
-            String namespacedProfile = "io.spokestack.spokestack.profile." + String.valueOf(profile);
-            builder.getPipelineBuilder().useProfile(namespacedProfile);
+            if (map.containsKey("profile")) {
+                Double p = Double.parseDouble(map.get("profile").toString());
+                PipelineProfiles profile = PipelineProfiles.values()[p.intValue()];
+                builder.getPipelineBuilder().useProfile(profile.value());
+            }
         } else {
             builder.withoutSpeechPipeline();
             builder.withoutAutoClassification();
@@ -101,47 +101,44 @@ public class RNSpokestackModule extends ReactContextBaseJavaModule {
         builder.withoutAutoPlayback();
 
         spokestack = builder.build();
-        onEvent("init", spokestack.getSpeechPipeline().getContext().isActive());
     }
 
     private enum PipelineProfiles {
-        TFWakewordAndroidASR(0),
-        VADTriggerAndroidASR(1),
-        PushToTalkAndroidASR(2),
-        TFWakewordSpokestackASR(3),
-        VADTriggerSpokestackASR(4),
-        PushToTalkSpokestackASR(5);
+        TFLiteWakewordNativeASR(TFWakewordAndroidASR.class),
+        VADNativeASR(VADTriggerAndroidASR.class),
+        PTTNativeASR(PushToTalkAndroidASR.class),
+        TFLiteWakewordSpokestackASR(TFWakewordSpokestackASR.class),
+        VADSpokestackASR(VADTriggerSpokestackASR.class),
+        PTTSpokestackASR(PushToTalkSpokestackASR.class);
 
-        private final int profile;
-        PipelineProfiles(int l) {
-            this.profile = l;
+        private final Class<? extends PipelineProfile> profile;
+        PipelineProfiles(Class<? extends PipelineProfile> p) {
+            this.profile = p;
         }
 
-        public int value() {
-            return this.profile;
+        public String value() {
+            return this.profile.getCanonicalName();
         }
     }
 
     @ReactMethod
     public void start() throws Exception {
         spokestack.getSpeechPipeline().start();
-        onEvent("start", spokestack.getSpeechPipeline().getContext().isActive());
     }
 
     @ReactMethod
     public void stop () {
         spokestack.getSpeechPipeline().stop();
-        onEvent("stop", spokestack.getSpeechPipeline().getContext().isActive());
     }
 
     @ReactMethod
     public void activate () {
-        spokestack.getSpeechPipeline().activate();
+        spokestack.activate();
     }
 
     @ReactMethod
     public void deactivate () {
-        spokestack.getSpeechPipeline().deactivate();
+        spokestack.deactivate();
     }
 
     @ReactMethod
@@ -158,35 +155,12 @@ public class RNSpokestackModule extends ReactContextBaseJavaModule {
                     .withMode(SynthesisRequest.Mode.values()[format])
                     .withVoice(ttsInput.getString("voice"))
                     .build();
-            spokestack.getTts().synthesize(req);
+            spokestack.synthesize(req);
         }
     }
 
     @ReactMethod
     public void classify (String utterance, ReadableMap context) {
-        AsyncResult<NLUResult> asyncResult = spokestack.getNlu().classify(utterance, new NLUContext(spokestack.getSpeechPipeline().getConfig()));
-        asyncResult.registerCallback(adapter);
-    }
-
-    public void onEvent(SpeechContext.Event event, SpeechContext context) {
-        WritableMap react_event = Arguments.createMap();
-        react_event.putString("event", event.name());
-        react_event.putString("transcript", context.getTranscript());
-        react_event.putString("message", context.getMessage());
-        react_event.putString("error", Log.getStackTraceString(context.getError()));
-        if (react_event.getString("error").isEmpty()) {
-            sendEvent("onSpeechEvent", react_event);
-        } else {
-            sendEvent("onErrorEvent", react_event);
-        }
-    }
-
-    public void onEvent(String event, Boolean active) {
-        WritableMap react_event = Arguments.createMap();
-        react_event.putString("event", event);
-        react_event.putString("transcript", "");
-        react_event.putString("message", "");
-        react_event.putString("error", "");
-        sendEvent("onSpeechEvent", react_event);
+        spokestack.classify(utterance);
     }
 }

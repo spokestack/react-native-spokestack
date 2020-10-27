@@ -9,15 +9,18 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiFunction;
 
-import androidx.annotation.RequiresApi;
 import io.spokestack.spokestack.nlu.NLUResult;
 import io.spokestack.spokestack.nlu.Slot;
 import io.spokestack.spokestack.tts.TTSEvent;
 import io.spokestack.spokestack.util.EventTracer;
 
-@RequiresApi(api = Build.VERSION_CODES.N)
 public class RNSpokestackAdapter extends io.spokestack.spokestack.SpokestackAdapter {
-    public BiFunction<String, WritableMap, Void> sendEvent;
+
+    private BiFunction<String, WritableMap, Void> sendEvent;
+
+    public RNSpokestackAdapter(BiFunction<String, WritableMap, Void> sendFunc) {
+        sendEvent = sendFunc;
+    }
 
     @Override
     public void onTrace(EventTracer.Level level, String message) {

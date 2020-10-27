@@ -19,7 +19,7 @@ React Native wrapper for the [Spokestack](https://spokestack.io) speech activity
 `$ npm install react-native-spokestack --save`
 
 - _React Native_: 0.60.0+
-- _Android_: Android SDK 26+
+- _Android_: Android SDK 24+
 - _iOS_: iOS 13+
 
 ## Usage
@@ -109,7 +109,7 @@ React Native wrapper for the [Spokestack](https://spokestack.io) speech activity
 
 ### Android
 
-- Requires Android SDK 26 level support
+- Requires Android SDK 24 level support
 - Requires Gradle 3.0.1+ (`classpath 'com.android.tools.build:gradle:3.0.1'` in root `build.gradle` `dependencies`)
 - Add app setting for microphone permission
 
