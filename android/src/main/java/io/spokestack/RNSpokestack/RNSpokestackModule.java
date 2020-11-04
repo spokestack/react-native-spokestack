@@ -118,7 +118,7 @@ public class RNSpokestackModule extends ReactContextBaseJavaModule {
         }
 
         public String value() {
-            return this.profile.getCanonicalName();
+            return this.profile.getName();
         }
     }
 
