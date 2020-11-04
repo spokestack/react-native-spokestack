@@ -51,7 +51,8 @@ class Spokestack {
       'onSpeechEvent': this._onSpeechEvent.bind(this),
       'onTTSEvent': this._onTTSEvent.bind(this),
       'onNLUEvent': this._onNLUEvent.bind(this),
-      'onErrorEvent': this._onErrorEvent.bind(this)
+      'onErrorEvent': this._onErrorEvent.bind(this),
+      'onTraceEvent': this._onTraceEvent.bind(this)
     }
   }
 
@@ -103,6 +104,12 @@ class Spokestack {
     }
   }
 
+  _onTraceEvent (e) {
+    if (this.onTrace) {
+      this.onTrace(e)
+    }
+  }
+
   _onNLUEvent (e) {
     console.log('js onNLUEvent ' + e.event)
     if (this.onClassification) {
@@ -148,7 +155,8 @@ class Spokestack {
           this.onStop(e)
         }
         break
-      case 'init':
+    case 'init':
+      console.log("rns init")
         if (this.onInit) {
           this.onInit(e)
         }

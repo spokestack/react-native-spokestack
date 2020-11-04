@@ -1,7 +1,5 @@
 package io.spokestack.RNSpokestack;
 
-import android.os.Build;
-
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.WritableMap;
 
@@ -9,10 +7,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiFunction;
 
+import io.spokestack.spokestack.SpeechContext;
+import io.spokestack.spokestack.SpokestackModule;
 import io.spokestack.spokestack.nlu.NLUResult;
 import io.spokestack.spokestack.nlu.Slot;
 import io.spokestack.spokestack.tts.TTSEvent;
-import io.spokestack.spokestack.util.EventTracer;
 
 public class RNSpokestackAdapter extends io.spokestack.spokestack.SpokestackAdapter {
 
@@ -23,40 +22,46 @@ public class RNSpokestackAdapter extends io.spokestack.spokestack.SpokestackAdap
     }
 
     @Override
-    public void onTrace(EventTracer.Level level, String message) {
+    public void error(SpokestackModule module, Throwable err) {
         WritableMap react_event = Arguments.createMap();
-        react_event.putString("event", "trace");
-        react_event.putString("trace", message);
-        react_event.putString("level", level.toString());
-        sendEvent.apply("onSpeechEvent", react_event);
+        react_event.putString("event", "error");
+        react_event.putString("error", module.name() + " " + err.getLocalizedMessage());
+        sendEvent.apply("onErrorEvent", react_event);
     }
 
     @Override
-    public void eventReceived(TTSEvent event) {
+    public void trace(SpokestackModule module, String message) {
+        WritableMap react_event = Arguments.createMap();
+        react_event.putString("event", "trace");
+        react_event.putString("trace",  module.name() + " " + message);
+        sendEvent.apply("onTraceEvent", react_event);
+    }
+
+    @Override
+    public void nluResult(NLUResult result) {
+        WritableMap reactEvent = Arguments.makeNativeMap(toEvent(result));
+        sendEvent.apply("onNLUEvent", reactEvent);
+    }
+
+    @Override
+    public void ttsEvent(TTSEvent event) {
         WritableMap react_event = Arguments.createMap();
         if (event.getError() == null) {
             react_event.putString("event", "success");
             react_event.putString("url", event.getTtsResponse().getAudioUri().toString());
             sendEvent.apply("onTTSEvent", react_event);
-        } else {
-            react_event.putString("event", "failure");
-            react_event.putString("error", event.getError().getLocalizedMessage());
-            sendEvent.apply("onErrorEvent", react_event);
         }
     }
 
     @Override
-    public void onError(Throwable err) {
-        WritableMap react_event = Arguments.createMap();
-        react_event.putString("event", "error");
-        react_event.putString("error", err.getLocalizedMessage());
-        sendEvent.apply("onErrorEvent", react_event);
-    }
-
-    @Override
-    public void call(NLUResult arg) {
-        WritableMap reactEvent = Arguments.makeNativeMap(toEvent(arg));
-        sendEvent.apply("onNLUEvent", reactEvent);
+    public void speechEvent(SpeechContext.Event event, SpeechContext context) {
+        if (event != SpeechContext.Event.ERROR && event != SpeechContext.Event.TRACE) {
+            WritableMap react_event = Arguments.createMap();
+            react_event.putString("event", event.name());
+            react_event.putString("transcript", context.getTranscript());
+            react_event.putString("message", context.getMessage());
+            sendEvent.apply("onSpeechEvent", react_event);
+        }
     }
 
     static Map<String, Object> toEvent(NLUResult nluResult) {

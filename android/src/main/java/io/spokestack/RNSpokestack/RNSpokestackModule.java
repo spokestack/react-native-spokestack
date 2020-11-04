@@ -1,8 +1,6 @@
 
 package io.spokestack.RNSpokestack;
 
-import android.os.Build;
-
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
@@ -101,6 +99,9 @@ public class RNSpokestackModule extends ReactContextBaseJavaModule {
         builder.withoutAutoPlayback();
 
         spokestack = builder.build();
+        WritableMap react_event = Arguments.createMap();
+        react_event.putString("event", "init");
+        sendEvent("init", react_event);
     }
 
     private enum PipelineProfiles {

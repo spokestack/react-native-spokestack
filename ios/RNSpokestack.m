@@ -44,7 +44,7 @@ RCT_EXPORT_MODULE();
 
 - (NSArray<NSString *> *)supportedEvents
 {
-    return @[@"onSpeechEvent", @"onTTSEvent", @"onNLUEvent", @"onErrorEvent"];
+    return @[@"onSpeechEvent", @"onTTSEvent", @"onNLUEvent", @"onErrorEvent", @"onTraceEvent"];
 }
 
 - (void)didActivate {
@@ -52,7 +52,7 @@ RCT_EXPORT_MODULE();
     if (hasListeners)
     {
         [self sendEventWithName:@"onSpeechEvent" body:@{
-            @"event": @"activate", @"transcript": @"", @"error": @""}];
+            @"event": @"activate", @"transcript": @""}];
     }
 }
 
@@ -61,7 +61,7 @@ RCT_EXPORT_MODULE();
     if (hasListeners)
     {
         [self sendEventWithName:@"onSpeechEvent" body:@{
-            @"event": @"deactivate", @"transcript": @"", @"error": @""}];
+            @"event": @"deactivate", @"transcript": @""}];
     }
 }
 
@@ -69,8 +69,8 @@ RCT_EXPORT_MODULE();
     NSLog(@"RNSpokestack didTrace");
     if (hasListeners)
     {
-        [self sendEventWithName:@"onSpeechEvent" body:@{
-            @"event": @"trace", @"transcript": @"", @"error": @"", @"trace": trace}];
+        [self sendEventWithName:@"onTraceEvent" body:@{
+            @"event": @"trace", @"trace": trace}];
     }
 }
 
@@ -79,7 +79,7 @@ RCT_EXPORT_MODULE();
     if (hasListeners)
     {
         [self sendEventWithName:@"onSpeechEvent" body:@{
-            @"event": @"stop", @"transcript": @"", @"error": @""}];
+            @"event": @"stop", @"transcript": @""}];
     }
 }
 
@@ -88,7 +88,7 @@ RCT_EXPORT_MODULE();
     if (hasListeners)
     {
         [self sendEventWithName:@"onSpeechEvent" body:@{
-            @"event": @"start", @"transcript": @"", @"error": @""}];
+            @"event": @"start", @"transcript": @""}];
     }
 }
 
@@ -97,7 +97,7 @@ RCT_EXPORT_MODULE();
     if (hasListeners)
     {
         [self sendEventWithName:@"onSpeechEvent" body:@{
-            @"event": @"recognize", @"transcript": results.transcript, @"error": @""}];
+            @"event": @"recognize", @"transcript": results.transcript}];
     }
 }
 
@@ -106,7 +106,7 @@ RCT_EXPORT_MODULE();
     if (hasListeners)
     {
         [self sendEventWithName:@"onSpeechEvent" body:@{
-            @"event": @"timeout", @"transcript": @"", @"error": @""}];
+            @"event": @"timeout", @"transcript": @""}];
     }
 }
 
@@ -114,8 +114,8 @@ RCT_EXPORT_MODULE();
     NSLog(@"RNSpokestack setupFailed");
     if (hasListeners)
     {
-        [self sendEventWithName:@"onSpeechEvent" body:@{
-            @"event": @"error", @"transcript": @"", @"error": error}];
+        [self sendEventWithName:@"onErrorEvent" body:@{
+            @"event": @"error", @"error": error}];
     }
 }
 
@@ -124,7 +124,7 @@ RCT_EXPORT_MODULE();
     if (hasListeners)
     {
         [self sendEventWithName:@"onSpeechEvent" body:@{
-            @"event": @"init", @"transcript": @"", @"error": @""}];
+            @"event": @"init", @"transcript": @""}];
     }
 }
 
@@ -145,7 +145,7 @@ RCT_EXPORT_MODULE();
     if (hasListeners)
     {
         [self sendEventWithName:@"onTTSEvent" body:@{
-            @"event": @"success", @"url": result.url.absoluteString, @"error": @""}];
+            @"event": @"success", @"url": result.url.absoluteString}];
     }
 }
 
@@ -161,7 +161,7 @@ RCT_EXPORT_MODULE();
             slots[name] = @{@"type": slot.type, @"value": (slot.value ?: [NSNull null]), @"rawValue": (slot.rawValue  ?: [NSNull null])};
         }];
         // send the slots along with the rest of the result object
-        [self sendEventWithName:@"onNLUEvent" body: @{@"event": @"classification", @"result": @{@"intent":result.intent, @"confidence":[[NSNumber numberWithFloat:result.confidence] stringValue], @"slots":slots}, @"error":@""}];
+        [self sendEventWithName:@"onNLUEvent" body: @{@"event": @"classification", @"result": @{@"intent":result.intent, @"confidence":[[NSNumber numberWithFloat:result.confidence] stringValue], @"slots":slots}}];
     }
 }
 

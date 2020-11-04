@@ -50,10 +50,9 @@ React Native wrapper for the [Spokestack](https://spokestack.io) speech activity
 | onStop(event)             | `null`                | Invoked when the speech pipeline has been stopped                                                                    | Android, iOS |
 | onRecognize(event)        | `transcript`:`string` | Invoked when speech has been recognized                                                                              | Android, iOS |
 | onTimeout(event)          | `null`                | Invoked when no speech has been detected for `wake-active-max` after activation                                      | Android, iOS |
-| onTrace(event)            | `message`:`string`    | Invoked when a trace message become available                                                                        | Android      |
-| onError(event)            | `error`:`string`      | Invoked upon an error in the speech pipeline execution                                                               | Android, iOS |
+| onTrace(event)            | `message`:`string`    | Invoked when a trace message becomes available                                                                       | Android      |
+| onError(event)            | `error`:`string`      | Invoked upon an error in a Spokestack module.                                                                        | Android, iOS |
 | onSuccess(ttsEvent)          | `url`:`string`   | Invoked upon a successful TTS synthesis request                | iOS          |
-| onFailure(ttsEvent)          | `error`:`string` | Invoked upon a failed TTS synthesis request                    | iOS          |
 | onClassification(nluEvent) | `result`:`dictionary` | Invoked upon a successful NLU utterance classification | iOS          |
 
 ### Dictionaries
