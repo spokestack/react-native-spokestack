@@ -75,7 +75,6 @@ React Native wrapper for the [Spokestack](https://spokestack.io) speech activity
 | type       | string |
 | value      | string |
 
-
 ### Enums
 #### Trace
 

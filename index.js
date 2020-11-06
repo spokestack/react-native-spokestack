@@ -140,11 +140,6 @@ class Spokestack {
           this.onRecognize(e)
         }
         break
-      case 'trace':
-        if (this.onTrace) {
-          this.onTrace(e)
-        }
-        break
       case 'start':
         if (this.onStart) {
           this.onStart(e)
@@ -155,8 +150,7 @@ class Spokestack {
           this.onStop(e)
         }
         break
-    case 'init':
-      console.log("rns init")
+      case 'init':
         if (this.onInit) {
           this.onInit(e)
         }
