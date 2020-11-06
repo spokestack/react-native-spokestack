@@ -19,7 +19,7 @@ React Native wrapper for the [Spokestack](https://spokestack.io) speech activity
 `$ npm install react-native-spokestack --save`
 
 - _React Native_: 0.60.0+
-- _Android_: Android SDK 26+
+- _Android_: Android SDK 24+
 - _iOS_: iOS 13+
 
 ## Usage
@@ -50,10 +50,9 @@ React Native wrapper for the [Spokestack](https://spokestack.io) speech activity
 | onStop(event)             | `null`                | Invoked when the speech pipeline has been stopped                                                                    | Android, iOS |
 | onRecognize(event)        | `transcript`:`string` | Invoked when speech has been recognized                                                                              | Android, iOS |
 | onTimeout(event)          | `null`                | Invoked when no speech has been detected for `wake-active-max` after activation                                      | Android, iOS |
-| onTrace(event)            | `message`:`string`    | Invoked when a trace message become available                                                                        | Android      |
-| onError(event)            | `error`:`string`      | Invoked upon an error in the speech pipeline execution                                                               | Android, iOS |
+| onTrace(event)            | `message`:`string`    | Invoked when a trace message becomes available                                                                       | Android      |
+| onError(event)            | `error`:`string`      | Invoked upon an error in a Spokestack module.                                                                        | Android, iOS |
 | onSuccess(ttsEvent)          | `url`:`string`   | Invoked upon a successful TTS synthesis request                | iOS          |
-| onFailure(ttsEvent)          | `error`:`string` | Invoked upon a failed TTS synthesis request                    | iOS          |
 | onClassification(nluEvent) | `result`:`dictionary` | Invoked upon a successful NLU utterance classification | iOS          |
 
 ### Dictionaries
@@ -76,7 +75,6 @@ React Native wrapper for the [Spokestack](https://spokestack.io) speech activity
 | type       | string |
 | value      | string |
 
-
 ### Enums
 #### Trace
 
@@ -94,11 +92,22 @@ React Native wrapper for the [Spokestack](https://spokestack.io) speech activity
 | SSML           | 1     |
 | SPEECHMARKDOWN | 2     |
 
+#### Pipeline Profiles
+| PipelineProfile                      | Value |
+| ------------------------------------ | ----- |
+| TFLITE_WAKEWORD_NATIVE_ASR           |     0  |
+| VAD_NATIVE_ASR                       |     1 |
+| PTT_NATIVE_ASR                       |     2 |
+| TFLITE_WAKEWORD_SPOKESTACK_ASR       |     3 |
+| VAD_SPOKESTACK_ASR                   |     4 |
+| PTT_SPOKESTACK_ASR                   |     5 |
+
+
 ## Gotchas
 
 ### Android
 
-- Requires Android SDK 26 level support
+- Requires Android SDK 24 level support
 - Requires Gradle 3.0.1+ (`classpath 'com.android.tools.build:gradle:3.0.1'` in root `build.gradle` `dependencies`)
 - Add app setting for microphone permission
 

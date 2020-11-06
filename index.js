@@ -19,6 +19,16 @@ const TTSFormat = Object.freeze({
   SPEECHMARKDOWN: 2
 })
 
+// Warning: Order is fixed for interop with Spokestack-iOS. New profiles should be appended to end and coordinated with Spokestack-iOS releases.
+const PipelineProfile = Object.freeze({
+  TFLITE_WAKEWORD_NATIVE_ASR: 0,
+  VAD_NATIVE_ASR: 1,
+  PTT_NATIVE_ASR: 2,
+  TFLITE_WAKEWORD_SPOKESTACK_ASR: 3,
+  VAD_SPOKESTACK_ASR: 4,
+  PTT_SPOKESTACK_ASR: 5
+})
+
 class Spokestack {
   get TraceLevel () {
     return TraceLevel
@@ -26,6 +36,10 @@ class Spokestack {
 
   get TTSFormat () {
     return TTSFormat
+  }
+
+  get PipelineProfile() {
+    return PipelineProfile
   }
 
   // Class methods
@@ -36,7 +50,9 @@ class Spokestack {
     this._events = {
       'onSpeechEvent': this._onSpeechEvent.bind(this),
       'onTTSEvent': this._onTTSEvent.bind(this),
-      'onNLUEvent': this._onNLUEvent.bind(this)
+      'onNLUEvent': this._onNLUEvent.bind(this),
+      'onErrorEvent': this._onErrorEvent.bind(this),
+      'onTraceEvent': this._onTraceEvent.bind(this)
     }
   }
 
@@ -82,38 +98,28 @@ class Spokestack {
 
   // Events
 
+  _onErrorEvent (e) {
+    if (this.onError) {
+      this.onError(e)
+    }
+  }
+
+  _onTraceEvent (e) {
+    if (this.onTrace) {
+      this.onTrace(e)
+    }
+  }
+
   _onNLUEvent (e) {
     console.log('js onNLUEvent ' + e.event)
-    switch (e.event.toLowerCase()) {
-      case 'classification':
-        if (this.onClassification) {
-          this.onClassification(e)
-        }
-        break
-      case 'error':
-        if (this.onError) {
-          this.onError(e)
-        }
-        break
-      default:
-        break
+    if (this.onClassification) {
+      this.onClassification(e)
     }
   }
 
   _onTTSEvent (e) {
-    switch (e.event.toLowerCase()) {
-      case 'success':
-        if (this.onSuccess) {
-          this.onSuccess(e)
-        }
-        break
-      case 'failure':
-        if (this.onFailure) {
-          this.onFailure(e)
-        }
-        break
-      default:
-        break
+    if (this.onSuccess) {
+      this.onSuccess(e)
     }
   }
 
@@ -132,16 +138,6 @@ class Spokestack {
       case 'recognize':
         if (this.onRecognize) {
           this.onRecognize(e)
-        }
-        break
-      case 'trace':
-        if (this.onTrace) {
-          this.onTrace(e)
-        }
-        break
-      case 'error':
-        if (this.onError) {
-          this.onError(e)
         }
         break
       case 'start':
