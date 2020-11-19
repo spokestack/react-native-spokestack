@@ -2,6 +2,15 @@ export = RNSpokestack;
 export as namespace RNSpokestack;
 
 declare namespace RNSpokestack {
+  enum PipelineProfile {
+    TFLITE_WAKEWORD_NATIVE_ASR = 0,
+    VAD_NATIVE_ASR = 1,
+    PTT_NATIVE_ASR = 2,
+    TFLITE_WAKEWORD_SPOKESTACK_ASR = 3,
+    VAD_SPOKESTACK_ASR = 4,
+    PTT_SPOKESTACK_ASR = 5,
+  }
+
   enum TraceLevel {
     DEBUG = 10,
     PERF = 20,
@@ -56,35 +65,6 @@ declare namespace RNSpokestack {
     SpokestackTTSEvent &
     SpokestackNLUEvent;
 
-  type SpokestackInput =
-    | "io.spokestack.spokestack.android.MicrophoneInput"
-    | "io.spokestack.spokestack.android.NoInput"
-    | "io.spokestack.spokestack.android.PreASRMicrophoneInput";
-
-  type SpokestackInputProcessing =
-    | "io.spokestack.spokestack.webrtc.AcousticNoiseSuppressor"
-    | "io.spokestack.spokestack.webrtc.AutomaticGainControl";
-
-  type SpokestackVoiceActivity =
-    | "io.spokestack.spokestack.webrtc.VoiceActivityDetector"
-    | "io.spokestack.spokestack.webrtc.VoiceActivityTrigger"
-    // Specify the two above, the one below, or none
-    | "io.spokestack.spokestack.wakeword.WakewordTrigger";
-
-  // Only specify one of these
-  type SpokestackSpeechRecognizer =
-    | "io.spokestack.spokestack.android.AndroidSpeechRecognizer"
-    | "io.spokestack.spokestack.google.GoogleSpeechRecognizer"
-    | "io.spokestack.spokestack.microsoft.AzureSpeechRecognizer";
-
-  // Important: follow this order when specifying stages
-  // All stages are optional
-  type SpokestackStage =
-    | SpokestackInputProcessing
-    | SpokestackVoiceActivity
-    | "io.spokestack.spokestack.ActivationTimeout"
-    | SpokestackSpeechRecognizer;
-
   /**
    * Configuration is mostly Android-based.
    * Spokestack-iOS takes some of these values and
@@ -93,17 +73,44 @@ declare namespace RNSpokestack {
    * spokestack-android reference: https://javadoc.io/doc/io.spokestack/spokestack-android/latest/index.html
    */
   interface SpokestackConfig {
-    /**
-     * Required for Android.
-     * Specifies which input processor to use.
-     */
-    input?: SpokestackInput;
-    /**
-     * Stages is an array of classes through which to pass input
-     * Only the wakeword stage is relevant in iOS
-     */
-    stages: SpokestackStage[];
     properties?: {
+      /**
+       * Spokestack API credentials
+       * Can be generated after creating an account
+       * https://spokestack.io/create
+       */
+      "spokestack-id"?: string;
+      "spokestack-secret"?: string;
+      /**
+       * Trace level for logs
+       * DEBUG, PERF, INFO, and NONE
+       */
+      "trace-level"?: TraceLevel;
+    };
+    /**
+     * NLU settings
+     * Only set these if you are calling `Spokestack.classify`
+     */
+    nlu?: {
+      /**
+       * String filesystem path to NLU model
+       */
+      "nlu-model-path"?: string;
+      /**
+       * String filesystem path to NLU metadata
+       */
+      "nlu-metadata-path"?: string;
+      /**
+       * String filesystem path to NLU vocab
+       */
+      "wordpiece-vocab-path"?: string;
+    };
+    pipeline: {
+      /**
+       * Profiles are collections of common configurations for Pipeline stages.
+       * See `SpokestackPipelineProfile` for available profiles.
+       */
+      profile: PipelineProfile;
       /**
        * Audio sampling rate, in Hz
        */
@@ -128,11 +135,6 @@ declare namespace RNSpokestack {
        * how many negative samples must be received to flip the detector to negative
        */
       "vad-fall-delay"?: number;
-      /**
-       * Trace level for logs
-       * DEBUG, PERF, INFO, and NONE
-       */
-      "trace-level"?: TraceLevel;
 
       // Wakeword: iOS and Android options
       /**
@@ -253,56 +255,12 @@ declare namespace RNSpokestack {
        */
       "wake-threshold"?: number;
 
-      // Android-only Speech Recognizer
-      // -----------------------------------------------
-      /**
-       * Language code for speech recognition
-       * Used in both Azure and Google Speech Recognizers
-       */
-      locale?: string;
-
-      // AzureSpeechRecognizer
-      /**
-       * API key for the Azure Speech service
-       */
-      "azure-api-key"?: string;
-      /**
-       * Azure Speech service region
-       */
-      "azure-region"?: string;
-
       // GoogleSpeechRecognizer
       /**
        * Google speech credentials.
        * Only necessary when using the GoogleSpeechRecognizer stage
        */
       "google-credentials"?: string;
-    };
-    tts?: {
-      ttsServiceClass?: string; // Android-only
-      /**
-       * Spokestack API credentials
-       * Can be generated after creating an account
-       * https://spokestack.io/create
-       */
-      "spokestack-id"?: string;
-      "spokestack-secret"?: string;
-    };
-    nlu?: {
-      // NLU settings.
-      // Only set these if you are calling `Spokestack.classify`.
-      /**
-       * String filesystem path to NLU model
-       */
-      "nlu-model-path"?: string;
-      /**
-       * String filesystem path to NLU metadata
-       */
-      "nlu-metadata-path"?: string;
-      /**
-       * String filesystem path to NLU vocab
-       */
-      "wordpiece-vocab-path"?: string;
     };
   }
 
