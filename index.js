@@ -6,21 +6,21 @@ import {
 const { RNSpokestack } = NativeModules
 const spokestackEmitter = new NativeEventEmitter(RNSpokestack)
 
-const TraceLevel = Object.freeze({
+export const TraceLevel = Object.freeze({
   DEBUG: 10,
   PERF: 20,
   INFO: 30,
   NONE: 100
 })
 
-const TTSFormat = Object.freeze({
+export const TTSFormat = Object.freeze({
   TEXT: 0,
   SSML: 1,
   SPEECHMARKDOWN: 2
 })
 
 // Warning: Order is fixed for interop with Spokestack-iOS. New profiles should be appended to end and coordinated with Spokestack-iOS releases.
-const PipelineProfile = Object.freeze({
+export const PipelineProfile = Object.freeze({
   TFLITE_WAKEWORD_NATIVE_ASR: 0,
   VAD_NATIVE_ASR: 1,
   PTT_NATIVE_ASR: 2,
@@ -30,17 +30,9 @@ const PipelineProfile = Object.freeze({
 })
 
 class Spokestack {
-  get TraceLevel () {
-    return TraceLevel
-  }
-
-  get TTSFormat () {
-    return TTSFormat
-  }
-
-  get PipelineProfile() {
-    return PipelineProfile
-  }
+  TraceLevel = TraceLevel
+  TTSFormat = TTSFormat
+  PipelineProfile = PipelineProfile
 
   // Class methods
 
