@@ -1,56 +1,138 @@
-
 buildscript {
-    repositories {
-        mavenCentral()
-        jcenter()
-        google()
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:4.1.0'
-    }
+  // Buildscript is evaluated before everything else so we can't use getExtOrDefault
+  def kotlin_version = rootProject.ext.has('kotlinVersion') ? rootProject.ext.get('kotlinVersion') : project.properties['Spokestack_kotlinVersion']
+
+  repositories {
+    google()
+    jcenter()
+  }
+
+  dependencies {
+    classpath 'com.android.tools.build:gradle:3.2.1'
+    // noinspection DifferentKotlinGradleVersion
+    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+  }
 }
 
 apply plugin: 'com.android.library'
-def safeExtGet(prop, fallback) {
-    rootProject.ext.has(prop) ? rootProject.ext.get(prop) : fallback
+apply plugin: 'kotlin-android'
+
+def getExtOrDefault(name) {
+  return rootProject.ext.has(name) ? rootProject.ext.get(name) : project.properties['Spokestack_' + name]
+}
+
+def getExtOrIntegerDefault(name) {
+  return rootProject.ext.has(name) ? rootProject.ext.get(name) : (project.properties['Spokestack_' + name]).toInteger()
 }
 
 android {
-    compileSdkVersion safeExtGet("compileSdkVersion", 27)
+  compileSdkVersion getExtOrIntegerDefault('compileSdkVersion')
+  buildToolsVersion getExtOrDefault('buildToolsVersion')
+  defaultConfig {
+    minSdkVersion 16
+    targetSdkVersion getExtOrIntegerDefault('targetSdkVersion')
+    versionCode 1
+    versionName "1.0"
+  }
 
-    defaultConfig {
-        minSdkVersion safeExtGet('minSdkVersion', 24)
-        targetSdkVersion safeExtGet('targetSdkVersion', 27)
-        versionCode 1
-        versionName "1.0"
+  buildTypes {
+    release {
+      minifyEnabled false
     }
-    lintOptions {
-        abortOnError false
-    }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
+  }
+  lintOptions {
+    disable 'GradleCompatible'
+  }
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_8
+    targetCompatibility JavaVersion.VERSION_1_8
+  }
 }
 
 repositories {
-    mavenCentral()
-    jcenter()
-    google()
+  mavenCentral()
+  jcenter()
+  google()
+
+  def found = false
+  def defaultDir = null
+  def androidSourcesName = 'React Native sources'
+
+  if (rootProject.ext.has('reactNativeAndroidRoot')) {
+    defaultDir = rootProject.ext.get('reactNativeAndroidRoot')
+  } else {
+    defaultDir = new File(
+            projectDir,
+            '/../../../node_modules/react-native/android'
+    )
+  }
+
+  if (defaultDir.exists()) {
     maven {
-        // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
-        url "$projectDir/../node_modules/react-native/android"
+      url defaultDir.toString()
+      name androidSourcesName
     }
+
+    logger.info(":${project.name}:reactNativeAndroidRoot ${defaultDir.canonicalPath}")
+    found = true
+  } else {
+    def parentDir = rootProject.projectDir
+
+    1.upto(5, {
+      if (found) return true
+      parentDir = parentDir.parentFile
+
+      def androidSourcesDir = new File(
+              parentDir,
+              'node_modules/react-native'
+      )
+
+      def androidPrebuiltBinaryDir = new File(
+              parentDir,
+              'node_modules/react-native/android'
+      )
+
+      if (androidPrebuiltBinaryDir.exists()) {
+        maven {
+          url androidPrebuiltBinaryDir.toString()
+          name androidSourcesName
+        }
+
+        logger.info(":${project.name}:reactNativeAndroidRoot ${androidPrebuiltBinaryDir.canonicalPath}")
+        found = true
+      } else if (androidSourcesDir.exists()) {
+        maven {
+          url androidSourcesDir.toString()
+          name androidSourcesName
+        }
+
+        logger.info(":${project.name}:reactNativeAndroidRoot ${androidSourcesDir.canonicalPath}")
+        found = true
+      }
+    })
+  }
+
+  if (!found) {
+    throw new GradleException(
+            "${project.name}: unable to locate React Native android sources. " +
+                    "Ensure you have you installed React Native as a dependency in your project and try again."
+    )
+  }
 }
 
+def kotlin_version = getExtOrDefault('kotlinVersion')
+
 dependencies {
-    testImplementation 'junit:junit:4.12'
-    annotationProcessor 'com.google.auto.value:auto-value:1.5.2'
-    implementation 'org.tensorflow:tensorflow-lite:2.3.0'
-    implementation 'com.github.wendykierp:JTransforms:3.0'
-    implementation 'com.google.code.gson:gson:2.8.6'
-    implementation 'io.grpc:grpc-okhttp:1.28.1'
-    implementation 'com.google.cloud:google-cloud-speech:1.20.0' // NB 1.21+ fails at either build or runtime.
-    implementation 'com.facebook.react:react-native:+'
-    implementation 'io.spokestack:spokestack-android:9.1.0'
+  // noinspection GradleDynamicVersion
+  implementation 'com.facebook.react:react-native:+'
+  implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+  api 'io.spokestack:spokestack-android:9.1.0'
+
+  // for TensorFlow Lite-powered wakeword detection and/or NLU
+  implementation 'org.tensorflow:tensorflow-lite:2.3.0'
+
+  // for playback of TTS audio
+  implementation 'androidx.lifecycle:lifecycle-common-java8:2.2.0'
+  implementation 'androidx.media:media:1.2.0'
+  implementation 'com.google.android.exoplayer:exoplayer-core:2.11.7'
 }
