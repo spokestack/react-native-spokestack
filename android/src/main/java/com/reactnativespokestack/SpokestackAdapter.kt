@@ -2,11 +2,11 @@ package com.reactnativespokestack
 
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.WritableMap
-import java.util.HashMap
 import io.spokestack.spokestack.SpeechContext
 import io.spokestack.spokestack.SpokestackModule
 import io.spokestack.spokestack.nlu.NLUResult
 import io.spokestack.spokestack.tts.TTSEvent
+import java.util.*
 
 class SpokestackAdapter(sendFunc:(event: String, data: WritableMap) -> Unit):io.spokestack.spokestack.SpokestackAdapter() {
   private val sendEvent:(event: String, data: WritableMap) -> Unit = sendFunc
@@ -55,6 +55,11 @@ class SpokestackAdapter(sendFunc:(event: String, data: WritableMap) -> Unit):io.
         reactEvent.putString("transcript", "")
         sendEvent(event.name, reactEvent)
       }
+      SpeechContext.Event.ERROR -> {
+        reactEvent.putString("error", context.error.message)
+        sendEvent(event.name, reactEvent)
+      }
+      else -> println("Native event received (${event.name}) but not sending JS event.")
     }
   }
 
