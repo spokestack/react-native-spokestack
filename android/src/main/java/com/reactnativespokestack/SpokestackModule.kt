@@ -115,7 +115,6 @@ class SpokestackModule(private val reactContext: ReactApplicationContext): React
       val map = config.getMap("pipeline")?.toHashMap()
       if (map != null) {
         for (key in map.keys) {
-          println(kebabCase((key)))
           // JS uses camelCase for keys
           // Convert to kebab-case
           builder.setProperty(kebabCase(key), map[key])
