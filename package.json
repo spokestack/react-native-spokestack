@@ -29,7 +29,7 @@
     "pods": "cd example && pod-install --quiet",
     "prepare": "npm run build",
     "release": "release-it",
-    "test": "jest --coverage --runInBand",
+    "test": "jest --runInBand",
     "test:watch": "jest --coverage --watchAll",
     "typescript": "tsc -p tsconfig.json --noEmit"
   },
