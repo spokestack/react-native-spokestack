@@ -1,0 +1,16 @@
+package.json
+package-lock.json
+node_modules/**
+.git/**
+.idea/**
+.*
+*.sh
+Dockerfile
+.ebextensions/*
+ios/**
+android/**
+example/ios/**
+example/android/**
+docs/**
+coverage/**
+lib/**
