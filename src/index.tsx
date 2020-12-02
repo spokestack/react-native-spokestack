@@ -27,8 +27,12 @@ interface SpokestackType {
    * See below for all available options.
    *
    * ```js
-   * Spokestack.initialize(process.env.CLIENT_ID, process.env.CLIENT_SECRET, {
-   *  pipeline: {
+   * import Spokestack from 'react-native-spokestack'
+   *
+   * // ...
+   *
+   * await Spokestack.initialize(process.env.CLIENT_ID, process.env.CLIENT_SECRET, {
+   *   pipeline: {
    *     profile: Spokestack.PipelineProfile.PTT_NATIVE_ASR
    *   }
    * })
@@ -42,11 +46,28 @@ interface SpokestackType {
   /**
    * Start the speech pipeline.
    * The speech pipeline starts in the `deactivate` state.
+   *
+   * ```js
+   * import Spokestack from 'react-native-spokestack`
+   *
+   * // ...
+   *
+   * Spokestack.initialize(process.env.CLIENT_ID, process.env.CLIENT_SECRET)
+   *   .then(Spokestack.start)
+   * ```
    */
   start(): Promise<void>
   /**
    * Stop the speech pipeline.
    * This effectively stops ASR, VAD, and wakeword.
+   *
+   * ```js
+   * import Spokestack from 'react-native-spokestack`
+   *
+   * // ...
+   *
+   * await Spokestack.stop()
+   * ```
    */
   stop(): Promise<void>
   /**
@@ -54,6 +75,14 @@ interface SpokestackType {
    * This is necessary when using a PTT profile.
    * VAD profiles can also activate ASR without the need
    * to call this method.
+   *
+   * ```js
+   * import Spokestack from 'react-native-spokestack`
+   *
+   * // ...
+   *
+   * <Button title="Listen" onClick={() => Spokestack.activate()} />
+   * ```
    */
   activate(): Promise<void>
   /**
@@ -61,6 +90,14 @@ interface SpokestackType {
    * If the profile includes wakeword, the pipeline will go back
    * to listening for the wakeword.
    * If VAD is active, the pipeline can reactivate without calling activate().
+   *
+   * ```js
+   * import Spokestack from 'react-native-spokestack`
+   *
+   * // ...
+   *
+   * <Button title="Stop listening" onClick={() => Spokestack.deactivate()} />
+   * ```
    */
   deactivate(): Promise<void>
   /**
@@ -92,7 +129,18 @@ interface SpokestackType {
    */
   speak(input: string, format?: TTSFormat, voice?: string): Promise<void>
   /**
-   * Classify the utterance with an intent/slot Natural Language Understanding model
+   * Classify the utterance using the
+   * intent/slot Natural Language Understanding model
+   * passed to Spokestack.initialize().
+   * See https://www.spokestack.io/docs/concepts/nlu for more info.
+   *
+   * ```js
+   * const result = await Spokestack.classify('hello')
+   *
+   * // Here's what the result might look like,
+   * // depending on the NLU model
+   * console.log(result.intent) // launch
+   * ```
    */
   classify(utterance: string): Promise<SpokestackNLUResult>
   /**
@@ -102,13 +150,12 @@ interface SpokestackType {
    *
    * ```js
    * useEffect(() => {
-   *   const listener = Spokestack.addEventListener('recognize', onSpeech)
+   *   const listener = Spokestack.addEventListener('recognize', onRecognize)
    *   // Unsubsribe by calling remove when components are unmounted
    *   return () => {
    *     listener.remove()
    *   }
    * }, [])
-   *
    * ```
    */
   addEventListener: typeof emitter.addListener
@@ -116,7 +163,7 @@ interface SpokestackType {
    * Remove an event listener
    *
    * ```js
-   * Spokestack.removeEventListener('speech', onSpeech)
+   * Spokestack.removeEventListener('recognize', onRecognize)
    * ```
    */
   removeEventListener: typeof emitter.removeListener
@@ -124,7 +171,9 @@ interface SpokestackType {
    * Remove any existing listeners
    *
    * ```js
-   * Spokestack.removeAllListeners()
+   * componentWillUnmount() {
+   *   Spokestack.removeAllListeners()
+   * }
    * ```
    */
   removeAllListeners: () => void

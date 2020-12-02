@@ -26,7 +26,7 @@
     "example": "cd example && npm install",
     "format": "prettier --write \"**/*.tsx\" \"**/*.ts\" \"**/*.js\" \"**/*.md\" \"**/*.json\"",
     "lint": "eslint \"**/*.{js,ts,tsx}\" && prettier --check \"**/*.md\" \"**/*.json\"",
-    "pods": "cd example && pod-install --quiet",
+    "pods": "cd example && npx pod-install --quiet",
     "prepare": "npm run build",
     "release": "release-it",
     "test": "jest --runInBand",
