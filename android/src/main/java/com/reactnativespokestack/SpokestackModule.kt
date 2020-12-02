@@ -1,6 +1,7 @@
 package com.reactnativespokestack
 
 import android.net.Uri
+import android.util.Log
 import com.facebook.react.bridge.*
 import com.facebook.react.modules.core.DeviceEventManagerModule
 import io.spokestack.spokestack.PipelineProfile
@@ -65,7 +66,7 @@ class SpokestackModule(private val reactContext: ReactApplicationContext): React
           promises["classify"]?.resolve(params.getMap("result"))
           promises.remove("classify")
         }
-        else -> println("Sending JS event: $event")
+        else -> Log.d(name, "Sending JS event: $event")
       }
       reactContext
         .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
@@ -81,7 +82,7 @@ class SpokestackModule(private val reactContext: ReactApplicationContext): React
 
   private fun textToSpeech(input: String, format: Int, voice: String) {
     if (format > 2 || format < 0) {
-      throw Exception(("A format of $format is not supported. Please use an int between 0 and 2. Refer to documentation for further details."))
+      throw Exception(("A format of $format is not supported. Please use an int from 0 to 2 (or use the TTSFormat enum). Refer to documentation for further details."))
     }
     val req = SynthesisRequest.Builder(input)
       .withMode(SynthesisRequest.Mode.values()[format])
@@ -190,7 +191,6 @@ class SpokestackModule(private val reactContext: ReactApplicationContext): React
 
     if (nluFiles != 3) {
       builder.withoutNlu()
-      builder.withoutAutoClassification()
     }
     // TTS is automatically built and available
     builder.withoutAutoPlayback()
@@ -262,7 +262,7 @@ class SpokestackModule(private val reactContext: ReactApplicationContext): React
   fun speak(input: String, format: Int, voice: String, promise: Promise) {
     promises["speak"] = promise
     say = { url ->
-      println("Playing audio from URL: $url")
+      Log.d(name,"Playing audio from URL: $url")
       val uri = Uri.parse(url)
       val response = AudioResponse(uri)
       audioPlayer.audioReceived(response)

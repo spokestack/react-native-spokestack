@@ -1,6 +1,6 @@
 # react-native-spokestack
 
-React Native plugin for adding voice using [Spokestack](https://spokestack.io). This includes speech recognition, wakeword, and natural language understanding, as well as synthesizing text to speech using Spokestack voices.
+React Native plugin for adding voice using [Spokestack](https://www.spokestack.io). This includes speech recognition, wakeword, and natural language understanding, as well as synthesizing text to speech using Spokestack voices.
 
 ## Requirements
 
@@ -70,7 +70,7 @@ $ npx pod-install
 
 Add the following to your Info.plist to enable permissions. In XCode, also ensure your iOS deployment target is set to 13.0 or higher.
 
-```
+```xml
 <key>NSMicrophoneUsageDescription</key>
 <string>This app uses the microphone to hear voice commands</string>
 <key>NSSpeechRecognitionUsageDescription</key>
@@ -124,11 +124,11 @@ The following is a suggestion that should fit most use cases:
 
 The example usage uses the system-provided ASRs (`AndroidSpeechRecognizer` and `AppleSpeechRecognizer`). However, `AndroidSpeechRecognizer` is not available on 100% of devices. If such a device is supported, use Spokestack ASR instead.
 
-See our [ASR documentation](https://spokestack.io/docs/concepts/asr) for more information.
+See our [ASR documentation](https://www.spokestack.io/docs/concepts/asr) for more information.
 
 ### Edit root build.gradle (_not_ app/build.gradle)
 
-```gradle
+```groovy
 // ...
   ext {
     // Minimum SDK is 24
@@ -155,12 +155,12 @@ Add the necessary permissions to your `AndroidManifest.xml`. The first permissio
 
 The responsibility to request permission for RECORD_AUDIO on new devices is left to the user, as there are differing strategies for how to handle permissions.
 
-1. Add a screen to your onboarding that explains the need for the permissions used on each platform (RECORD*AUDIO on Android and Microphone and Speech Recognition on iOS). \_Recommended*
+1. Add a screen to your onboarding that explains the need for the permissions used on each platform (RECORD_AUDIO on Android and Microphone and Speech Recognition on iOS). **Recommended**
 2. Request the permissions only when needed. This is also a good option as it avoids asking for permission as soon as the app is launched. Avoid asking for permission with no context or without making it clear why it is needed.
 
 While iOS will bring up permissions dialogs automatically for any permissions needed, you must do this manually in Android.
 
-React Native already provides a module for so. See [React Native's PermissionsAndroid](https://reactnative.dev/docs/permissionsandroid) for more info.
+React Native already provides a module for this. See [React Native's PermissionsAndroid](https://reactnative.dev/docs/permissionsandroid) for more info.
 
 </details>
 
@@ -205,9 +205,7 @@ function App() {
       .then(Spokestack.start)
 
     return () => {
-      Spokestack.removeEventListener('activate', onActivate)
-      Spokestack.removeEventListener('deactivate', onDeactivate)
-      Spokestack.removeEventListener('recognize', onRecognize)
+      Spokestack.removeAllListeners()
     }
   }, [])
 
@@ -227,3 +225,25 @@ See the [contributing guide](CONTRIBUTING.md) to learn how to contribute to the 
 ---
 
 # API Documentation
+
+---
+
+## Events
+
+| Name              |           Data           |                                  Description                                  |     Platform |
+| :---------------- | :----------------------: | :---------------------------------------------------------------------------: | -----------: |
+| recognize         | `{ transcript: string }` |           Fired whenever speech recognition completes successfully.           |  iOS/Android |
+| timeout           |          `null`          |      Fired when an active pipeline times out due to lack of recognition.      |  iOS/Android |
+| activate          |          `null`          | Fired when the speech pipeline activates, either through the VAD or manually. |  iOS/Android |
+| deactivate        |          `null`          |                  Fired when the speech pipeline deactivates.                  |  iOS/Android |
+| play              |  `{ playing: boolean }`  |     Fired when TTS playback starts and stops. See the `speak()` function.     |  iOS/Android |
+| error             |   `{ error: string }`    |                  Fired when there's an error in Spokestack.                   |  iOS/Android |
+| partial_recognize | `{ transcript: string }` |       Fired whenever the transcript changes during speech recognition.        | Android only |
+
+---
+
+## License
+
+Apache-2.0
+
+Copyright 2020 Spokestack

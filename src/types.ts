@@ -55,7 +55,7 @@ export enum TraceLevel {
  * Three formats are supported when using Spokestack TTS.
  * Raw text, SSML, and Speech Markdown.
  * See https://www.speechmarkdown.org/ if unfamiliar with Speech Markdown.
- * IPAs are expected when using SSML or Speech Markdown.
+ * IPA is expected when using SSML or Speech Markdown.
  */
 export enum TTSFormat {
   TEXT = 0,
@@ -103,14 +103,69 @@ export interface SynthesizeOptions {
 }
 
 /**
- * Configuration is mostly Android-based.
- * Spokestack-iOS takes some of these values and
- * decides what they mean for iOS, as config for iOS is simpler.
  * Spokestack-iOS reference: https://spokestack.github.io/spokestack-ios/index.html
  * spokestack-android reference: https://javadoc.io/doc/io.spokestack/spokestack-android/latest/index.html
  */
 export interface SpokestackConfig {
   traceLevel?: TraceLevel
+  pipeline?: {
+    /**
+     * Profiles are collections of common configurations for Pipeline stages.
+     * See `PipelineProfile` for available profiles.
+     * Default: PTT_NATIVE_ASR
+     */
+    profile?: PipelineProfile
+    /**
+     * Audio sampling rate, in Hz
+     */
+    sampleRate?: number
+    /**
+     * @advanced
+     * Speech frame width, in ms
+     */
+    frameWidth?: number
+    /**
+     * @advanced
+     * Buffer width, used with frameWidth to determine the buffer size
+     */
+    bufferWidth?: number
+    /**
+     * Voice activity detector mode
+     */
+    vadMode?: 'quality' | 'low-bitrate' | 'aggressive' | 'very-aggressive'
+    /**
+     * @advanced
+     * Falling-edge detection run length, in ms; this value determines
+     * how many negative samples must be received to flip the detector to negative
+     */
+    vadFallDelay?: number
+    /**
+     * @advanced
+     * Android-only
+     * Rising-edge detection run length, in ms; this value determines
+     * how many positive samples must be received to flip the detector to positive
+     */
+    vadRiseDelay?: number
+    /**
+     * @advanced
+     * Android-only for AcousticNoiseSuppressor
+     * Noise policy
+     */
+    ansPolicy?: 'mild' | 'medium' | 'aggressive' | 'very-aggressive'
+    /**
+     * @advanced
+     * Android-only for AcousticGainControl
+     * target peak audio level, in -dB,
+     * to maintain a peak of -9dB, configure a value of 9
+     */
+    agcCompressionGainDb?: number
+    /**
+     * @advanced
+     * Android-only for AcousticGainControl
+     * dynamic range compression rate, in dBFS
+     */
+    agcTargetLevelDbfs?: number
+  }
   /**
    * NLU settings
    * Only set these if you are calling `Spokestack.classify`
@@ -129,6 +184,7 @@ export interface SpokestackConfig {
      */
     vocabPath?: string
     /**
+     * @advanced
      * Android-only
      * Padded length of the model's input sequences.
      * Defaults to 128 and should only be changed if this parameter
@@ -179,121 +235,76 @@ export interface SpokestackConfig {
      */
     requestTimeout?: number
     /**
+     * @advanced
      * The threshold of the classifier's posterior output,
      * above which the trigger activates the pipeline, in the range [0, 1]
      */
     threshold?: number
     /**
+     * @advanced
      * The length of the sliding window of encoder output
      * used as an input to the classifier, in milliseconds
      */
     encodeLength?: number
     /**
+     * @advanced
      * The size of the encoder output, in vector units
      */
     encodeWidth?: number
     /**
+     * @advanced
      * The size of the encoder state, in vector units (defaults to wake-encode-width)
      */
     stateWidth?: number
     /**
+     * @advanced
      * The desired linear Root Mean Squared (RMS) signal energy,
      * which is used for signal normalization and should be tuned
      * to the RMS target used during training
      */
     rmsTarget?: number
     /**
+     * @advanced
      * The Exponentially-Weighted Moving Average (EWMA) update
      * rate for the current RMS signal energy (0 for no RMS normalization)
      */
     rmsAlpha?: number
     /**
+     * @advanced
      * The size of the signal window used to calculate the STFT,
      * in number of samples - should be a power of 2 for maximum efficiency
      */
     fftWindowSize?: number
     /**
+     * @advanced
      * Android-only
      * The name of the windowing function to apply to each audio frame
      * before calculating the STFT; currently the "hann" window is supported
      */
     fftWindowType?: string
     /**
+     * @advanced
      * The length of time to skip each time the
      * overlapping STFT is calculated, in milliseconds
      */
     fftHopLength?: number
     /**
+     * @advanced
      * The pre-emphasis filter weight to apply to
      * the normalized audio signal (0 for no pre-emphasis)
      */
     preEmphasis?: number
     /**
+     * @advanced
      * The length of time to skip each time the
      * overlapping STFT is calculated, in milliseconds
      */
     melFrameLength?: number
     /**
+     * @advanced
      * The size of each mel spectrogram frame,
      * in number of filterbank components
      */
     melFrameWidth?: number
-  }
-  pipeline?: {
-    /**
-     * Profiles are collections of common configurations for Pipeline stages.
-     * See `PipelineProfile` for available profiles.
-     * Default: PTT_NATIVE_ASR
-     */
-    profile?: PipelineProfile
-    /**
-     * Audio sampling rate, in Hz
-     */
-    sampleRate?: number
-    /**
-     * Speech frame width, in ms
-     */
-    frameWidth?: number
-    /**
-     * Buffer width, used with frameWidth to determine the buffer size
-     */
-    bufferWidth?: number
-    /**
-     * Voice activity detector mode
-     */
-    vadMode?: 'quality' | 'low-bitrate' | 'aggressive' | 'very-aggressive'
-    /**
-     * Falling-edge detection run length, in ms; this value determines
-     * how many negative samples must be received to flip the detector to negative
-     */
-    vadFallDelay?: number
-    /**
-     * Android-only
-     * Rising-edge detection run length, in ms; this value determines
-     * how many positive samples must be received to flip the detector to positive
-     */
-    vadRiseDelay?: number
-
-    // Android-only AcousticNoiseSuppressor
-    // -----------------------------------------------
-    /**
-     * Android-only
-     * Noise policy
-     */
-    ansPolicy?: 'mild' | 'medium' | 'aggressive' | 'very-aggressive'
-
-    // Android-only AcousticGainControl
-    // -----------------------------------------------
-    /**
-     * Android-only
-     * target peak audio level, in -dB,
-     * to maintain a peak of -9dB, configure a value of 9
-     */
-    agcCompressionGainDb?: number
-    /**
-     * Android-only
-     * dynamic range compression rate, in dBFS
-     */
-    agcTargetLevelDbfs?: number
   }
 }
