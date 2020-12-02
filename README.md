@@ -44,7 +44,7 @@ platform :ios, '13.0'
 We also need to use `use_frameworks!` in our Podfile in order to support dependencies written in Swift.
 
 ```ruby
-target 'SpokestackTrayExample' do
+target 'SpokestackExample' do
   use_frameworks!
   #...
 ```
