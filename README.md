@@ -172,6 +172,8 @@ See the [contributing guide](CONTRIBUTING.md) to learn how to contribute to the 
 
 [Get started using Spokestack](https://www.spokestack.io/docs/React%20Native/getting-started), or check out our in-depth tutorials on [ASR](https://www.spokestack.io/docs/React%20Native/speech-pipeline), [NLU](https://www.spokestack.io/docs/React%20Native/nlu), and [TTS](https://www.spokestack.io/docs/React%20Native/tts). Also be sure to take a look at the [Cookbook](https://www.spokestack.io/docs/React%20Native/cookbook) for quick solutions to common problems.
 
+A working example app is included in this repo in the `example/` folder.
+
 ```js
 import Spokestack from 'react-native-spokestack'
 import { View, Button, Text } from 'react-native'
@@ -184,18 +186,6 @@ function App() {
   const onRecognize = ({ transcript }) => console.log(transcript)
 
   useEffect(() => {
-    // The first 2 args are your Spokestack credentials
-    // available for free from https://spokestack.io.
-    // Avoid hardcoding these in your app.
-    // There are several ways to include
-    // environment variables in your code.
-    //
-    // Using process.env:
-    // https://babeljs.io/docs/en/babel-plugin-transform-inline-environment-variables/
-    //
-    // Using a local .env file ignored by git:
-    // https://github.com/goatandsheep/react-native-dotenv
-    // https://github.com/luggit/react-native-config
     Spokestack.addEventListener('activate', onActivate)
     Spokestack.addEventListener('deactivate', onDeactivate)
     Spokestack.addEventListener('recognize', onRecognize)
