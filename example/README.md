@@ -24,11 +24,15 @@ export SPOKESTACK_CLIENT_SECRET=$CLIENT_SECRET_KEY
 
 Now that you have tokens in place, the app can be run as normal.
 
-Start the packager in a new terminal (to make sure the env vars are there):
+Start the packager in a new terminal:
 
 ```sh
 $ npm run dev
 ```
+
+**Note**: The only difference between `npm run dev` and `npm start` is that `npm run dev` resets the bundler cache, which is **necessary anytime you change an environment variable**.
+
+See [babel-plugin-transform-inline-environment-variables](https://babeljs.io/docs/en/babel-plugin-transform-inline-environment-variables/) for more info.
 
 Run the app on iOS or Android. Note that a real device is needed on Android for the mic to work.
 
