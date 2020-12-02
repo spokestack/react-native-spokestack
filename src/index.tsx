@@ -97,8 +97,8 @@ interface SpokestackType {
   classify(utterance: string): Promise<SpokestackNLUResult>
   /**
    * Bind to any event emitted by the native libraries
-   * The events are: "recognize", "error", "activate", "deactivate", and "timeout"
-   * "partial_recognize" is available on Android only.
+   * The events are: "recognize", "partial_recognize", "error", "activate", "deactivate", and "timeout".
+   * See the bottom of the README.md for descriptions of the events.
    *
    * ```js
    * useEffect(() => {
@@ -120,6 +120,14 @@ interface SpokestackType {
    * ```
    */
   removeEventListener: typeof emitter.removeListener
+  /**
+   * Remove any existing listeners
+   *
+   * ```js
+   * Spokestack.removeAllListeners()
+   * ```
+   */
+  removeAllListeners: () => void
 }
 
 // Add enums as values
@@ -136,6 +144,18 @@ Spokestack.removeEventListener = (
   type: string,
   listener: (event: SpokestackEvent) => void
 ) => emitter.removeListener(type, listener)
+
+Spokestack.removeAllListeners = () => {
+  ;[
+    'recognize',
+    'partial_recognize',
+    'activate',
+    'deactivate',
+    'timeout',
+    'play',
+    'error'
+  ].forEach((event) => emitter.removeAllListeners(event))
+}
 
 // Ensure method is called with proper number of args despite what's passed
 const initialize = Spokestack.initialize

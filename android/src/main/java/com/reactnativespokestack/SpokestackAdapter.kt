@@ -1,5 +1,6 @@
 package com.reactnativespokestack
 
+import android.util.Log
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.WritableMap
 import io.spokestack.spokestack.SpeechContext
@@ -9,6 +10,7 @@ import io.spokestack.spokestack.tts.TTSEvent
 import java.util.*
 
 class SpokestackAdapter(sendFunc:(event: String, data: WritableMap) -> Unit):io.spokestack.spokestack.SpokestackAdapter() {
+  val TAG = "Spokestack"
   private val sendEvent:(event: String, data: WritableMap) -> Unit = sendFunc
 
   override fun error(module:SpokestackModule, err:Throwable) {
@@ -43,6 +45,10 @@ class SpokestackAdapter(sendFunc:(event: String, data: WritableMap) -> Unit):io.
         reactEvent.putString("transcript", context.transcript)
         sendEvent(event.name, reactEvent)
       }
+      SpeechContext.Event.PARTIAL_RECOGNIZE -> {
+        reactEvent.putString("transcript", context.transcript)
+        sendEvent(event.name, reactEvent)
+      }
       SpeechContext.Event.ACTIVATE -> {
         reactEvent.putString("transcript", "")
         sendEvent(event.name, reactEvent)
@@ -59,7 +65,7 @@ class SpokestackAdapter(sendFunc:(event: String, data: WritableMap) -> Unit):io.
         reactEvent.putString("error", context.error.message)
         sendEvent(event.name, reactEvent)
       }
-      else -> println("Native event received (${event.name}) but not sending JS event.")
+      else -> Log.d(TAG, "Native event received (${event.name}) but not sending JS event.")
     }
   }
 

@@ -126,7 +126,7 @@ dependencies {
   // noinspection GradleDynamicVersion
   implementation 'com.facebook.react:react-native:+'
   implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-  api 'io.spokestack:spokestack-android:9.1.0'
+  api 'io.spokestack:spokestack-android:10.0.0'
 
   // for TensorFlow Lite-powered wakeword detection and/or NLU
   implementation 'org.tensorflow:tensorflow-lite:2.3.0'

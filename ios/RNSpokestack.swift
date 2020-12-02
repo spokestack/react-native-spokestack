@@ -23,7 +23,7 @@ class RNSpokestack: RCTEventEmitter, SpokestackDelegate {
     }
 
     override func supportedEvents() -> [String]! {
-        return ["activate", "deactivate", "timeout", "recognize", "error", "play"]
+        return ["activate", "deactivate", "timeout", "recognize", "partial_recognize", "error", "play"]
     }
 
     func handleError(_ error: Error) -> Void {
@@ -89,6 +89,10 @@ class RNSpokestack: RCTEventEmitter, SpokestackDelegate {
 
     func didRecognize(_ result: SpeechContext) {
         sendEvent(withName: "recognize", body: [ "transcript": result.transcript ])
+    }
+
+    func didRecognizePartial(_ result: SpeechContext) {
+        sendEvent(withName: "partial_recognize", body: [ "transcript": result.transcript ])
     }
 
     func success(result: TextToSpeechResult) {

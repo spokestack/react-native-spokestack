@@ -1,7 +1,4 @@
 {
   "extends": "./tsconfig.json",
-  "exclude": ["node_modules", "example", "test"],
-  "compilerOptions": {
-    "types": ["./types/declaration"]
-  }
+  "exclude": ["node_modules", "example", "test"]
 }

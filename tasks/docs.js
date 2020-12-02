@@ -75,21 +75,25 @@ const header = '\n---\n\n# API Documentation'
 let data =
   read('../README.md').replace(new RegExp(header + '[^]+'), '') + header
 
-// Add Spokestack tray props
-const defaultOptions = redoLinks(
-  read('../docs/classes/_src_spokestacktray_.spokestacktray.md')
-)
-  // Remove unwanted text
-  .replace(/[\w\W]+\*\*defaultProps\*\*: object/, '')
+// Default values for SpokestackConfig
+// const defaultOptions = redoLinks(
+//   read('../docs/classes/_src_spokestacktray_.spokestacktray.md')
+// )
+//   // Remove unwanted text
+//   .replace(/[\w\W]+\*\*defaultProps\*\*: object/, '')
 
-const parsedDefaults = {}
-defaultOptions.replace(rdefaultProps, function (all, key, value) {
-  parsedDefaults[key] = value
-  return all
-})
+// const parsedDefaults = {}
+// defaultOptions.replace(rdefaultProps, function (all, key, value) {
+//   parsedDefaults[key] = value
+//   return all
+// })
+// console.log(parsedDefaults)
+
+data += '\n\n---\n\n'
+data += read('./EVENTS.md')
 
 // Add license info
-data += `\n---\n\n ## License\n\nCopyright ${new Date().getFullYear()} Spokestack\n\nApache-2.0\n`
+data += `\n---\n\n ## License\n\nApache-2.0\n\nCopyright ${new Date().getFullYear()} Spokestack\n`
 
 // Write a pretty version
 write(

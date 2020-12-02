@@ -11,26 +11,16 @@ export default function App() {
   const [listening, setListening] = React.useState(false)
   const [playing, setPlaying] = React.useState(false)
   const [transcript, setTranscript] = React.useState('')
+  const [partial, setPartial] = React.useState('')
   const [error, setError] = React.useState('')
 
-  function onActivate() {
-    console.log('Activated')
-    setListening(true)
-  }
-  function onDeactivate() {
-    console.log('Deactivated')
-    setListening(false)
-  }
-  function onTimeout() {
-    console.log('Timeout')
-    setListening(false)
-  }
-  function onPlay({ playing }: SpokestackPlayEvent) {
-    setPlaying(playing)
-  }
-  function onRecognize({ transcript }: SpokestackRecognizeEvent) {
+  const onActivate = () => setListening(true)
+  const onDeactivate = () => setListening(false)
+  const onPlay = ({ playing }: SpokestackPlayEvent) => setPlaying(playing)
+  const onRecognize = ({ transcript }: SpokestackRecognizeEvent) =>
     setTranscript(transcript)
-  }
+  const onRecognizePartial = ({ transcript }: SpokestackRecognizeEvent) =>
+    setPartial(transcript)
 
   async function init() {
     const clientId = process.env.SPOKESTACK_CLIENT_ID
@@ -56,20 +46,16 @@ export default function App() {
   }
 
   React.useEffect(() => {
+    Spokestack.addEventListener('recognize', onRecognize)
+    Spokestack.addEventListener('partial_recognize', onRecognizePartial)
     Spokestack.addEventListener('activate', onActivate)
     Spokestack.addEventListener('deactivate', onDeactivate)
-    Spokestack.addEventListener('timeout', onTimeout)
-    Spokestack.addEventListener('recognize', onRecognize)
     Spokestack.addEventListener('play', onPlay)
 
     init()
 
     return () => {
-      Spokestack.removeEventListener('activate', onActivate)
-      Spokestack.removeEventListener('deactivate', onDeactivate)
-      Spokestack.removeEventListener('timeout', onTimeout)
-      Spokestack.removeEventListener('recognize', onRecognize)
-      Spokestack.removeEventListener('play', onPlay)
+      Spokestack.removeAllListeners()
     }
   }, [])
 
@@ -95,7 +81,10 @@ export default function App() {
         />
       </View>
       {!!error && <Text style={styles.error}>{error}</Text>}
-      <Text>Transcript: "{transcript}"</Text>
+      <View style={styles.results}>
+        <Text>Partial: "{partial}"</Text>
+        <Text>Completed: "{transcript}"</Text>
+      </View>
     </View>
   )
 }
@@ -110,6 +99,13 @@ const styles = StyleSheet.create({
     width: '100%',
     flexDirection: 'row',
     justifyContent: 'space-evenly',
+    alignItems: 'center'
+  },
+  results: {
+    width: '100%',
+    height: 50,
+    flexDirection: 'column',
+    justifyContent: 'space-between',
     alignItems: 'center'
   },
   error: {
