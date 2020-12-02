@@ -42,7 +42,7 @@ export enum PipelineProfile {
 
 /**
  * How much logging to show
- * The higher the number, the less logs.
+ * A lower number means more logs.
  */
 export enum TraceLevel {
   DEBUG = 10,

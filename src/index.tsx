@@ -23,8 +23,22 @@ interface SpokestackType {
   TraceLevel: typeof TraceLevel
   TTSFormat: typeof TTSFormat
   /**
-   * Initialize the speech pipeline; required for all other methods
-   * See below for all available options.
+   * Initialize the speech pipeline; required for all other methods.
+   *
+   * The first 2 args are your Spokestack credentials
+   * available for free from https://spokestack.io.
+   * Avoid hardcoding these in your app.
+   * There are several ways to include
+   * environment variables in your code.
+   *
+   * Using process.env:
+   * https://babeljs.io/docs/en/babel-plugin-transform-inline-environment-variables/
+   *
+   * Using a local .env file ignored by git:
+   * https://github.com/goatandsheep/react-native-dotenv
+   * https://github.com/luggit/react-native-config
+   *
+   * See SpokestackConfig for all available options.
    *
    * ```js
    * import Spokestack from 'react-native-spokestack'
