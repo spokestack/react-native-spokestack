@@ -13,82 +13,125 @@ function redoLinks(data) {
     data
       // Remove links that aren't links to source
       .replace(/\[([^:]+)\]\(.*?\)/g, '$1')
+      .replace(/SpokestackConfig/g, '[SpokestackConfig](#SpokestackConfig)')
+      .replace(/PipelineProfile/g, '[PipelineProfile](#PipelineProfile)')
+      .replace(/TTSFormat/g, '[TTSFormat](#TTSFormat)')
+      .replace(/NLUConfig/g, '[NLUConfig](#NLUConfig)')
+      .replace(/PipelineConfig/g, '[PipelineConfig](#PipelineConfig)')
+      .replace(/TraceLevel/g, '[TraceLevel](#TraceLevel)')
+      .replace(/WakewordConfig/g, '[WakewordConfig](#WakewordConfig)')
   )
-}
-
-/**
- * @param {string} filename
- * @param {Array<string>} methods List of methods to extract from docs
- */
-function getClassMethods(filename, methods) {
-  const fileData = redoLinks(read(`../docs/classes/${filename}`))
-    // Remove everything up to methods
-    .replace(/[\w\W]+#{2}\s*Methods/, '')
-    .replace(/___/g, '')
-  return methods
-    .map((method) => {
-      const rmethod = new RegExp(`#\\s*(${method}[^]+?)##`)
-      const match = rmethod.exec(fileData)
-      return match ? `\n---\n### ${match[1]}` : ''
-    })
-    .join('\n\n')
 }
 
 function getInterfaceContent(filename) {
   return redoLinks(read(`../docs/interfaces/${filename}`))
-    .replace(/[\w\W]+##\s*Properties/, '')
+    .replace(/[^]+\n##\s*Properties/, '')
     .replace(/___/g, '')
-    .replace(/\n### /g, '\n### ')
+    .replace(/undefined \\\| /g, '')
 }
 
 function getEnumContent(filename) {
   return redoLinks(read(`../docs/enums/${filename}`))
-    .replace(/[\w\W]+##\s*Enumeration members/, '')
+    .replace(/[^]+##\s*Enumeration members/, '')
+    .replace(/\n### .+/g, '')
     .replace(/___/g, '')
-    .replace(/\n### /g, '\n### ')
 }
 
 /**
  * @param {string} filename
- * @param {Array<string>} functions List of functions to extract from docs
+ * @param {Array<string>} items List of functions or properties to extract from an interface
  */
-function getModuleFunctions(filename, functions) {
-  const fileData = redoLinks(read(`../docs/modules/${filename}`))
-    // Remove everything up to functions
-    .replace(/[\w\W]+#{2}\s*Functions/, '')
-    .replace(/___/g, '')
-  return functions
+function getInterfaceItems(filename, items) {
+  const data = redoLinks(read(`../docs/interfaces/${filename}`))
+    // Remove everything up to properties
+    .replace(/[^]+\n##\s*Properties/, '')
+    .split(/(?:___|## Methods)/)
+  return items
     .map((fn) => {
-      const rfn = new RegExp(`#\\s*(${fn}[^]+?)##`)
-      const match = rfn.exec(fileData)
-      return match ? `\n---\n### ${match[1]}` : ''
+      const rfn = new RegExp(`\\n###\\s*${fn}`)
+      for (const m of data) {
+        if (rfn.test(m)) {
+          return m
+        }
+      }
+      console.warn(`Item not found: ${fn}`)
+      return ''
     })
-    .join('\n\n')
+    .join('\n\n---\n\n')
 }
-
-const rprops = /(?:`Optional` )?\*\*(\w+)\*\*\s*: [^\n]+/g
-const rdefaultProps = /`(\w+)` \|[^|]+\|\s*([^|]+) |/g
-const renum = /\*\*(\w+)\*\*:\s*=\s*([^\n]+)/g
 
 // Start with the README
 const header = '\n---\n\n# API Documentation'
 let data =
-  read('../README.md').replace(new RegExp(header + '[^]+'), '') + header
+  read('../README.md').replace(new RegExp(header + '[^]+'), '') +
+  header +
+  '\n\n'
 
-// Default values for SpokestackConfig
-// const defaultOptions = redoLinks(
-//   read('../docs/classes/_src_spokestacktray_.spokestacktray.md')
-// )
-//   // Remove unwanted text
-//   .replace(/[\w\W]+\*\*defaultProps\*\*: object/, '')
+// Add Spokestack methods
+data += getInterfaceItems('_src_index_.spokestacktype.md', [
+  'initialize',
+  'start',
+  'stop',
+  'activate',
+  'deactivate',
+  'addEventListener',
+  'removeEventListener',
+  'removeAllListeners',
+  'synthesize',
+  'speak'
+])
 
-// const parsedDefaults = {}
-// defaultOptions.replace(rdefaultProps, function (all, key, value) {
-//   parsedDefaults[key] = value
-//   return all
-// })
-// console.log(parsedDefaults)
+// Add TTSFormat
+data += '\n\n---\n\n### TTSFormat'
+data += getEnumContent('_src_types_.ttsformat.md')
 
+// Add Spokestack config
+data += '\n\n---\n\n## SpokestackConfig'
+data +=
+  '\n\nThese are the configuration options that can be passed to `Spokestack.initialize(_, _, spokestackConfig)`. No options in SpokestackConfig are required.'
+data += '\n\nSpokestackConfig has the following structure:\n'
+data += `\n\n
+\`\`\`ts
+interface SpokestackConfig {
+  traceLevel: TraceLevel,
+  // Most options are advanced aside from "profile"
+  pipeline: PipelineConfig,
+  // Only needed for Spokestack.classify
+  nlu: NLUConfig,
+  // Needed for wakeword
+  // Most options are advanced aside from
+  // filterPath, encodePath, and decodePath
+  // for passing config files.
+  wakeword: WakewordConfig
+})
+\`\`\`
+`
+data += '\n\n### TraceLevel'
+data += getEnumContent('_src_types_.tracelevel.md')
+
+data += '\n\n## PipelineConfig'
+data += getInterfaceItems('_src_types_.pipelineconfig.md', ['profile'])
+data += '\n\n### PipelineProfile'
+data += getEnumContent('_src_types_.pipelineprofile.md')
+data += getInterfaceItems('_src_types_.pipelineconfig.md', [
+  'sampleRate',
+  'frameWidth',
+  'bufferWidth',
+  'vadMode',
+  'vadFallDelay',
+  'vadRiseDelay',
+  'ansPolicy',
+  'agcCompressionGainDb',
+  'agcTargetLevelDbfs'
+])
+
+data += '\n\n## NLUConfig'
+data += getInterfaceContent('_src_types_.nluconfig.md')
+
+data += '\n\n## WakewordConfig'
+data += getInterfaceContent('_src_types_.wakewordconfig.md')
+
+// Add events table
 data += '\n\n---\n\n'
 data += read('./EVENTS.md')
 
