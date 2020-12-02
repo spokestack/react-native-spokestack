@@ -169,15 +169,15 @@ interface NLUConfig {
   /**
    * String filesystem path to NLU model
    */
-  modelPath?: string
+  modelPath: string
   /**
    * String filesystem path to NLU metadata
    */
-  metadataPath?: string
+  metadataPath: string
   /**
    * String filesystem path to NLU vocab
    */
-  vocabPath?: string
+  vocabPath: string
   /**
    * @advanced
    *
@@ -196,20 +196,20 @@ interface WakewordConfig {
    * which is used to calculate a mel spectrogram frame from the linear STFT;
    * its inputs should be shaped [fft-width], and its outputs [mel-width]
    */
-  filterPath?: string
+  filterPath: string
   /**
    * File system path to the "encode" Tensorflow-Lite model,
    * which is used to perform each autoregressive step over the mel frames;
    * its inputs should be shaped [mel-length, mel-width], and its outputs [encode-width],
    * with an additional state input/output shaped [state-width]
    */
-  detectPath?: string
+  detectPath: string
   /**
    * File system path to the "detect" Tensorflow-Lite model;
    * its inputs should be shaped [encode-length, encode-width],
    * and its outputs
    */
-  encodePath?: string
+  encodePath: string
   /**
    * The minimum length of an activation, in milliseconds,
    * used to ignore a VAD deactivation after the wakeword

@@ -23,11 +23,14 @@ function redoLinks(data) {
   )
 }
 
-function getInterfaceContent(filename) {
-  return redoLinks(read(`../docs/interfaces/${filename}`))
-    .replace(/[^]+\n##\s*Properties/, '')
-    .replace(/___/g, '')
-    .replace(/undefined \\\| /g, '')
+function getInterfaceContentSplit(filename) {
+  return (
+    redoLinks(read(`../docs/interfaces/${filename}`))
+      // Remove everything up to properties
+      .replace(/[^]+\n##\s*Properties/, '')
+      .replace(/undefined \\\| /g, '')
+      .split(/(?:___|## Methods)/)
+  )
 }
 
 function getEnumContent(filename) {
@@ -42,10 +45,7 @@ function getEnumContent(filename) {
  * @param {Array<string>} items List of functions or properties to extract from an interface
  */
 function getInterfaceItems(filename, items) {
-  const data = redoLinks(read(`../docs/interfaces/${filename}`))
-    // Remove everything up to properties
-    .replace(/[^]+\n##\s*Properties/, '')
-    .split(/(?:___|## Methods)/)
+  const data = getInterfaceContentSplit(filename)
   return items
     .map((fn) => {
       const rfn = new RegExp(`\\n###\\s*${fn}`)
@@ -126,10 +126,23 @@ data += getInterfaceItems('_src_types_.pipelineconfig.md', [
 ])
 
 data += '\n\n## NLUConfig'
-data += getInterfaceContent('_src_types_.nluconfig.md')
+data += getInterfaceItems('_src_types_.nluconfig.md', [
+  'modelPath',
+  'metadataPath',
+  'vocabPath',
+  'inputLength'
+])
 
 data += '\n\n## WakewordConfig'
-data += getInterfaceContent('_src_types_.wakewordconfig.md')
+data += getInterfaceItems('_src_types_.wakewordconfig.md', [
+  'filterPath',
+  'detectPath',
+  'encodePath'
+])
+const wakewordConfig = getInterfaceContentSplit('_src_types_.wakewordconfig.md')
+data += wakewordConfig
+  .filter((prop) => prop.indexOf('`Optional`') > -1)
+  .join('\n\n---\n\n')
 
 // Add events table
 data += '\n\n---\n\n'
