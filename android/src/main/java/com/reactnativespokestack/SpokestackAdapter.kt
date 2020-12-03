@@ -21,7 +21,7 @@ class SpokestackAdapter(sendFunc:(event: String, data: WritableMap) -> Unit):io.
 
   override fun trace(module:SpokestackModule, message:String) {
     val reactEvent = Arguments.createMap()
-    reactEvent.putString("trace", module.name + " " + message)
+    reactEvent.putString("message", module.name + " " + message)
     sendEvent("trace", reactEvent)
   }
 

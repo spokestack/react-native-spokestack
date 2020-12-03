@@ -34,7 +34,7 @@ class RNSpokestack: RCTEventEmitter, SpokestackDelegate {
     }
 
     override func supportedEvents() -> [String]! {
-        return ["activate", "deactivate", "timeout", "recognize", "partial_recognize", "error", "play"]
+        return ["activate", "deactivate", "timeout", "recognize", "partial_recognize", "play", "error", "trace"]
     }
 
     func handleError(_ error: Error) -> Void {
@@ -53,6 +53,10 @@ class RNSpokestack: RCTEventEmitter, SpokestackDelegate {
         // Reset
         resolvers = [:]
         rejecters = [:]
+    }
+    
+    func didTrace(_ trace: String) {
+        sendEvent(withName: "trace", body: [ "message": trace ])
     }
 
     func didInit() {
