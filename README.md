@@ -37,6 +37,8 @@ Before running `pod install`, make sure to make the following edits.
 
 react-native-spokestack makes use of relatively new APIs only available in iOS 13+. Make sure to set your deployment target to iOS 13 at the top of your Podfile:
 
+Also set your deployment target to 13.0 in your XCode project.
+
 ```ruby
 platform :ios, '13.0'
 ```

@@ -11,3 +11,5 @@ Use `Spokestack.addEventListener()`, `Spokestack.removeEventListener()`, and `Sp
 | deactivate        |          `null`          |                                   Fired when the speech pipeline deactivates. |
 | play              |  `{ playing: boolean }`  |         Fired when TTS playback starts and stops. See the `speak()` function. |
 | error             |   `{ error: string }`    |                                    Fired when there's an error in Spokestack. |
+
+_When an error event is triggered, any existing promises are rejected as it's difficult to know exactly from where the error originated and whether it may affect other requests._
