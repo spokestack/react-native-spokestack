@@ -6,6 +6,17 @@ enum RNSpokestackError: Error {
     case tts
 }
 
+enum RNSpokestackPromise: String {
+    case initialize
+    case start
+    case stop
+    case activate
+    case deactivate
+    case synthesize
+    case speak
+    case classify
+}
+
 @objc(RNSpokestack)
 class RNSpokestack: RCTEventEmitter, SpokestackDelegate {
     var speechPipeline: SpeechPipeline?
@@ -14,8 +25,8 @@ class RNSpokestack: RCTEventEmitter, SpokestackDelegate {
     var synthesizer: TextToSpeech?
     var classifier: NLUTensorflow?
     var started = false
-    var resolvers: [String:RCTPromiseResolveBlock] = [:]
-    var rejecters: [String:RCTPromiseRejectBlock] = [:]
+    var resolvers: [RNSpokestackPromise:RCTPromiseResolveBlock] = [:]
+    var rejecters: [RNSpokestackPromise:RCTPromiseRejectBlock] = [:]
 
     @objc
     override static func requiresMainQueueSetup() -> Bool {
@@ -36,7 +47,8 @@ class RNSpokestack: RCTEventEmitter, SpokestackDelegate {
 
         // Reject all existing promises
         for (key, reject) in rejecters {
-            reject(String(format: "%@_error", key), String(format: "Spokestack error during %@.", key), error)
+            let value = key.rawValue
+            reject(String(format: "%@_error", value), String(format: "Spokestack error during %@.", value), error)
         }
         // Reset
         resolvers = [:]
@@ -45,41 +57,41 @@ class RNSpokestack: RCTEventEmitter, SpokestackDelegate {
 
     func didInit() {
         print("Spokestack initialized!")
-        if let resolve = resolvers.removeValue(forKey: "init") {
+        if let resolve = resolvers.removeValue(forKey: RNSpokestackPromise.initialize) {
             resolve(nil)
-            rejecters.removeValue(forKey: "init")
+            rejecters.removeValue(forKey: RNSpokestackPromise.initialize)
         }
     }
 
     func didActivate() {
-        if let resolve = resolvers.removeValue(forKey: "activate") {
+        if let resolve = resolvers.removeValue(forKey: RNSpokestackPromise.activate) {
             resolve(nil)
-            rejecters.removeValue(forKey: "activate")
+            rejecters.removeValue(forKey: RNSpokestackPromise.activate)
         }
         sendEvent(withName: "activate", body: [ "transcript": "" ])
     }
 
     func didDeactivate() {
-        if let resolve = resolvers.removeValue(forKey: "deactivate") {
+        if let resolve = resolvers.removeValue(forKey: RNSpokestackPromise.deactivate) {
             resolve(nil)
-            rejecters.removeValue(forKey: "deactivate")
+            rejecters.removeValue(forKey: RNSpokestackPromise.deactivate)
         }
         sendEvent(withName: "deactivate", body: [ "transcript": "" ])
     }
 
     func didStart() {
         started = true
-        if let resolve = resolvers.removeValue(forKey: "start") {
+        if let resolve = resolvers.removeValue(forKey: RNSpokestackPromise.start) {
             resolve(nil)
-            rejecters.removeValue(forKey: "start")
+            rejecters.removeValue(forKey: RNSpokestackPromise.start)
         }
     }
 
     func didStop() {
         started = false
-        if let resolve = resolvers.removeValue(forKey: "stop") {
+        if let resolve = resolvers.removeValue(forKey: RNSpokestackPromise.stop) {
             resolve(nil)
-            rejecters.removeValue(forKey: "stop")
+            rejecters.removeValue(forKey: RNSpokestackPromise.stop)
         }
     }
 
@@ -96,17 +108,17 @@ class RNSpokestack: RCTEventEmitter, SpokestackDelegate {
     }
 
     func success(result: TextToSpeechResult) {
-        if let resolve = resolvers.removeValue(forKey: "synthesize") {
+        if let resolve = resolvers.removeValue(forKey: RNSpokestackPromise.synthesize) {
             resolve(result.url)
-            rejecters.removeValue(forKey: "synthesize")
-        } else if let resolve = resolvers.removeValue(forKey: "speak") {
+            rejecters.removeValue(forKey: RNSpokestackPromise.synthesize)
+        } else if let resolve = resolvers.removeValue(forKey: RNSpokestackPromise.speak) {
             resolve(nil)
-            rejecters.removeValue(forKey: "speak")
+            rejecters.removeValue(forKey: RNSpokestackPromise.speak)
         }
     }
 
     func classification(result: NLUResult) {
-        if let resolve = resolvers.removeValue(forKey: "classify") {
+        if let resolve = resolvers.removeValue(forKey: RNSpokestackPromise.classify) {
             for (name, slot) in result.slots! {
                 print(name, slot)
             }
@@ -119,14 +131,14 @@ class RNSpokestack: RCTEventEmitter, SpokestackDelegate {
                     "rawValue": slot.rawValue ?? nil
                 ] }
             ])
-            rejecters.removeValue(forKey: "classify")
+            rejecters.removeValue(forKey: RNSpokestackPromise.classify)
         }
     }
 
     func didBeginSpeaking() {
-        if let resolve = resolvers.removeValue(forKey: "speak") {
+        if let resolve = resolvers.removeValue(forKey: RNSpokestackPromise.speak) {
             resolve(nil)
-            rejecters.removeValue(forKey: "speak")
+            rejecters.removeValue(forKey: RNSpokestackPromise.speak)
         }
         sendEvent(withName: "play", body: [ "playing": true ])
     }
@@ -290,7 +302,7 @@ class RNSpokestack: RCTEventEmitter, SpokestackDelegate {
         }
 
         // Build pipeline
-        resolvers["init"] = resolve
+        resolvers[RNSpokestackPromise.initialize] = resolve
         builder = builder.setConfiguration(speechConfig)
         builder = builder.addListener(self)
         do {
@@ -305,8 +317,8 @@ class RNSpokestack: RCTEventEmitter, SpokestackDelegate {
     @objc(start:withRejecter:)
     func start(resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
         if let pipeline = speechPipeline {
-            resolvers["start"] = resolve
-            rejecters["start"] = reject
+            resolvers[RNSpokestackPromise.start] = resolve
+            rejecters[RNSpokestackPromise.start] = reject
             pipeline.start()
         }
     }
@@ -315,8 +327,8 @@ class RNSpokestack: RCTEventEmitter, SpokestackDelegate {
     @objc(stop:withRejecter:)
     func stop(resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
         if let pipeline = speechPipeline {
-            resolvers["stop"] = resolve
-            rejecters["stop"] = reject
+            resolvers[RNSpokestackPromise.stop] = resolve
+            rejecters[RNSpokestackPromise.stop] = reject
             pipeline.stop()
         }
     }
@@ -333,8 +345,8 @@ class RNSpokestack: RCTEventEmitter, SpokestackDelegate {
             return
         }
         if let pipeline = speechPipeline {
-            resolvers["activate"] = resolve
-            rejecters["activate"] = reject
+            resolvers[RNSpokestackPromise.activate] = resolve
+            rejecters[RNSpokestackPromise.activate] = reject
             pipeline.activate()
         }
     }
@@ -343,8 +355,8 @@ class RNSpokestack: RCTEventEmitter, SpokestackDelegate {
     @objc(deactivate:withRejecter:)
     func deactivate(resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
         if let pipeline = speechPipeline {
-            resolvers["deactivate"] = resolve
-            rejecters["deactivate"] = reject
+            resolvers[RNSpokestackPromise.deactivate] = resolve
+            rejecters[RNSpokestackPromise.deactivate] = reject
             pipeline.deactivate()
         } else {
             reject(
@@ -363,8 +375,8 @@ class RNSpokestack: RCTEventEmitter, SpokestackDelegate {
     @objc(synthesize:withFormat:withVoice:withResolver:withRejecter:)
     func synthesize(input: String, format: Int, voice: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
         if let tts = synthesizer {
-            resolvers["synthesize"] = resolve
-            rejecters["synthesize"] = reject
+            resolvers[RNSpokestackPromise.synthesize] = resolve
+            rejecters[RNSpokestackPromise.synthesize] = reject
             let ttsInput = TextToSpeechInput(input, voice: voice, inputFormat: TTSInputFormat(rawValue: format) ?? TTSInputFormat.text)
             tts.synthesize(ttsInput)
         } else {
@@ -384,8 +396,8 @@ class RNSpokestack: RCTEventEmitter, SpokestackDelegate {
     @objc(speak:withFormat:withVoice:withResolver:withRejecter:)
     func speak(input: String, format: Int, voice: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
         if let tts = synthesizer {
-            resolvers["speak"] = resolve
-            rejecters["speak"] = reject
+            resolvers[RNSpokestackPromise.speak] = resolve
+            rejecters[RNSpokestackPromise.speak] = reject
             let ttsInput = TextToSpeechInput(input, voice: voice, inputFormat: TTSInputFormat(rawValue: format) ?? TTSInputFormat.text)
             tts.speak(ttsInput)
         } else {
@@ -403,8 +415,8 @@ class RNSpokestack: RCTEventEmitter, SpokestackDelegate {
     @objc(classify:withResolver:withRejecter:)
     func classify(utterance: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
         if let nlu = classifier {
-            resolvers["classify"] = resolve
-            rejecters["classify"] = reject
+            resolvers[RNSpokestackPromise.classify] = resolve
+            rejecters[RNSpokestackPromise.classify] = reject
             nlu.classify(utterance: utterance)
         } else {
             reject(

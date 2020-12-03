@@ -15,7 +15,7 @@ import javax.annotation.Nullable
 class SpokestackModule(private val reactContext: ReactApplicationContext): ReactContextBaseJavaModule(reactContext) {
   private val adapter = SpokestackAdapter { event: String, data: WritableMap -> sendEvent(event, data) }
   private lateinit var spokestack: Spokestack
-  private val promises = mutableMapOf<String, Promise>()
+  private val promises = mutableMapOf<SpokestackPromise, Promise>()
   private var say: ((url: String) -> Unit)? = null
   private lateinit var audioPlayer: SpokestackTTSOutput
 
@@ -28,6 +28,12 @@ class SpokestackModule(private val reactContext: ReactApplicationContext): React
     if (spokestack.speechPipeline != null) {
       spokestack.stop()
     }
+  }
+
+  private enum class SpokestackPromise {
+    SYNTHESIZE,
+    SPEAK,
+    CLASSIFY
   }
 
   private enum class PipelineProfiles(p:Class<out PipelineProfile>) {
@@ -49,22 +55,22 @@ class SpokestackModule(private val reactContext: ReactApplicationContext): React
         "error" -> {
           // Reject all existing promises
           for ((key, promise) in promises) {
-            promise.reject(Exception("Error in Spokestack during $key."))
+            promise.reject(Exception("Error in Spokestack during ${key.name}."))
           }
           promises.clear()
         }
         "synthesize" -> {
           val url = params.getString("url")
-          promises["synthesize"]?.resolve(url)
-          promises.remove("synthesize")
+          promises[SpokestackPromise.SYNTHESIZE]?.resolve(url)
+          promises.remove(SpokestackPromise.SYNTHESIZE)
           if (say != null && url != null) {
             say!!(url)
             say = null
           }
         }
         "classify" -> {
-          promises["classify"]?.resolve(params.getMap("result"))
-          promises.remove("classify")
+          promises[SpokestackPromise.CLASSIFY]?.resolve(params.getMap("result"))
+          promises.remove(SpokestackPromise.CLASSIFY)
         }
         else -> Log.d(name, "Sending JS event: $event")
       }
@@ -249,18 +255,18 @@ class SpokestackModule(private val reactContext: ReactApplicationContext): React
 
   @ReactMethod
   fun synthesize(input: String, format: Int, voice: String, promise: Promise) {
-    promises["synthesize"] = promise
+    promises[SpokestackPromise.SYNTHESIZE] = promise
     try {
       textToSpeech(input, format, voice)
     } catch (e: Exception) {
       promise.reject(e)
-      promises.remove("synthesize")
+      promises.remove(SpokestackPromise.SYNTHESIZE)
     }
   }
 
   @ReactMethod
   fun speak(input: String, format: Int, voice: String, promise: Promise) {
-    promises["speak"] = promise
+    promises[SpokestackPromise.SPEAK] = promise
     say = { url ->
       Log.d(name,"Playing audio from URL: $url")
       val uri = Uri.parse(url)
@@ -269,19 +275,19 @@ class SpokestackModule(private val reactContext: ReactApplicationContext): React
 
       // Resolve RN promise
       promise.resolve(null)
-      promises.remove("speak")
+      promises.remove(SpokestackPromise.SPEAK)
     }
     try {
       textToSpeech(input, format, voice)
     } catch (e: Exception) {
       promise.reject(e)
-      promises.remove("speak")
+      promises.remove(SpokestackPromise.SPEAK)
     }
   }
 
   @ReactMethod
   fun classify(utterance:String, promise: Promise) {
-    promises["classify"] = promise
+    promises[SpokestackPromise.CLASSIFY] = promise
     spokestack.classify(utterance)
   }
 }
