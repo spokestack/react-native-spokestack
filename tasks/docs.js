@@ -85,6 +85,10 @@ data += getInterfaceItems('_src_index_.spokestacktype.md', [
 data += '\n\n---\n\n### TTSFormat'
 data += getEnumContent('_src_types_.ttsformat.md')
 
+// Add events table
+data += '\n\n---\n\n'
+data += read('./EVENTS.md')
+
 // Add Spokestack config
 data += '\n\n---\n\n## SpokestackConfig'
 data +=
@@ -139,14 +143,11 @@ data += getInterfaceItems('_src_types_.wakewordconfig.md', [
   'detectPath',
   'encodePath'
 ])
+data += '\n\n---\n\n'
 const wakewordConfig = getInterfaceContentSplit('_src_types_.wakewordconfig.md')
 data += wakewordConfig
   .filter((prop) => prop.indexOf('`Optional`') > -1)
   .join('\n\n---\n\n')
-
-// Add events table
-data += '\n\n---\n\n'
-data += read('./EVENTS.md')
 
 // Add license info
 data += `\n---\n\n ## License\n\nApache-2.0\n\nCopyright ${new Date().getFullYear()} Spokestack\n`

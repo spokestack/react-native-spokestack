@@ -222,12 +222,14 @@ interface WakewordConfig {
   activeMax?: number
   /**
    * iOS-only
+   *
    * A comma-separated list of wakeword keywords
    * Only necessary when not passing the filter, detect, and encode paths.
    */
   wakewords?: string
   /**
    * iOS-only
+   *
    * Length of time to allow an Apple ASR request to run, in milliseconds.
    * Apple has an undocumented limit of 60000ms per request.
    */
@@ -268,6 +270,7 @@ interface WakewordConfig {
   rmsTarget?: number
   /**
    * @advanced
+   *
    * The Exponentially-Weighted Moving Average (EWMA) update
    * rate for the current RMS signal energy (0 for no RMS normalization)
    */
@@ -281,7 +284,9 @@ interface WakewordConfig {
   fftWindowSize?: number
   /**
    * @advanced
+   *
    * Android-only
+   *
    * The name of the windowing function to apply to each audio frame
    * before calculating the STFT; currently the "hann" window is supported
    */
@@ -295,6 +300,7 @@ interface WakewordConfig {
   fftHopLength?: number
   /**
    * @advanced
+   *
    * The pre-emphasis filter weight to apply to
    * the normalized audio signal (0 for no pre-emphasis)
    */

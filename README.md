@@ -222,7 +222,7 @@ function App() {
 
 ▸ **initialize**(`clientId`: string, `clientSecret`: string, `config?`: [SpokestackConfig](#SpokestackConfig)): Promise\<void>
 
-_Defined in [src/index.tsx:55](https://github.com/spokestack/react-native-spokestack/blob/46040d8/src/index.tsx#L55)_
+_Defined in [src/index.tsx:55](https://github.com/spokestack/react-native-spokestack/blob/fc770f4/src/index.tsx#L55)_
 
 Initialize the speech pipeline; required for all other methods.
 
@@ -269,7 +269,7 @@ await Spokestack.initialize(process.env.CLIENT_ID, process.env.CLIENT_SECRET, {
 
 ▸ **start**(): Promise\<void>
 
-_Defined in [src/index.tsx:73](https://github.com/spokestack/react-native-spokestack/blob/46040d8/src/index.tsx#L73)_
+_Defined in [src/index.tsx:73](https://github.com/spokestack/react-native-spokestack/blob/fc770f4/src/index.tsx#L73)_
 
 Start the speech pipeline.
 The speech pipeline starts in the `deactivate` state.
@@ -291,7 +291,7 @@ Spokestack.initialize(process.env.CLIENT_ID, process.env.CLIENT_SECRET)
 
 ▸ **stop**(): Promise\<void>
 
-_Defined in [src/index.tsx:86](https://github.com/spokestack/react-native-spokestack/blob/46040d8/src/index.tsx#L86)_
+_Defined in [src/index.tsx:86](https://github.com/spokestack/react-native-spokestack/blob/fc770f4/src/index.tsx#L86)_
 
 Stop the speech pipeline.
 This effectively stops ASR, VAD, and wakeword.
@@ -312,7 +312,7 @@ await Spokestack.stop()
 
 ▸ **activate**(): Promise\<void>
 
-_Defined in [src/index.tsx:101](https://github.com/spokestack/react-native-spokestack/blob/46040d8/src/index.tsx#L101)_
+_Defined in [src/index.tsx:101](https://github.com/spokestack/react-native-spokestack/blob/fc770f4/src/index.tsx#L101)_
 
 Manually activate the speech pipeline.
 This is necessary when using a PTT profile.
@@ -335,7 +335,7 @@ import Spokestack from 'react-native-spokestack`
 
 ▸ **deactivate**(): Promise\<void>
 
-_Defined in [src/index.tsx:116](https://github.com/spokestack/react-native-spokestack/blob/46040d8/src/index.tsx#L116)_
+_Defined in [src/index.tsx:116](https://github.com/spokestack/react-native-spokestack/blob/fc770f4/src/index.tsx#L116)_
 
 Deactivate the speech pipeline.
 If the profile includes wakeword, the pipeline will go back
@@ -358,7 +358,7 @@ import Spokestack from 'react-native-spokestack`
 
 • **addEventListener**: _typeof_ addListener
 
-_Defined in [src/index.tsx:175](https://github.com/spokestack/react-native-spokestack/blob/46040d8/src/index.tsx#L175)_
+_Defined in [src/index.tsx:175](https://github.com/spokestack/react-native-spokestack/blob/fc770f4/src/index.tsx#L175)_
 
 Bind to any event emitted by the native libraries
 The events are: "recognize", "partial_recognize", "error", "activate", "deactivate", and "timeout".
@@ -380,7 +380,7 @@ useEffect(() => {
 
 • **removeEventListener**: _typeof_ removeListener
 
-_Defined in [src/index.tsx:183](https://github.com/spokestack/react-native-spokestack/blob/46040d8/src/index.tsx#L183)_
+_Defined in [src/index.tsx:183](https://github.com/spokestack/react-native-spokestack/blob/fc770f4/src/index.tsx#L183)_
 
 Remove an event listener
 
@@ -394,7 +394,7 @@ Spokestack.removeEventListener('recognize', onRecognize)
 
 • **removeAllListeners**: () => void
 
-_Defined in [src/index.tsx:193](https://github.com/spokestack/react-native-spokestack/blob/46040d8/src/index.tsx#L193)_
+_Defined in [src/index.tsx:193](https://github.com/spokestack/react-native-spokestack/blob/fc770f4/src/index.tsx#L193)_
 
 Remove any existing listeners
 
@@ -410,7 +410,7 @@ componentWillUnmount() {
 
 ▸ **synthesize**(`input`: string, `format?`: [TTSFormat](#TTSFormat), `voice?`: string): Promise\<string>
 
-_Defined in [src/index.tsx:129](https://github.com/spokestack/react-native-spokestack/blob/46040d8/src/index.tsx#L129)_
+_Defined in [src/index.tsx:129](https://github.com/spokestack/react-native-spokestack/blob/fc770f4/src/index.tsx#L129)_
 
 Synthesize some text into speech
 Returns `Promise<string>` with the string
@@ -439,7 +439,7 @@ play(url)
 
 ▸ **speak**(`input`: string, `format?`: [TTSFormat](#TTSFormat), `voice?`: string): Promise\<void>
 
-_Defined in [src/index.tsx:144](https://github.com/spokestack/react-native-spokestack/blob/46040d8/src/index.tsx#L144)_
+_Defined in [src/index.tsx:144](https://github.com/spokestack/react-native-spokestack/blob/fc770f4/src/index.tsx#L144)_
 
 Synthesize some text into speech
 and then immediately play the audio through
@@ -470,15 +470,33 @@ await Spokestack.speak('Hello world')
 
 • **SPEECHMARKDOWN**: = 2
 
-_Defined in [src/types.ts:63](https://github.com/spokestack/react-native-spokestack/blob/46040d8/src/types.ts#L63)_
+_Defined in [src/types.ts:63](https://github.com/spokestack/react-native-spokestack/blob/fc770f4/src/types.ts#L63)_
 
 • **SSML**: = 1
 
-_Defined in [src/types.ts:62](https://github.com/spokestack/react-native-spokestack/blob/46040d8/src/types.ts#L62)_
+_Defined in [src/types.ts:62](https://github.com/spokestack/react-native-spokestack/blob/fc770f4/src/types.ts#L62)_
 
 • **TEXT**: = 0
 
-_Defined in [src/types.ts:61](https://github.com/spokestack/react-native-spokestack/blob/46040d8/src/types.ts#L61)_
+_Defined in [src/types.ts:61](https://github.com/spokestack/react-native-spokestack/blob/fc770f4/src/types.ts#L61)_
+
+---
+
+# Events
+
+Use `Spokestack.addEventListener()`, `Spokestack.removeEventListener()`, and `Spokestack.removeAllListeners()` to add and remove events handlers. All events are available in both iOS and Android.
+
+| Name              |           Data           |                                                                   Description |
+| :---------------- | :----------------------: | ----------------------------------------------------------------------------: |
+| recognize         | `{ transcript: string }` |                     Fired whenever speech recognition completes successfully. |
+| partial_recognize | `{ transcript: string }` |              Fired whenever the transcript changes during speech recognition. |
+| timeout           |          `null`          |           Fired when an active pipeline times out due to lack of recognition. |
+| activate          |          `null`          | Fired when the speech pipeline activates, either through the VAD or manually. |
+| deactivate        |          `null`          |                                   Fired when the speech pipeline deactivates. |
+| play              |  `{ playing: boolean }`  |         Fired when TTS playback starts and stops. See the `speak()` function. |
+| error             |   `{ error: string }`    |                                    Fired when there's an error in Spokestack. |
+
+_When an error event is triggered, any existing promises are rejected as it's difficult to know exactly from where the error originated and whether it may affect other requests._
 
 ---
 
@@ -490,36 +508,36 @@ SpokestackConfig has the following structure:
 
 ```ts
 interface SpokestackConfig {
-  traceLevel: TraceLevel,
+  traceLevel: TraceLevel
   // Most options are advanced aside from "profile"
-  pipeline: PipelineConfig,
+  pipeline: PipelineConfig
   // Only needed for Spokestack.classify
-  nlu: NLUConfig,
+  nlu: NLUConfig
   // Needed for wakeword
   // Most options are advanced aside from
   // filterPath, encodePath, and decodePath
   // for passing config files.
   wakeword: WakewordConfig
-})
+}
 ```
 
 ### TraceLevel
 
 • **DEBUG**: = 10
 
-_Defined in [src/types.ts:48](https://github.com/spokestack/react-native-spokestack/blob/46040d8/src/types.ts#L48)_
+_Defined in [src/types.ts:48](https://github.com/spokestack/react-native-spokestack/blob/fc770f4/src/types.ts#L48)_
 
 • **INFO**: = 30
 
-_Defined in [src/types.ts:50](https://github.com/spokestack/react-native-spokestack/blob/46040d8/src/types.ts#L50)_
+_Defined in [src/types.ts:50](https://github.com/spokestack/react-native-spokestack/blob/fc770f4/src/types.ts#L50)_
 
 • **NONE**: = 100
 
-_Defined in [src/types.ts:51](https://github.com/spokestack/react-native-spokestack/blob/46040d8/src/types.ts#L51)_
+_Defined in [src/types.ts:51](https://github.com/spokestack/react-native-spokestack/blob/fc770f4/src/types.ts#L51)_
 
 • **PERF**: = 20
 
-_Defined in [src/types.ts:49](https://github.com/spokestack/react-native-spokestack/blob/46040d8/src/types.ts#L49)_
+_Defined in [src/types.ts:49](https://github.com/spokestack/react-native-spokestack/blob/fc770f4/src/types.ts#L49)_
 
 ## PipelineConfig
 
@@ -527,7 +545,7 @@ _Defined in [src/types.ts:49](https://github.com/spokestack/react-native-spokest
 
 • `Optional` **profile**: [PipelineProfile](#PipelineProfile)
 
-_Defined in [src/types.ts:104](https://github.com/spokestack/react-native-spokestack/blob/46040d8/src/types.ts#L104)_
+_Defined in [src/types.ts:104](https://github.com/spokestack/react-native-spokestack/blob/fc770f4/src/types.ts#L104)_
 
 Profiles are collections of common configurations for Pipeline stages.
 Default: PTT_NATIVE_ASR
@@ -536,7 +554,7 @@ Default: PTT_NATIVE_ASR
 
 • **PTT_NATIVE_ASR**: = 2
 
-_Defined in [src/types.ts:22](https://github.com/spokestack/react-native-spokestack/blob/46040d8/src/types.ts#L22)_
+_Defined in [src/types.ts:22](https://github.com/spokestack/react-native-spokestack/blob/fc770f4/src/types.ts#L22)_
 
 Apple/Android Automatic Speech Recogntion is on
 when the speech pipeline is active.
@@ -545,7 +563,7 @@ when not using wakeword.
 
 • **PTT_SPOKESTACK_ASR**: = 5
 
-_Defined in [src/types.ts:40](https://github.com/spokestack/react-native-spokestack/blob/46040d8/src/types.ts#L40)_
+_Defined in [src/types.ts:40](https://github.com/spokestack/react-native-spokestack/blob/fc770f4/src/types.ts#L40)_
 
 Spokestack Automatic Speech Recogntion is on
 when the speech pipeline is active.
@@ -554,7 +572,7 @@ when not using wakeword, but Spokestack ASR is preferred.
 
 • **TFLITE_WAKEWORD_NATIVE_ASR**: = 0
 
-_Defined in [src/types.ts:10](https://github.com/spokestack/react-native-spokestack/blob/46040d8/src/types.ts#L10)_
+_Defined in [src/types.ts:10](https://github.com/spokestack/react-native-spokestack/blob/fc770f4/src/types.ts#L10)_
 
 Set up wakeword and use local Apple/Android ASR.
 Note that wakeword.filterPath, wakeword.encodePath, and wakeword.detectPath
@@ -562,7 +580,7 @@ are required if any wakeword profile is used.
 
 • **TFLITE_WAKEWORD_SPOKESTACK_ASR**: = 3
 
-_Defined in [src/types.ts:28](https://github.com/spokestack/react-native-spokestack/blob/46040d8/src/types.ts#L28)_
+_Defined in [src/types.ts:28](https://github.com/spokestack/react-native-spokestack/blob/fc770f4/src/types.ts#L28)_
 
 Set up wakeword and use remote Spokestack ASR.
 Note that wakeword.filterPath, wakeword.encodePath, and wakeword.detectPath
@@ -570,14 +588,14 @@ are required if any wakeword profile is used.
 
 • **VAD_NATIVE_ASR**: = 1
 
-_Defined in [src/types.ts:15](https://github.com/spokestack/react-native-spokestack/blob/46040d8/src/types.ts#L15)_
+_Defined in [src/types.ts:15](https://github.com/spokestack/react-native-spokestack/blob/fc770f4/src/types.ts#L15)_
 
 Apple/Android Automatic Speech Recognition is on
 when Voice Active Detection triggers it.
 
 • **VAD_SPOKESTACK_ASR**: = 4
 
-_Defined in [src/types.ts:33](https://github.com/spokestack/react-native-spokestack/blob/46040d8/src/types.ts#L33)_
+_Defined in [src/types.ts:33](https://github.com/spokestack/react-native-spokestack/blob/fc770f4/src/types.ts#L33)_
 
 Spokestack Automatic Speech Recognition is on
 when Voice Active Detection triggers it.
@@ -586,7 +604,7 @@ when Voice Active Detection triggers it.
 
 • `Optional` **sampleRate**: number
 
-_Defined in [src/types.ts:108](https://github.com/spokestack/react-native-spokestack/blob/46040d8/src/types.ts#L108)_
+_Defined in [src/types.ts:108](https://github.com/spokestack/react-native-spokestack/blob/fc770f4/src/types.ts#L108)_
 
 Audio sampling rate, in Hz
 
@@ -596,7 +614,7 @@ Audio sampling rate, in Hz
 
 • `Optional` **frameWidth**: number
 
-_Defined in [src/types.ts:114](https://github.com/spokestack/react-native-spokestack/blob/46040d8/src/types.ts#L114)_
+_Defined in [src/types.ts:114](https://github.com/spokestack/react-native-spokestack/blob/fc770f4/src/types.ts#L114)_
 
 **`advanced`**
 
@@ -608,7 +626,7 @@ Speech frame width, in ms
 
 • `Optional` **bufferWidth**: number
 
-_Defined in [src/types.ts:120](https://github.com/spokestack/react-native-spokestack/blob/46040d8/src/types.ts#L120)_
+_Defined in [src/types.ts:120](https://github.com/spokestack/react-native-spokestack/blob/fc770f4/src/types.ts#L120)_
 
 **`advanced`**
 
@@ -620,7 +638,7 @@ Buffer width, used with frameWidth to determine the buffer size
 
 • `Optional` **vadMode**: \"quality\" \| \"low-bitrate\" \| \"aggressive\" \| \"very-aggressive\"
 
-_Defined in [src/types.ts:124](https://github.com/spokestack/react-native-spokestack/blob/46040d8/src/types.ts#L124)_
+_Defined in [src/types.ts:124](https://github.com/spokestack/react-native-spokestack/blob/fc770f4/src/types.ts#L124)_
 
 Voice activity detector mode
 
@@ -630,7 +648,7 @@ Voice activity detector mode
 
 • `Optional` **vadFallDelay**: number
 
-_Defined in [src/types.ts:131](https://github.com/spokestack/react-native-spokestack/blob/46040d8/src/types.ts#L131)_
+_Defined in [src/types.ts:131](https://github.com/spokestack/react-native-spokestack/blob/fc770f4/src/types.ts#L131)_
 
 **`advanced`**
 
@@ -643,7 +661,7 @@ how many negative samples must be received to flip the detector to negative
 
 • `Optional` **vadRiseDelay**: number
 
-_Defined in [src/types.ts:140](https://github.com/spokestack/react-native-spokestack/blob/46040d8/src/types.ts#L140)_
+_Defined in [src/types.ts:140](https://github.com/spokestack/react-native-spokestack/blob/fc770f4/src/types.ts#L140)_
 
 **`advanced`**
 
@@ -658,7 +676,7 @@ how many positive samples must be received to flip the detector to positive
 
 • `Optional` **ansPolicy**: \"mild\" \| \"medium\" \| \"aggressive\" \| \"very-aggressive\"
 
-_Defined in [src/types.ts:148](https://github.com/spokestack/react-native-spokestack/blob/46040d8/src/types.ts#L148)_
+_Defined in [src/types.ts:148](https://github.com/spokestack/react-native-spokestack/blob/fc770f4/src/types.ts#L148)_
 
 **`advanced`**
 
@@ -672,7 +690,7 @@ Noise policy
 
 • `Optional` **agcCompressionGainDb**: number
 
-_Defined in [src/types.ts:157](https://github.com/spokestack/react-native-spokestack/blob/46040d8/src/types.ts#L157)_
+_Defined in [src/types.ts:157](https://github.com/spokestack/react-native-spokestack/blob/fc770f4/src/types.ts#L157)_
 
 **`advanced`**
 
@@ -687,7 +705,7 @@ to maintain a peak of -9dB, configure a value of 9
 
 • `Optional` **agcTargetLevelDbfs**: number
 
-_Defined in [src/types.ts:165](https://github.com/spokestack/react-native-spokestack/blob/46040d8/src/types.ts#L165)_
+_Defined in [src/types.ts:165](https://github.com/spokestack/react-native-spokestack/blob/fc770f4/src/types.ts#L165)_
 
 **`advanced`**
 
@@ -701,7 +719,7 @@ Dynamic range compression rate, in dBFS
 
 • **modelPath**: string
 
-_Defined in [src/types.ts:172](https://github.com/spokestack/react-native-spokestack/blob/46040d8/src/types.ts#L172)_
+_Defined in [src/types.ts:172](https://github.com/spokestack/react-native-spokestack/blob/fc770f4/src/types.ts#L172)_
 
 String filesystem path to NLU model
 
@@ -711,7 +729,7 @@ String filesystem path to NLU model
 
 • **metadataPath**: string
 
-_Defined in [src/types.ts:176](https://github.com/spokestack/react-native-spokestack/blob/46040d8/src/types.ts#L176)_
+_Defined in [src/types.ts:176](https://github.com/spokestack/react-native-spokestack/blob/fc770f4/src/types.ts#L176)_
 
 String filesystem path to NLU metadata
 
@@ -721,7 +739,7 @@ String filesystem path to NLU metadata
 
 • **vocabPath**: string
 
-_Defined in [src/types.ts:180](https://github.com/spokestack/react-native-spokestack/blob/46040d8/src/types.ts#L180)_
+_Defined in [src/types.ts:180](https://github.com/spokestack/react-native-spokestack/blob/fc770f4/src/types.ts#L180)_
 
 String filesystem path to NLU vocab
 
@@ -731,7 +749,7 @@ String filesystem path to NLU vocab
 
 • `Optional` **inputLength**: number
 
-_Defined in [src/types.ts:190](https://github.com/spokestack/react-native-spokestack/blob/46040d8/src/types.ts#L190)_
+_Defined in [src/types.ts:190](https://github.com/spokestack/react-native-spokestack/blob/fc770f4/src/types.ts#L190)_
 
 **`advanced`**
 
@@ -747,7 +765,7 @@ is explicitly set to a different value at training time.
 
 • **filterPath**: string
 
-_Defined in [src/types.ts:199](https://github.com/spokestack/react-native-spokestack/blob/46040d8/src/types.ts#L199)_
+_Defined in [src/types.ts:199](https://github.com/spokestack/react-native-spokestack/blob/fc770f4/src/types.ts#L199)_
 
 File system path to the "filter" Tensorflow-Lite model,
 which is used to calculate a mel spectrogram frame from the linear STFT;
@@ -759,7 +777,7 @@ its inputs should be shaped [fft-width], and its outputs [mel-width]
 
 • **detectPath**: string
 
-_Defined in [src/types.ts:206](https://github.com/spokestack/react-native-spokestack/blob/46040d8/src/types.ts#L206)_
+_Defined in [src/types.ts:206](https://github.com/spokestack/react-native-spokestack/blob/fc770f4/src/types.ts#L206)_
 
 File system path to the "encode" Tensorflow-Lite model,
 which is used to perform each autoregressive step over the mel frames;
@@ -772,17 +790,19 @@ with an additional state input/output shaped [state-width]
 
 • **encodePath**: string
 
-_Defined in [src/types.ts:212](https://github.com/spokestack/react-native-spokestack/blob/46040d8/src/types.ts#L212)_
+_Defined in [src/types.ts:212](https://github.com/spokestack/react-native-spokestack/blob/fc770f4/src/types.ts#L212)_
 
 File system path to the "detect" Tensorflow-Lite model;
 its inputs should be shaped [encode-length, encode-width],
 and its outputs
 
+---
+
 ### activeMax
 
 • `Optional` **activeMax**: number
 
-_Defined in [src/types.ts:222](https://github.com/spokestack/react-native-spokestack/blob/46040d8/src/types.ts#L222)_
+_Defined in [src/types.ts:222](https://github.com/spokestack/react-native-spokestack/blob/fc770f4/src/types.ts#L222)_
 
 The maximum length of an activation, in milliseconds,
 used to time out the activation
@@ -793,7 +813,7 @@ used to time out the activation
 
 • `Optional` **activeMin**: number
 
-_Defined in [src/types.ts:217](https://github.com/spokestack/react-native-spokestack/blob/46040d8/src/types.ts#L217)_
+_Defined in [src/types.ts:217](https://github.com/spokestack/react-native-spokestack/blob/fc770f4/src/types.ts#L217)_
 
 The minimum length of an activation, in milliseconds,
 used to ignore a VAD deactivation after the wakeword
@@ -804,7 +824,7 @@ used to ignore a VAD deactivation after the wakeword
 
 • `Optional` **encodeLength**: number
 
-_Defined in [src/types.ts:248](https://github.com/spokestack/react-native-spokestack/blob/46040d8/src/types.ts#L248)_
+_Defined in [src/types.ts:250](https://github.com/spokestack/react-native-spokestack/blob/fc770f4/src/types.ts#L250)_
 
 **`advanced`**
 
@@ -817,7 +837,7 @@ used as an input to the classifier, in milliseconds
 
 • `Optional` **encodeWidth**: number
 
-_Defined in [src/types.ts:254](https://github.com/spokestack/react-native-spokestack/blob/46040d8/src/types.ts#L254)_
+_Defined in [src/types.ts:256](https://github.com/spokestack/react-native-spokestack/blob/fc770f4/src/types.ts#L256)_
 
 **`advanced`**
 
@@ -829,7 +849,7 @@ The size of the encoder output, in vector units
 
 • `Optional` **fftHopLength**: number
 
-_Defined in [src/types.ts:295](https://github.com/spokestack/react-native-spokestack/blob/46040d8/src/types.ts#L295)_
+_Defined in [src/types.ts:300](https://github.com/spokestack/react-native-spokestack/blob/fc770f4/src/types.ts#L300)_
 
 **`advanced`**
 
@@ -842,7 +862,7 @@ overlapping STFT is calculated, in milliseconds
 
 • `Optional` **fftWindowSize**: number
 
-_Defined in [src/types.ts:281](https://github.com/spokestack/react-native-spokestack/blob/46040d8/src/types.ts#L281)_
+_Defined in [src/types.ts:284](https://github.com/spokestack/react-native-spokestack/blob/fc770f4/src/types.ts#L284)_
 
 **`advanced`**
 
@@ -855,10 +875,12 @@ in number of samples - should be a power of 2 for maximum efficiency
 
 • `Optional` **fftWindowType**: string
 
-_Defined in [src/types.ts:288](https://github.com/spokestack/react-native-spokestack/blob/46040d8/src/types.ts#L288)_
+_Defined in [src/types.ts:293](https://github.com/spokestack/react-native-spokestack/blob/fc770f4/src/types.ts#L293)_
 
 **`advanced`**
+
 Android-only
+
 The name of the windowing function to apply to each audio frame
 before calculating the STFT; currently the "hann" window is supported
 
@@ -868,7 +890,7 @@ before calculating the STFT; currently the "hann" window is supported
 
 • `Optional` **melFrameLength**: number
 
-_Defined in [src/types.ts:308](https://github.com/spokestack/react-native-spokestack/blob/46040d8/src/types.ts#L308)_
+_Defined in [src/types.ts:314](https://github.com/spokestack/react-native-spokestack/blob/fc770f4/src/types.ts#L314)_
 
 **`advanced`**
 
@@ -881,7 +903,7 @@ overlapping STFT is calculated, in milliseconds
 
 • `Optional` **melFrameWidth**: number
 
-_Defined in [src/types.ts:315](https://github.com/spokestack/react-native-spokestack/blob/46040d8/src/types.ts#L315)_
+_Defined in [src/types.ts:321](https://github.com/spokestack/react-native-spokestack/blob/fc770f4/src/types.ts#L321)_
 
 **`advanced`**
 
@@ -894,9 +916,10 @@ in number of filterbank components
 
 • `Optional` **preEmphasis**: number
 
-_Defined in [src/types.ts:301](https://github.com/spokestack/react-native-spokestack/blob/46040d8/src/types.ts#L301)_
+_Defined in [src/types.ts:307](https://github.com/spokestack/react-native-spokestack/blob/fc770f4/src/types.ts#L307)_
 
 **`advanced`**
+
 The pre-emphasis filter weight to apply to
 the normalized audio signal (0 for no pre-emphasis)
 
@@ -906,9 +929,10 @@ the normalized audio signal (0 for no pre-emphasis)
 
 • `Optional` **requestTimeout**: number
 
-_Defined in [src/types.ts:234](https://github.com/spokestack/react-native-spokestack/blob/46040d8/src/types.ts#L234)_
+_Defined in [src/types.ts:236](https://github.com/spokestack/react-native-spokestack/blob/fc770f4/src/types.ts#L236)_
 
 iOS-only
+
 Length of time to allow an Apple ASR request to run, in milliseconds.
 Apple has an undocumented limit of 60000ms per request.
 
@@ -918,9 +942,10 @@ Apple has an undocumented limit of 60000ms per request.
 
 • `Optional` **rmsAlpha**: number
 
-_Defined in [src/types.ts:274](https://github.com/spokestack/react-native-spokestack/blob/46040d8/src/types.ts#L274)_
+_Defined in [src/types.ts:277](https://github.com/spokestack/react-native-spokestack/blob/fc770f4/src/types.ts#L277)_
 
 **`advanced`**
+
 The Exponentially-Weighted Moving Average (EWMA) update
 rate for the current RMS signal energy (0 for no RMS normalization)
 
@@ -930,7 +955,7 @@ rate for the current RMS signal energy (0 for no RMS normalization)
 
 • `Optional` **rmsTarget**: number
 
-_Defined in [src/types.ts:268](https://github.com/spokestack/react-native-spokestack/blob/46040d8/src/types.ts#L268)_
+_Defined in [src/types.ts:270](https://github.com/spokestack/react-native-spokestack/blob/fc770f4/src/types.ts#L270)_
 
 **`advanced`**
 
@@ -944,7 +969,7 @@ to the RMS target used during training
 
 • `Optional` **stateWidth**: number
 
-_Defined in [src/types.ts:260](https://github.com/spokestack/react-native-spokestack/blob/46040d8/src/types.ts#L260)_
+_Defined in [src/types.ts:262](https://github.com/spokestack/react-native-spokestack/blob/fc770f4/src/types.ts#L262)_
 
 **`advanced`**
 
@@ -956,7 +981,7 @@ The size of the encoder state, in vector units (defaults to wake-encode-width)
 
 • `Optional` **threshold**: number
 
-_Defined in [src/types.ts:241](https://github.com/spokestack/react-native-spokestack/blob/46040d8/src/types.ts#L241)_
+_Defined in [src/types.ts:243](https://github.com/spokestack/react-native-spokestack/blob/fc770f4/src/types.ts#L243)_
 
 **`advanced`**
 
@@ -969,27 +994,12 @@ above which the trigger activates the pipeline, in the range [0, 1]
 
 • `Optional` **wakewords**: string
 
-_Defined in [src/types.ts:228](https://github.com/spokestack/react-native-spokestack/blob/46040d8/src/types.ts#L228)_
+_Defined in [src/types.ts:229](https://github.com/spokestack/react-native-spokestack/blob/fc770f4/src/types.ts#L229)_
 
 iOS-only
+
 A comma-separated list of wakeword keywords
 Only necessary when not passing the filter, detect, and encode paths.
-
----
-
-## Events
-
-Use `Spokestack.addEventListener()`, `Spokestack.removeEventListener()`, and `Spokestack.removeAllListeners()` to add and remove events handlers. All events are available in both iOS and Android.
-
-| Name              |           Data           |                                                                   Description |
-| :---------------- | :----------------------: | ----------------------------------------------------------------------------: |
-| recognize         | `{ transcript: string }` |                     Fired whenever speech recognition completes successfully. |
-| partial_recognize | `{ transcript: string }` |              Fired whenever the transcript changes during speech recognition. |
-| timeout           |          `null`          |           Fired when an active pipeline times out due to lack of recognition. |
-| activate          |          `null`          | Fired when the speech pipeline activates, either through the VAD or manually. |
-| deactivate        |          `null`          |                                   Fired when the speech pipeline deactivates. |
-| play              |  `{ playing: boolean }`  |         Fired when TTS playback starts and stops. See the `speak()` function. |
-| error             |   `{ error: string }`    |                                    Fired when there's an error in Spokestack. |
 
 ---
 
