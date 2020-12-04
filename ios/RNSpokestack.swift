@@ -3,7 +3,6 @@ import Spokestack
 enum RNSpokestackError: Error {
     case notInitialized
     case notStarted
-    case tts
 }
 
 enum RNSpokestackPromise: String {
@@ -286,15 +285,7 @@ class RNSpokestack: RCTEventEmitter, SpokestackDelegate {
         }
 
         // Initialize TTS
-        if #available(iOS 13, *) {
-            synthesizer = TextToSpeech([self], configuration: speechConfig)
-        } else {
-            reject(
-                "init_error",
-                "Spokestack TTS is only available in iOS 13 or higher",
-                RNSpokestackError.tts
-            )
-        }
+        synthesizer = TextToSpeech([self], configuration: speechConfig)
 
         if nluFiles == 3 {
             do {
