@@ -14,14 +14,6 @@ export default function App() {
   const [partial, setPartial] = React.useState('')
   const [error, setError] = React.useState('')
 
-  const onActivate = () => setListening(true)
-  const onDeactivate = () => setListening(false)
-  const onPlay = ({ playing }: SpokestackPlayEvent) => setPlaying(playing)
-  const onRecognize = ({ transcript }: SpokestackRecognizeEvent) =>
-    setTranscript(transcript)
-  const onRecognizePartial = ({ transcript }: SpokestackRecognizeEvent) =>
-    setPartial(transcript)
-
   async function init() {
     const clientId = process.env.SPOKESTACK_CLIENT_ID
     const clientSecret = process.env.SPOKESTACK_CLIENT_SECRET
@@ -46,11 +38,19 @@ export default function App() {
   }
 
   React.useEffect(() => {
-    Spokestack.addEventListener('recognize', onRecognize)
-    Spokestack.addEventListener('partial_recognize', onRecognizePartial)
-    Spokestack.addEventListener('activate', onActivate)
-    Spokestack.addEventListener('deactivate', onDeactivate)
-    Spokestack.addEventListener('play', onPlay)
+    Spokestack.addEventListener('activate', () => setListening(true))
+    Spokestack.addEventListener('deactivate', () => setListening(false))
+    Spokestack.addEventListener(
+      'recognize',
+      ({ transcript }: SpokestackRecognizeEvent) => setTranscript(transcript)
+    )
+    Spokestack.addEventListener(
+      'partial_recognize',
+      ({ transcript }: SpokestackRecognizeEvent) => setPartial(transcript)
+    )
+    Spokestack.addEventListener('play', ({ playing }: SpokestackPlayEvent) =>
+      setPlaying(playing)
+    )
 
     init()
 
