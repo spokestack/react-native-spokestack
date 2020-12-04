@@ -10,35 +10,46 @@ import io.spokestack.spokestack.tts.TTSEvent
 import java.util.*
 
 class SpokestackAdapter(sendFunc:(event: String, data: WritableMap) -> Unit):io.spokestack.spokestack.SpokestackAdapter() {
-  val TAG = "Spokestack"
+  private val logTag = "Spokestack"
   private val sendEvent:(event: String, data: WritableMap) -> Unit = sendFunc
 
-  override fun error(module:SpokestackModule, err:Throwable) {
+  override fun error(module: SpokestackModule, err:Throwable) {
     val reactEvent = Arguments.createMap()
     reactEvent.putString("error", module.name + " " + err.localizedMessage)
     sendEvent("error", reactEvent)
   }
 
-  override fun trace(module:SpokestackModule, message:String) {
+  override fun trace(module: SpokestackModule, message:String) {
     val reactEvent = Arguments.createMap()
     reactEvent.putString("message", module.name + " " + message)
     sendEvent("trace", reactEvent)
   }
 
-  override fun nluResult(result:NLUResult) {
+  override fun nluResult(result: NLUResult) {
     val reactEvent = Arguments.makeNativeMap(toEvent(result))
     sendEvent("classify", reactEvent)
   }
 
-  override fun ttsEvent(event:TTSEvent) {
+  override fun ttsEvent(event: TTSEvent) {
     val reactEvent = Arguments.createMap()
-    if (event.error == null) {
-      reactEvent.putString("url", event.ttsResponse.audioUri.toString())
-      sendEvent("synthesize", reactEvent)
+    when (event.type) {
+      TTSEvent.Type.AUDIO_AVAILABLE -> {
+        reactEvent.putString("url", event.ttsResponse.audioUri.toString())
+        sendEvent("synthesize", reactEvent)
+      }
+      TTSEvent.Type.PLAYBACK_COMPLETE -> {
+        reactEvent.putBoolean("playing", false)
+        sendEvent("play", reactEvent)
+      }
+      TTSEvent.Type.ERROR -> {
+        reactEvent.putString("error", "TTS error: " + event.error.localizedMessage)
+        sendEvent("error", reactEvent)
+      }
+      else -> Log.d(logTag, "TTS event received with unexpected type ${event.type}")
     }
   }
 
-  override fun speechEvent(event:SpeechContext.Event, context:SpeechContext) {
+  override fun speechEvent(event: SpeechContext.Event, context: SpeechContext) {
     val reactEvent = Arguments.createMap()
     when (event) {
       SpeechContext.Event.RECOGNIZE -> {
@@ -65,7 +76,7 @@ class SpokestackAdapter(sendFunc:(event: String, data: WritableMap) -> Unit):io.
         reactEvent.putString("error", context.error.message)
         sendEvent(event.name, reactEvent)
       }
-      else -> Log.d(TAG, "Native event received (${event.name}) but not sending JS event.")
+      else -> Log.d(logTag, "Native event received (${event.name}) but not sending JS event.")
     }
   }
 

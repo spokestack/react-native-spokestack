@@ -48,9 +48,10 @@ export default function App() {
       'partial_recognize',
       ({ transcript }: SpokestackRecognizeEvent) => setPartial(transcript)
     )
-    Spokestack.addEventListener('play', ({ playing }: SpokestackPlayEvent) =>
+    Spokestack.addEventListener('play', ({ playing }: SpokestackPlayEvent) => {
+      console.log('Player state changed', playing)
       setPlaying(playing)
-    )
+    })
 
     init()
 
