@@ -1,17 +1,21 @@
 import {
-  NativeEventEmitter,
-  NativeModules,
-  PermissionsAndroid,
-  Platform
-} from 'react-native'
-import {
+  NLUConfig,
   PipelineProfile,
   SpokestackConfig,
   SpokestackEvent,
   SpokestackNLUResult,
   TTSFormat,
-  TraceLevel
+  TraceLevel,
+  WakewordConfig
 } from './types'
+import {
+  NativeEventEmitter,
+  NativeModules,
+  PermissionsAndroid,
+  Platform
+} from 'react-native'
+
+import resolveModelUrl from './resolveModelUrl'
 
 const { Spokestack } = NativeModules
 
@@ -193,41 +197,6 @@ interface SpokestackType {
   removeAllListeners: () => void
 }
 
-// Add enums as values
-Spokestack.PipelineProfile = PipelineProfile
-Spokestack.TraceLevel = TraceLevel
-Spokestack.TTSFormat = TTSFormat
-
-Spokestack.addEventListener = (
-  type: string,
-  listener: (event: SpokestackEvent) => void
-) => emitter.addListener(type, listener)
-
-Spokestack.removeEventListener = (
-  type: string,
-  listener: (event: SpokestackEvent) => void
-) => emitter.removeListener(type, listener)
-
-Spokestack.removeAllListeners = () => {
-  ;[
-    'recognize',
-    'partial_recognize',
-    'activate',
-    'deactivate',
-    'timeout',
-    'play',
-    'error'
-  ].forEach((event) => emitter.removeAllListeners(event))
-}
-
-// Ensure method is called with proper number of args despite what's passed
-const initialize = Spokestack.initialize
-Spokestack.initialize = (
-  id: string,
-  secret: string,
-  config: SpokestackConfig = {}
-) => initialize(id, secret, config)
-
 // This is necessary to allow usage where arguments may
 // be passed accidentally.
 // For example,
@@ -270,6 +239,76 @@ Spokestack.initialize = (
   ) => original(input, format, voice)
 })
 
+// Ensure method is called with proper number of args despite what's passed
+const originalInit = Spokestack.initialize
+Spokestack.initialize = (
+  id: string,
+  secret: string,
+  config: SpokestackConfig = {}
+) => {
+  // Resolve source objects to URLs for local downloads
+  const wakewordConfig = (config.wakeword || {}) as WakewordConfig
+  if (wakewordConfig.filter && typeof wakewordConfig.filter !== 'string') {
+    wakewordConfig.filter = resolveModelUrl(wakewordConfig.filter)
+  }
+  if (wakewordConfig.detect && typeof wakewordConfig.detect !== 'string') {
+    wakewordConfig.detect = resolveModelUrl(wakewordConfig.detect)
+  }
+  if (wakewordConfig.encode && typeof wakewordConfig.encode !== 'string') {
+    wakewordConfig.encode = resolveModelUrl(wakewordConfig.encode)
+  }
+  const nluConfig = (config.nlu || {}) as NLUConfig
+  if (nluConfig.model && typeof nluConfig.model !== 'string') {
+    nluConfig.model = resolveModelUrl(nluConfig.model)
+  }
+  if (nluConfig.metadata && typeof nluConfig.metadata !== 'string') {
+    nluConfig.metadata = resolveModelUrl(nluConfig.metadata)
+  }
+  if (nluConfig.vocab && typeof nluConfig.vocab !== 'string') {
+    nluConfig.vocab = resolveModelUrl(nluConfig.vocab)
+  }
+  return originalInit(id, secret, config)
+}
+
+Object.assign(Spokestack, {
+  // Add enums as values
+  PipelineProfile,
+  TraceLevel,
+  TTSFormat,
+
+  // Event handling
+  addEventListener: (
+    type: string,
+    listener: (event: SpokestackEvent) => void
+  ) => emitter.addListener(type, listener),
+  removeEventListener: (
+    type: string,
+    listener: (event: SpokestackEvent) => void
+  ) => emitter.removeListener(type, listener),
+  removeAllListeners: () => {
+    ;[
+      'recognize',
+      'partial_recognize',
+      'activate',
+      'deactivate',
+      'timeout',
+      'play',
+      'error'
+    ].forEach((event) => emitter.removeAllListeners(event))
+  }
+})
+
 // Export types to be used as separate exports
 export * from './types'
+// Allow importing these methods separately
+export const {
+  initialize,
+  start,
+  stop,
+  activate,
+  deactivate,
+  synthesize,
+  speak,
+  classify
+} = Spokestack as SpokestackType
 export default Spokestack as SpokestackType

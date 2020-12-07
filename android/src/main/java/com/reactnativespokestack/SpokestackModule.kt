@@ -18,6 +18,7 @@ class SpokestackModule(private val reactContext: ReactApplicationContext): React
   private val promises = mutableMapOf<SpokestackPromise, Promise>()
   private var say: ((url: String) -> Unit)? = null
   private lateinit var audioPlayer: SpokestackTTSOutput
+  private lateinit var downloader: Downloader
 
   override fun getName(): String {
     return "Spokestack"
@@ -34,6 +35,15 @@ class SpokestackModule(private val reactContext: ReactApplicationContext): React
     SYNTHESIZE,
     SPEAK,
     CLASSIFY
+  }
+
+  private enum class Filenames(val value: String) {
+    WakewordFilter("filter.tflite"),
+    WakewordDetect("detect.tflite"),
+    WakewordEncode("encode.tflite"),
+    NluModel("nlu.tflite"),
+    NluMetadata("metadata.json"),
+    NluVocab("vocab.txt");
   }
 
   private enum class PipelineProfiles(p:Class<out PipelineProfile>) {
@@ -100,16 +110,22 @@ class SpokestackModule(private val reactContext: ReactApplicationContext): React
   @ReactMethod
   @Throws(Exception::class)
   fun initialize(clientId: String, clientSecret: String, config: ReadableMap, promise: Promise) {
-    val builder = Spokestack.Builder()
-    builder.addListener(adapter)
-    builder.withAndroidContext(reactContext.applicationContext)
     if (clientId.isEmpty() || clientSecret.isEmpty()) {
       val e = IllegalArgumentException("Client ID and Client Secret are required to initialize Spokestack")
       promise.reject(e)
       return
     }
+    val builder = Spokestack.Builder()
+    builder.addListener(adapter)
+    builder.withAndroidContext(reactContext.applicationContext)
     builder.setProperty("spokestack-id", clientId)
     builder.setProperty("spokestack-secret", clientSecret)
+
+    downloader = Downloader(
+      reactContext.applicationContext,
+      if (config.hasKey("allowCellular")) config.getBoolean("allowCellular") else false,
+      if (config.hasKey("refreshModels")) config.getBoolean("refreshModels") else false
+    )
 
     // Top-level config
     if (config.hasKey("traceLevel")) {
@@ -127,7 +143,7 @@ class SpokestackModule(private val reactContext: ReactApplicationContext): React
           builder.setProperty(kebabCase(key), map[key])
         }
         if (map.containsKey("profile")) {
-          val profile = PipelineProfiles.values()[map["profile"] as Int]
+          val profile = PipelineProfiles.values()[(map["profile"] as Double).toInt()]
           builder.pipelineBuilder.useProfile(profile.value())
         }
       }
@@ -140,17 +156,26 @@ class SpokestackModule(private val reactContext: ReactApplicationContext): React
         for (key in map.keys) {
           // Map JS keys to Android keys
           when (key) {
-            "filterPath" -> {
+            "filter" -> {
               wakeFiles++
-              builder.setProperty("wake-filter-path", map[key])
+              builder.setProperty(
+                "wake-filter-path",
+                downloader.downloadModel(Filenames.WakewordFilter.value, map[key] as String)
+              )
             }
-            "detectPath" -> {
+            "detect" -> {
               wakeFiles++
-              builder.setProperty("wake-detect-path", map[key])
+              builder.setProperty(
+                "wake-detect-path",
+                downloader.downloadModel(Filenames.WakewordDetect.value, map[key] as String)
+              )
             }
-            "encodePath" -> {
+            "encode" -> {
               wakeFiles++
-              builder.setProperty("wake-encode-path", map[key])
+              builder.setProperty(
+                "wake-encode-path",
+                downloader.downloadModel(Filenames.WakewordEncode.value, map[key] as String)
+              )
             }
             "activeMin" -> builder.setProperty("wake-active-min", map[key])
             "activeMax" -> builder.setProperty("wake-active-max", map[key])
@@ -166,7 +191,10 @@ class SpokestackModule(private val reactContext: ReactApplicationContext): React
 
     // Wakeword needs all three config paths
     if (wakeFiles != 3) {
+      Log.d(name, "Not enough wakeword config files. Building without wakeword.")
       builder.withoutWakeword()
+    } else {
+      Log.d(name, "Building with wakeword.")
     }
 
     // NLU
@@ -177,17 +205,26 @@ class SpokestackModule(private val reactContext: ReactApplicationContext): React
         for (key in map.keys) {
           // Map JS keys to Android keys
           when (key) {
-            "modelPath" -> {
+            "model" -> {
               nluFiles++
-              builder.setProperty("nlu-model-path", map[key])
+              builder.setProperty(
+                "nlu-model-path",
+                downloader.downloadModel(Filenames.NluModel.value, map[key] as String)
+              )
             }
-            "metadataPath" -> {
+            "metadata" -> {
               nluFiles++
-              builder.setProperty("nlu-metadata-path", map[key])
+              builder.setProperty(
+                "nlu-metadata-path",
+                downloader.downloadModel(Filenames.NluMetadata.value, map[key] as String)
+              )
             }
-            "vocabPath" -> {
+            "vocab" -> {
               nluFiles++
-              builder.setProperty("wordpiece-vocab-path", map[key])
+              builder.setProperty(
+                "wordpiece-vocab-path",
+                downloader.downloadModel(Filenames.NluVocab.value, map[key] as String)
+              )
             }
             "inputLength" -> builder.setProperty("nlu-input-length", map[key])
           }
@@ -196,16 +233,21 @@ class SpokestackModule(private val reactContext: ReactApplicationContext): React
     }
 
     if (nluFiles != 3) {
+      Log.d(name, "Not enough NLU config files. Building without NLU.")
       builder.withoutNlu()
+    } else {
+      Log.d(name, "Building with NLU.")
     }
+
     // TTS is automatically built and available
     builder.withoutAutoPlayback()
-    spokestack = builder.build()
 
     // Initialize the audio player for speaking
     audioPlayer = SpokestackTTSOutput(null)
     audioPlayer.setAndroidContext(reactContext.applicationContext)
     audioPlayer.addListener(adapter)
+
+    spokestack = builder.build()
     promise.resolve(null)
   }
 
