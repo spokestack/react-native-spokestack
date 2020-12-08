@@ -357,21 +357,21 @@ export interface WakewordConfig {
 export interface SpokestackConfig {
   /**
    * This option is only used when remote URLs are passed to fields such as `wakeword.filter`.
-   * The model files will not be downloaded over cellular by default and `Spokestack.initialize`
-   * would instead throw an error in that case.
-   *
-   * Ideally, the app will have logic to prevent this error being thrown by including
-   * network handling itself and informing the user that the files will be downloaded.
    *
    * Set this to true to allow downloading models over cellular.
-   * Note that `Spokestack.initialize()` will still throw an error if
+   * Note that `Spokestack.initialize()` will still reject the promise if
    * models need to be downloaded but there is no network at all.
+   *
+   * Ideally, the app will include network handling itself and
+   * inform the user about file downloads.
+   *
    * Default: false
    */
   allowCellularDownloads?: boolean
   /**
    * Set to true to ensure any models downloaded
    * during Spokestack.initialize are not pulled from cache.
+   *
    * Default: false
    */
   refreshModels?: boolean
