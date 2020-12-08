@@ -169,7 +169,7 @@ React Native already provides a module for this. See [React Native's Permissions
 ## Including model files in your app bundle
 
 To include model files locally in your app (rather than downloading them from a CDN), you also need to add the necessary extensions so
-the files are included in the app bundle. To do this, edit your [`metro.config.js`](https://facebook.github.io/metro/docs/configuration/).
+the files can be included by Babel. To do this, edit your [`metro.config.js`](https://facebook.github.io/metro/docs/configuration/).
 
 ```js
 const defaults = require('metro-config/src/defaults/defaults')
