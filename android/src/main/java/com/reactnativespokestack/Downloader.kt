@@ -66,6 +66,8 @@ class Downloader(private val context: Context, private val allowCellular: Boolea
       if (read <= 0) break
       out.write(buf, 0, read)
     } while (true)
+    stream.close()
+    out.close()
     return file.canonicalPath
   }
 }
