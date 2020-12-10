@@ -10,6 +10,7 @@ import io.spokestack.spokestack.profile.*
 import io.spokestack.spokestack.tts.AudioResponse
 import io.spokestack.spokestack.tts.SpokestackTTSOutput
 import io.spokestack.spokestack.tts.SynthesisRequest
+import kotlinx.coroutines.*
 import javax.annotation.Nullable
 
 class SpokestackModule(private val reactContext: ReactApplicationContext): ReactContextBaseJavaModule(reactContext) {
@@ -19,6 +20,14 @@ class SpokestackModule(private val reactContext: ReactApplicationContext): React
   private var say: ((url: String) -> Unit)? = null
   private lateinit var audioPlayer: SpokestackTTSOutput
   private lateinit var downloader: Downloader
+  private val filenameToProp = mutableMapOf(
+    "filter.tflite" to "wake-filter-path",
+    "detect.tflite" to "wake-detect-path",
+    "encode.tflite" to "wake-encode-path",
+    "nlu.tflite" to "nlu-model-path",
+    "metadata.json" to "nlu-metadata-path",
+    "vocab.txt" to "wordpiece-vocab-path"
+  )
 
   override fun getName(): String {
     return "Spokestack"
@@ -35,15 +44,6 @@ class SpokestackModule(private val reactContext: ReactApplicationContext): React
     SYNTHESIZE,
     SPEAK,
     CLASSIFY
-  }
-
-  private enum class Filenames(val value: String) {
-    WakewordFilter("filter.tflite"),
-    WakewordDetect("detect.tflite"),
-    WakewordEncode("encode.tflite"),
-    NluModel("nlu.tflite"),
-    NluMetadata("metadata.json"),
-    NluVocab("vocab.txt");
   }
 
   private enum class PipelineProfiles(p:Class<out PipelineProfile>) {
@@ -108,12 +108,11 @@ class SpokestackModule(private val reactContext: ReactApplicationContext): React
   }
 
   @ReactMethod
-  @Throws(Exception::class)
-  fun initialize(clientId: String, clientSecret: String, config: ReadableMap, promise: Promise) {
+  fun initialize(clientId: String, clientSecret: String, config: ReadableMap, promise: Promise) = runBlocking(Dispatchers.Default) {
     if (clientId.isEmpty() || clientSecret.isEmpty()) {
       val e = IllegalArgumentException("Client ID and Client Secret are required to initialize Spokestack")
       promise.reject(e)
-      return
+      return@runBlocking
     }
     val builder = Spokestack.Builder()
     builder.addListener(adapter)
@@ -149,7 +148,7 @@ class SpokestackModule(private val reactContext: ReactApplicationContext): React
       }
     }
     // Wakeword
-    var wakeFiles = 0
+    val wakeDownloads = mutableMapOf<String, String>()
     if (config.hasKey("wakeword")) {
       val map = config.getMap("wakeword")?.toHashMap()
       if (map != null) {
@@ -157,25 +156,13 @@ class SpokestackModule(private val reactContext: ReactApplicationContext): React
           // Map JS keys to Android keys
           when (key) {
             "filter" -> {
-              wakeFiles++
-              builder.setProperty(
-                "wake-filter-path",
-                downloader.downloadModel(Filenames.WakewordFilter.value, map[key] as String)
-              )
+              wakeDownloads[filenameToProp.keys.first { it.contains("filter") }] = map[key] as String
             }
             "detect" -> {
-              wakeFiles++
-              builder.setProperty(
-                "wake-detect-path",
-                downloader.downloadModel(Filenames.WakewordDetect.value, map[key] as String)
-              )
+              wakeDownloads[filenameToProp.keys.first { it.contains("detect") }] = map[key] as String
             }
             "encode" -> {
-              wakeFiles++
-              builder.setProperty(
-                "wake-encode-path",
-                downloader.downloadModel(Filenames.WakewordEncode.value, map[key] as String)
-              )
+              wakeDownloads[filenameToProp.keys.first { it.contains("encode") }] = map[key] as String
             }
             "activeMin" -> builder.setProperty("wake-active-min", map[key])
             "activeMax" -> builder.setProperty("wake-active-max", map[key])
@@ -190,15 +177,18 @@ class SpokestackModule(private val reactContext: ReactApplicationContext): React
     }
 
     // Wakeword needs all three config paths
-    if (wakeFiles != 3) {
+    if (wakeDownloads.size == 3) {
+      Log.d(name, "Building with wakeword.")
+      downloader.downloadAll(wakeDownloads).forEach { (filename, loc) ->
+        builder.setProperty(filenameToProp[filename], loc)
+      }
+    } else {
       Log.d(name, "Not enough wakeword config files. Building without wakeword.")
       builder.withoutWakeword()
-    } else {
-      Log.d(name, "Building with wakeword.")
     }
 
     // NLU
-    var nluFiles = 0
+    val nluDownloads = mutableMapOf<String, String>()
     if (config.hasKey("nlu")) {
       val map = config.getMap("nlu")?.toHashMap()
       if (map != null) {
@@ -206,25 +196,13 @@ class SpokestackModule(private val reactContext: ReactApplicationContext): React
           // Map JS keys to Android keys
           when (key) {
             "model" -> {
-              nluFiles++
-              builder.setProperty(
-                "nlu-model-path",
-                downloader.downloadModel(Filenames.NluModel.value, map[key] as String)
-              )
+              nluDownloads[filenameToProp.keys.first { it.contains("model") }] = map[key] as String
             }
             "metadata" -> {
-              nluFiles++
-              builder.setProperty(
-                "nlu-metadata-path",
-                downloader.downloadModel(Filenames.NluMetadata.value, map[key] as String)
-              )
+              nluDownloads[filenameToProp.keys.first { it.contains("metadata") }] = map[key] as String
             }
             "vocab" -> {
-              nluFiles++
-              builder.setProperty(
-                "wordpiece-vocab-path",
-                downloader.downloadModel(Filenames.NluVocab.value, map[key] as String)
-              )
+              nluDownloads[filenameToProp.keys.first { it.contains("vocab") }] = map[key] as String
             }
             "inputLength" -> builder.setProperty("nlu-input-length", map[key])
           }
@@ -232,11 +210,14 @@ class SpokestackModule(private val reactContext: ReactApplicationContext): React
       }
     }
 
-    if (nluFiles != 3) {
+    if (nluDownloads.size == 3) {
+      Log.d(name, "Building with NLU.")
+      downloader.downloadAll(nluDownloads).forEach { (filename, loc) ->
+        builder.setProperty(filenameToProp[filename], loc)
+      }
+    } else {
       Log.d(name, "Not enough NLU config files. Building without NLU.")
       builder.withoutNlu()
-    } else {
-      Log.d(name, "Building with NLU.")
     }
 
     // TTS is automatically built and available
@@ -252,7 +233,6 @@ class SpokestackModule(private val reactContext: ReactApplicationContext): React
   }
 
   @ReactMethod
-  @Throws(Exception::class)
   fun start(promise: Promise) {
     try {
       spokestack.start()

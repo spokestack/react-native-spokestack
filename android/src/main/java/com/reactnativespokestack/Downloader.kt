@@ -6,12 +6,15 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
 import android.util.Log
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import java.io.File
 import java.io.FileOutputStream
 import java.net.URL
 
 class Downloader(private val context: Context, private val allowCellular: Boolean, private val refreshModels: Boolean) {
   private val logTag = "Spokestack"
+  private val relocalhost = Regex("^http://localhost")
 
   private fun isNetworkAvailable(): Boolean {
     var result = false
@@ -30,6 +33,7 @@ class Downloader(private val context: Context, private val allowCellular: Boolea
         else -> false
       }
     } else {
+      @Suppress("DEPRECATION")
       connectivityManager.activeNetworkInfo?.run {
         result = when (type) {
           ConnectivityManager.TYPE_WIFI -> true
@@ -42,8 +46,10 @@ class Downloader(private val context: Context, private val allowCellular: Boolea
     return result
   }
 
-  fun downloadModel(filename: String, url: String): String {
-    if (!isNetworkAvailable()) {
+  private fun downloadModel(filename: String, url: String): String {
+    // Non-localhost downloads require network
+    if (!relocalhost.matches(url) && !isNetworkAvailable()) {
+      Log.d(logTag, "Checking network connection")
       var message = "Downloading Spokestack model files requires a network connection."
       if (!allowCellular) {
         message += " If you'd like to enable cellular downloads, set allowCellular to true in your Spokestack config."
@@ -55,7 +61,7 @@ class Downloader(private val context: Context, private val allowCellular: Boolea
       Log.d(logTag, "Returning existing file at ${file.canonicalPath}")
       return file.canonicalPath
     }
-    Log.d(logTag, "Downloading model file from $url.")
+    Log.d(logTag, "Retrieving model file from $url")
     val cn = URL(url).openConnection()
     cn.connect()
     val stream = cn.getInputStream()
@@ -69,5 +75,13 @@ class Downloader(private val context: Context, private val allowCellular: Boolea
     stream.close()
     out.close()
     return file.canonicalPath
+  }
+
+  suspend fun downloadAll(downloads: MutableMap<String, String>): MutableMap<String, String> = coroutineScope {
+    val completed = mutableMapOf<String, String>()
+    downloads.forEach { (filename, url) ->
+      completed[filename] = (async { downloadModel(filename, url) }).await()
+    }
+    completed
   }
 }

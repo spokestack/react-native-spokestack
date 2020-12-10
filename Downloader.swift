@@ -54,8 +54,10 @@ public class Downloader: NSObject {
     func downloadModel(_ url: URL, _ complete: @escaping (Error?, String?) -> Void) {
         // Wait until network status is availalbe to attempt downloading
         if hasStatus() {
-            if !isNetworkAvailable() {
+            if url.host != "localhost" && !isNetworkAvailable() {
+                print("Checking network connection")
                 complete(RNSpokestackError.networkNotAvailable, nil)
+                return
             }
         } else {
             downloadQueue[url] = complete
@@ -65,7 +67,7 @@ public class Downloader: NSObject {
         let destinationUrl = documentsUrl.appendingPathComponent(url.lastPathComponent)
 
         if !refreshModels && FileManager().fileExists(atPath: destinationUrl.path) {
-            print("File already exists [\(destinationUrl.path)]")
+            print("Returning existing file at [\(destinationUrl.path)]")
             complete(nil, destinationUrl.path)
             return
         }

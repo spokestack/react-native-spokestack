@@ -369,8 +369,12 @@ export interface SpokestackConfig {
    */
   allowCellularDownloads?: boolean
   /**
-   * Set to true to ensure any models downloaded
-   * during Spokestack.initialize are not pulled from cache.
+   * Wakeword and NLU model files are cached internally.
+   * Set this to true whenever a model is changed
+   * during development to refresh the internal model cache.
+   *
+   * This affects models passed with `require()` as well
+   * as models downloaded from remote URLs.
    *
    * Default: false
    */

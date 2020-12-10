@@ -5,6 +5,7 @@ enum RNSpokestackError: Error {
     case notStarted
     case networkNotAvailable
     case networkStatusNotAvailable
+    case builderNotAvailable
 }
 
 extension RNSpokestackError: LocalizedError {
@@ -18,6 +19,8 @@ extension RNSpokestackError: LocalizedError {
             return NSLocalizedString("The network is not available. Check your network connection. If the network is cellular and you'd like to download over cellular, ensure allowCellular is set to true.", comment: "")
         case .networkStatusNotAvailable:
             return NSLocalizedString("The network status has not yet been set by iOS.", comment: "")
+        case .builderNotAvailable:
+            return NSLocalizedString("buildPipeline() was called somehow without first initializing a builder", comment: "")
         }
     }
 }
@@ -44,9 +47,9 @@ class RNSpokestack: RCTEventEmitter, SpokestackDelegate {
     var started = false
     var resolvers: [RNSpokestackPromise:RCTPromiseResolveBlock] = [:]
     var rejecters: [RNSpokestackPromise:RCTPromiseRejectBlock] = [:]
-    var numRequests = 0
     var makeClassifer = false
     var downloader: Downloader?
+    var numRequests = 0
 
     @objc
     override static func requiresMainQueueSetup() -> Bool {
@@ -174,12 +177,10 @@ class RNSpokestack: RCTEventEmitter, SpokestackDelegate {
     func makeCompleteForModelDownload(speechProp: String) -> (Error?, String?) -> Void {
         return { (error: Error?, fileUrl: String?) -> Void in
             self.numRequests -= 1
-
             if (error != nil) {
-                self.numRequests -= 1
                 self.failure(error: error!)
             } else {
-                // Set model path on speech config
+                // Set local model filepath on speech config
                 self.speechConfig.setValue(fileUrl, forKey: speechProp)
 
                 // Build the pipeline if there are no more requests
@@ -192,6 +193,7 @@ class RNSpokestack: RCTEventEmitter, SpokestackDelegate {
 
     func buildPipeline() {
         if speechPipeline != nil {
+            print("buildPipeline() was called but the pipeline is already built")
             return
         }
         if makeClassifer {
@@ -210,6 +212,8 @@ class RNSpokestack: RCTEventEmitter, SpokestackDelegate {
             } catch {
                 failure(error: error)
             }
+        } else {
+            failure(error: RNSpokestackError.builderNotAvailable)
         }
     }
 
@@ -230,7 +234,8 @@ class RNSpokestack: RCTEventEmitter, SpokestackDelegate {
         speechConfig.apiSecret = clientSecret
         speechPipelineBuilder = SpeechPipelineBuilder()
         speechPipelineBuilder = speechPipelineBuilder?.useProfile(SpeechPipelineProfiles.pushToTalkAppleSpeech)
-        var nluFiles = 0
+        var nluDownloads: [URL:(Error?, String?) -> Void] = [:]
+        var wakeDownloads: [URL:(Error?, String?) -> Void] = [:]
         for (key, value) in config! {
             switch key {
             case "traceLevel":
@@ -242,19 +247,13 @@ class RNSpokestack: RCTEventEmitter, SpokestackDelegate {
                 for (nluKey, nluValue) in value as! Dictionary<String, String> {
                     switch nluKey {
                     case "model":
-                        nluFiles += 1
-                        numRequests += 1
-                        downloader!.downloadModel(RCTConvert.nsurl(nluValue), makeCompleteForModelDownload(speechProp: "nluModelPath"))
+                        nluDownloads[RCTConvert.nsurl(nluValue)] = makeCompleteForModelDownload(speechProp: "nluModelPath")
                         break
                     case "metadata":
-                        nluFiles += 1
-                        numRequests += 1
-                        downloader!.downloadModel(RCTConvert.nsurl(nluValue), makeCompleteForModelDownload(speechProp: "nluModelMetadataPath"))
+                        nluDownloads[RCTConvert.nsurl(nluValue)] = makeCompleteForModelDownload(speechProp: "nluModelMetadataPath")
                         break
                     case "vocab":
-                        nluFiles += 1
-                        numRequests += 1
-                        downloader!.downloadModel(RCTConvert.nsurl(nluValue), makeCompleteForModelDownload(speechProp: "nluVocabularyPath"))
+                        nluDownloads[RCTConvert.nsurl(nluValue)] = makeCompleteForModelDownload(speechProp: "nluVocabularyPath")
                         break
                     default:
                         break
@@ -264,16 +263,13 @@ class RNSpokestack: RCTEventEmitter, SpokestackDelegate {
                 for (wakeKey, wakeValue) in value as! Dictionary<String, Any> {
                     switch wakeKey {
                     case "filter":
-                        numRequests += 1
-                        downloader!.downloadModel(RCTConvert.nsurl(wakeValue), makeCompleteForModelDownload(speechProp: "filterModelPath"))
+                        wakeDownloads[RCTConvert.nsurl(wakeValue)] = makeCompleteForModelDownload(speechProp: "filterModelPath")
                         break
                     case "detect":
-                        numRequests += 1
-                        downloader!.downloadModel(RCTConvert.nsurl(wakeValue), makeCompleteForModelDownload(speechProp: "detectModelPath"))
+                        wakeDownloads[RCTConvert.nsurl(wakeValue)] = makeCompleteForModelDownload(speechProp: "detectModelPath")
                         break
                     case "encode":
-                        numRequests += 1
-                        downloader!.downloadModel(RCTConvert.nsurl(wakeValue), makeCompleteForModelDownload(speechProp: "encodeModelPath"))
+                        wakeDownloads[RCTConvert.nsurl(wakeValue)] = makeCompleteForModelDownload(speechProp: "encodeModelPath")
                         break
                     case "activeMin":
                         speechConfig.wakeActiveMin = RCTConvert.nsInteger(wakeValue)
@@ -356,10 +352,31 @@ class RNSpokestack: RCTEventEmitter, SpokestackDelegate {
 
         // Initialize TTS
         synthesizer = TextToSpeech([self], configuration: speechConfig)
-        makeClassifer = nluFiles == 3
-
+        
+        // Set resolve now in case
+        // all downloads are synchronous, early returns
+        // from the cache and the last one builds the pipeline
         resolvers[RNSpokestackPromise.initialize] = resolve
         rejecters[RNSpokestackPromise.initialize] = reject
+
+        // Set to total before starting requests
+        // in case the downloader returns the cached version synchronously.
+        // This avoids wakeword building the pipeline before moving on to NLU
+        numRequests = (wakeDownloads.count == 3 ? 3 : 0) + (nluDownloads.count == 3 ? 3 : 0)
+
+        // Download model files if necessary
+        if wakeDownloads.count == 3 {
+            wakeDownloads.forEach { (url, complete) in
+                self.downloader!.downloadModel(url, complete)
+            }
+        }
+        if nluDownloads.count == 3 {
+            makeClassifer = true
+            nluDownloads.forEach { (url, complete) in
+                self.downloader!.downloadModel(url, complete)
+            }
+        }
+
         if numRequests == 0 {
             buildPipeline()
         }
@@ -372,6 +389,12 @@ class RNSpokestack: RCTEventEmitter, SpokestackDelegate {
             resolvers[RNSpokestackPromise.start] = resolve
             rejecters[RNSpokestackPromise.start] = reject
             pipeline.start()
+        } else {
+            reject(
+                "not_initialized",
+                "The Speech Pipeline is not initialized. Call Spokestack.initialize().",
+                RNSpokestackError.notInitialized
+            )
         }
     }
 
@@ -382,24 +405,36 @@ class RNSpokestack: RCTEventEmitter, SpokestackDelegate {
             resolvers[RNSpokestackPromise.stop] = resolve
             rejecters[RNSpokestackPromise.stop] = reject
             pipeline.stop()
+        } else {
+            reject(
+                "not_initialized",
+                "The Speech Pipeline is not initialized. Call Spokestack.initialize().",
+                RNSpokestackError.notInitialized
+            )
         }
     }
 
     /// Manually activate the speech pipeline
     @objc(activate:withRejecter:)
     func activate(resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
-        if !started {
-            reject(
-                "not_started",
-                "Spokestack.start() must be called before Spokestack.activate()",
-                RNSpokestackError.notStarted
-            )
-            return
-        }
         if let pipeline = speechPipeline {
+            if !started {
+                reject(
+                    "not_started",
+                    "Spokestack.start() must be called before Spokestack.activate()",
+                    RNSpokestackError.notStarted
+                )
+                return
+            }
             resolvers[RNSpokestackPromise.activate] = resolve
             rejecters[RNSpokestackPromise.activate] = reject
             pipeline.activate()
+        } else {
+            reject(
+                "not_initialized",
+                "The Speech Pipeline is not initialized. Call Spokestack.initialize().",
+                RNSpokestackError.notInitialized
+            )
         }
     }
 
