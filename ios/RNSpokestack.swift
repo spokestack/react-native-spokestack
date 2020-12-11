@@ -33,6 +33,18 @@ enum RNSpokestackPromise: String {
     case classify
 }
 
+internal enum NLUDownloadProp: String, CaseIterable {
+    case nluModelPath
+    case nluModelMetadataPath
+    case nluVocabularyPath
+}
+
+internal enum WakewordDownloadProp: String, CaseIterable {
+    case filterModelPath
+    case detectModelPath
+    case encodeModelPath
+}
+
 @objc(RNSpokestack)
 class RNSpokestack: RCTEventEmitter, SpokestackDelegate {
     var speechPipelineBuilder: SpeechPipelineBuilder?
@@ -247,13 +259,16 @@ class RNSpokestack: RCTEventEmitter, SpokestackDelegate {
                 for (nluKey, nluValue) in value as! Dictionary<String, String> {
                     switch nluKey {
                     case "model":
-                        nluDownloads[RCTConvert.nsurl(nluValue)] = makeCompleteForModelDownload(speechProp: "nluModelPath")
+                        nluDownloads[RCTConvert.nsurl(nluValue)] = makeCompleteForModelDownload(
+                            speechProp: NLUDownloadProp.nluModelPath.rawValue)
                         break
                     case "metadata":
-                        nluDownloads[RCTConvert.nsurl(nluValue)] = makeCompleteForModelDownload(speechProp: "nluModelMetadataPath")
+                        nluDownloads[RCTConvert.nsurl(nluValue)] = makeCompleteForModelDownload(
+                            speechProp: NLUDownloadProp.nluModelMetadataPath.rawValue)
                         break
                     case "vocab":
-                        nluDownloads[RCTConvert.nsurl(nluValue)] = makeCompleteForModelDownload(speechProp: "nluVocabularyPath")
+                        nluDownloads[RCTConvert.nsurl(nluValue)] = makeCompleteForModelDownload(
+                            speechProp: NLUDownloadProp.nluVocabularyPath.rawValue)
                         break
                     default:
                         break
@@ -263,13 +278,16 @@ class RNSpokestack: RCTEventEmitter, SpokestackDelegate {
                 for (wakeKey, wakeValue) in value as! Dictionary<String, Any> {
                     switch wakeKey {
                     case "filter":
-                        wakeDownloads[RCTConvert.nsurl(wakeValue)] = makeCompleteForModelDownload(speechProp: "filterModelPath")
+                        wakeDownloads[RCTConvert.nsurl(wakeValue)] = makeCompleteForModelDownload(
+                            speechProp: WakewordDownloadProp.filterModelPath.rawValue)
                         break
                     case "detect":
-                        wakeDownloads[RCTConvert.nsurl(wakeValue)] = makeCompleteForModelDownload(speechProp: "detectModelPath")
+                        wakeDownloads[RCTConvert.nsurl(wakeValue)] = makeCompleteForModelDownload(
+                            speechProp: WakewordDownloadProp.detectModelPath.rawValue)
                         break
                     case "encode":
-                        wakeDownloads[RCTConvert.nsurl(wakeValue)] = makeCompleteForModelDownload(speechProp: "encodeModelPath")
+                        wakeDownloads[RCTConvert.nsurl(wakeValue)] = makeCompleteForModelDownload(
+                            speechProp: WakewordDownloadProp.encodeModelPath.rawValue)
                         break
                     case "activeMin":
                         speechConfig.wakeActiveMin = RCTConvert.nsInteger(wakeValue)
@@ -302,7 +320,8 @@ class RNSpokestack: RCTEventEmitter, SpokestackDelegate {
                         speechConfig.fftWindowSize = RCTConvert.nsInteger(wakeValue)
                         break
                     case "fftWindowType":
-                        speechConfig.fftWindowType = SignalProcessing.FFTWindowType(rawValue: RCTConvert.nsString(wakeValue)) ?? SignalProcessing.FFTWindowType.hann
+                        speechConfig.fftWindowType = SignalProcessing.FFTWindowType(rawValue: RCTConvert.nsString(wakeValue))
+                            ?? SignalProcessing.FFTWindowType.hann
                         break
                     case "fftHopLength":
                         speechConfig.fftHopLength = RCTConvert.nsInteger(wakeValue)
@@ -326,7 +345,8 @@ class RNSpokestack: RCTEventEmitter, SpokestackDelegate {
                 for (pipelineKey, pipelineValue) in value as! Dictionary<String, Int> {
                     switch pipelineKey {
                     case "profile":
-                        speechPipelineBuilder = speechPipelineBuilder?.useProfile(SpeechPipelineProfiles(rawValue: pipelineValue) ?? SpeechPipelineProfiles.pushToTalkAppleSpeech)
+                        speechPipelineBuilder = speechPipelineBuilder?.useProfile(SpeechPipelineProfiles(rawValue: pipelineValue) ??
+                                                                                    SpeechPipelineProfiles.pushToTalkAppleSpeech)
                         break
                     case "sampleRate":
                         speechConfig.sampleRate = pipelineValue
@@ -364,7 +384,8 @@ class RNSpokestack: RCTEventEmitter, SpokestackDelegate {
             // Set to total before starting requests
             // in case the downloader returns the cached version synchronously.
             // This avoids wakeword building the pipeline before moving on to NLU
-            numRequests = (wakeDownloads.count == 3 ? 3 : 0) + (nluDownloads.count == 3 ? 3 : 0)
+            numRequests = (wakeDownloads.count == WakewordDownloadProp.allCases.count ? wakeDownloads.count : 0) +
+                (nluDownloads.count == NLUDownloadProp.allCases.count ? nluDownloads.count : 0)
 
             if wakeDownloads.count == 3 {
                 wakeDownloads.forEach { (url, complete) in
