@@ -7,6 +7,7 @@ import android.net.NetworkCapabilities
 import android.os.Build
 import android.util.Log
 import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import java.io.File
 import java.io.FileOutputStream
@@ -49,7 +50,6 @@ class Downloader(private val context: Context, private val allowCellular: Boolea
   private fun downloadModel(filename: String, url: String): String {
     // Non-localhost downloads require network
     if (!relocalhost.matches(url) && !isNetworkAvailable()) {
-      Log.d(logTag, "Checking network connection")
       var message = "Downloading Spokestack model files requires a network connection."
       if (!allowCellular) {
         message += " If you'd like to enable cellular downloads, set allowCellular to true in your Spokestack config."
@@ -77,10 +77,18 @@ class Downloader(private val context: Context, private val allowCellular: Boolea
     return file.canonicalPath
   }
 
-  suspend fun downloadAll(downloads: MutableMap<String, String>): MutableMap<String, String> = coroutineScope {
+  /**
+   * @param downloads A map of filenames to URLs
+   * @return Returns a map of filenames to downloaded file locations
+   */
+  suspend fun downloadAll(downloads: Map<String, String>): Map<String, String> = coroutineScope {
+    val filenames = downloads.keys.toList()
     val completed = mutableMapOf<String, String>()
-    downloads.forEach { (filename, url) ->
-      completed[filename] = (async { downloadModel(filename, url) }).await()
+    // Use awaitAll to download all files in parallel
+    downloads.map { (filename, url) ->
+      async { downloadModel(filename, url) }
+    }.awaitAll().mapIndexed { i, loc ->
+      completed[filenames[i]] = loc
     }
     completed
   }
