@@ -88,7 +88,6 @@ class RNSpokestack: RCTEventEmitter, SpokestackDelegate {
     }
 
     func didInit() {
-        print("Spokestack initialized!")
         if let resolve = resolvers.removeValue(forKey: RNSpokestackPromise.initialize) {
             resolve(nil)
             rejecters.removeValue(forKey: RNSpokestackPromise.initialize)
@@ -151,9 +150,6 @@ class RNSpokestack: RCTEventEmitter, SpokestackDelegate {
 
     func classification(result: NLUResult) {
         if let resolve = resolvers.removeValue(forKey: RNSpokestackPromise.classify) {
-            for (name, slot) in result.slots! {
-                print(name, slot)
-            }
             resolve([
                 "intent": result.intent,
                 "confidence": result.confidence,
@@ -198,7 +194,6 @@ class RNSpokestack: RCTEventEmitter, SpokestackDelegate {
 
     func buildPipeline() {
         if speechPipeline != nil {
-            print("buildPipeline() was called but the pipeline is already built")
             return
         }
         if makeClassifer {

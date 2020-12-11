@@ -40,19 +40,18 @@ public class Downloader: NSObject {
     private let monitor = NWPathMonitor()
     private var path: NWPath?
     private var downloadQueue: [URL:(Error?, String?) -> Void] = [:]
-    lazy var pathUpdateHandler = { (path: NWPath) in
-        self.path = path
-        self.downloadAll()
-    }
 
     init(allowCellular: Bool = false, refreshModels: Bool = false) {
         self.allowCellular = allowCellular
         self.refreshModels = refreshModels
         super.init()
-        monitor.pathUpdateHandler = pathUpdateHandler
+        monitor.pathUpdateHandler = { (path: NWPath) in
+            self.path = path
+            self.downloadAll()
+        }
         monitor.start(queue: DispatchQueue.global(qos: .default))
     }
-    
+
     deinit {
         monitor.cancel()
     }
@@ -83,11 +82,9 @@ public class Downloader: NSObject {
         let destinationPath = destinationUrl.path
 
         if !refreshModels && FileManager().fileExists(atPath: destinationPath) {
-            print("Returning existing file at [\(destinationPath)]")
             complete(nil, destinationPath)
             return
         }
-        print("Retrieving model file from \(url)")
         let session = URLSession(configuration: URLSessionConfiguration.default, delegate: nil, delegateQueue: nil)
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
