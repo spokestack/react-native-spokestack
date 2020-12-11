@@ -3,9 +3,8 @@ import Spokestack
 enum RNSpokestackError: Error {
     case notInitialized
     case notStarted
-    case networkNotAvailable
-    case networkStatusNotAvailable
     case builderNotAvailable
+    case downloaderNotAvailable
 }
 
 extension RNSpokestackError: LocalizedError {
@@ -15,12 +14,10 @@ extension RNSpokestackError: LocalizedError {
             return NSLocalizedString("Spokestack has not yet been initialized. Call Spokestack.initialize()", comment: "")
         case .notStarted:
             return NSLocalizedString("Spokestack has not yet been started. Call Spokestack.start() before calling Spokestack.activate().", comment: "")
-        case .networkNotAvailable:
-            return NSLocalizedString("The network is not available. Check your network connection. If the network is cellular and you'd like to download over cellular, ensure allowCellular is set to true.", comment: "")
-        case .networkStatusNotAvailable:
-            return NSLocalizedString("The network status has not yet been set by iOS.", comment: "")
         case .builderNotAvailable:
             return NSLocalizedString("buildPipeline() was called somehow without first initializing a builder", comment: "")
+        case .downloaderNotAvailable:
+            return NSLocalizedString("Models were passed to initialize that could not be downloaded. The downloader was not initialized properly.", comment: "")
         }
     }
 }
@@ -76,6 +73,14 @@ class RNSpokestack: RCTEventEmitter, SpokestackDelegate {
         // Reset
         resolvers = [:]
         rejecters = [:]
+    }
+    
+    func notInitialized(_ reject: RCTPromiseRejectBlock, module: String) {
+        reject(
+            "not_initialized",
+            "\(module) is not initialized. Call Spokestack.initialize() first.",
+            RNSpokestackError.notInitialized
+        )
     }
 
     func didTrace(_ trace: String) {
@@ -352,29 +357,33 @@ class RNSpokestack: RCTEventEmitter, SpokestackDelegate {
 
         // Initialize TTS
         synthesizer = TextToSpeech([self], configuration: speechConfig)
-        
-        // Set resolve now in case
-        // all downloads are synchronous, early returns
-        // from the cache and the last one builds the pipeline
-        resolvers[RNSpokestackPromise.initialize] = resolve
-        rejecters[RNSpokestackPromise.initialize] = reject
-
-        // Set to total before starting requests
-        // in case the downloader returns the cached version synchronously.
-        // This avoids wakeword building the pipeline before moving on to NLU
-        numRequests = (wakeDownloads.count == 3 ? 3 : 0) + (nluDownloads.count == 3 ? 3 : 0)
 
         // Download model files if necessary
-        if wakeDownloads.count == 3 {
-            wakeDownloads.forEach { (url, complete) in
-                self.downloader!.downloadModel(url, complete)
+        if let d = downloader {
+            // Set resolve now in case
+            // all downloads are synchronous, early returns
+            // from the cache and the last one builds the pipeline
+            resolvers[RNSpokestackPromise.initialize] = resolve
+            rejecters[RNSpokestackPromise.initialize] = reject
+
+            // Set to total before starting requests
+            // in case the downloader returns the cached version synchronously.
+            // This avoids wakeword building the pipeline before moving on to NLU
+            numRequests = (wakeDownloads.count == 3 ? 3 : 0) + (nluDownloads.count == 3 ? 3 : 0)
+
+            if wakeDownloads.count == 3 {
+                wakeDownloads.forEach { (url, complete) in
+                    d.downloadModel(url, complete)
+                }
             }
-        }
-        if nluDownloads.count == 3 {
-            makeClassifer = true
-            nluDownloads.forEach { (url, complete) in
-                self.downloader!.downloadModel(url, complete)
+            if nluDownloads.count == 3 {
+                makeClassifer = true
+                nluDownloads.forEach { (url, complete) in
+                    d.downloadModel(url, complete)
+                }
             }
+        } else {
+            reject("init_error", "The downloader is unexpectedly nil.", RNSpokestackError.downloaderNotAvailable)
         }
 
         if numRequests == 0 {
@@ -390,11 +399,7 @@ class RNSpokestack: RCTEventEmitter, SpokestackDelegate {
             rejecters[RNSpokestackPromise.start] = reject
             pipeline.start()
         } else {
-            reject(
-                "not_initialized",
-                "The Speech Pipeline is not initialized. Call Spokestack.initialize().",
-                RNSpokestackError.notInitialized
-            )
+            notInitialized(reject, module: "Speech Pipeline")
         }
     }
 
@@ -406,11 +411,7 @@ class RNSpokestack: RCTEventEmitter, SpokestackDelegate {
             rejecters[RNSpokestackPromise.stop] = reject
             pipeline.stop()
         } else {
-            reject(
-                "not_initialized",
-                "The Speech Pipeline is not initialized. Call Spokestack.initialize().",
-                RNSpokestackError.notInitialized
-            )
+            notInitialized(reject, module: "Speech Pipeline")
         }
     }
 
@@ -430,11 +431,7 @@ class RNSpokestack: RCTEventEmitter, SpokestackDelegate {
             rejecters[RNSpokestackPromise.activate] = reject
             pipeline.activate()
         } else {
-            reject(
-                "not_initialized",
-                "The Speech Pipeline is not initialized. Call Spokestack.initialize().",
-                RNSpokestackError.notInitialized
-            )
+            notInitialized(reject, module: "Speech Pipeline")
         }
     }
 
@@ -446,11 +443,7 @@ class RNSpokestack: RCTEventEmitter, SpokestackDelegate {
             rejecters[RNSpokestackPromise.deactivate] = reject
             pipeline.deactivate()
         } else {
-            reject(
-                "not_initialized",
-                "The Speech Pipeline is not initialized. Call Spokestack.initialize().",
-                RNSpokestackError.notInitialized
-            )
+            notInitialized(reject, module: "Speech Pipeline")
         }
     }
 
@@ -467,11 +460,7 @@ class RNSpokestack: RCTEventEmitter, SpokestackDelegate {
             let ttsInput = TextToSpeechInput(input, voice: voice, inputFormat: TTSInputFormat(rawValue: format) ?? TTSInputFormat.text)
             tts.synthesize(ttsInput)
         } else {
-            reject(
-                "not_initialized",
-                "Spokestack TTS is not initialized. Call Spokestack.initialize().",
-                RNSpokestackError.notInitialized
-            )
+            notInitialized(reject, module: "Spokestack TTS")
         }
     }
 
@@ -488,11 +477,7 @@ class RNSpokestack: RCTEventEmitter, SpokestackDelegate {
             let ttsInput = TextToSpeechInput(input, voice: voice, inputFormat: TTSInputFormat(rawValue: format) ?? TTSInputFormat.text)
             tts.speak(ttsInput)
         } else {
-            reject(
-                "not_initialized",
-                "Spokestack TTS is not initialized. Call Spokestack.initialize().",
-                RNSpokestackError.notInitialized
-            )
+            notInitialized(reject, module: "Spokestack TTS")
         }
     }
 
@@ -506,11 +491,7 @@ class RNSpokestack: RCTEventEmitter, SpokestackDelegate {
             rejecters[RNSpokestackPromise.classify] = reject
             nlu.classify(utterance: utterance)
         } else {
-            reject(
-                "not_initialized",
-                "Spokestack NLU is not initialized. Call Spokestack.initialize() with NLU file locations.",
-                RNSpokestackError.notInitialized
-            )
+            notInitialized(reject, module: "Spokestack NLU")
         }
     }
 }

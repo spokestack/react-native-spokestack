@@ -8,6 +8,9 @@ import Spokestack, {
 import React from 'react'
 import checkPermission from './checkPermission'
 
+const noTranscriptMessage =
+  'Press the listening button and speak to record a message for speech playback'
+
 export default function App() {
   const [listening, setListening] = React.useState(false)
   const [playing, setPlaying] = React.useState(false)
@@ -86,9 +89,7 @@ export default function App() {
         <Button
           title={playing ? 'Playing...' : `Play transcript`}
           onPress={() => {
-            Spokestack.speak(
-              transcript || 'Record a transcript first to play it back'
-            )
+            Spokestack.speak(transcript || noTranscriptMessage)
           }}
         />
       </View>
