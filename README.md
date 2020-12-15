@@ -199,6 +199,8 @@ Spokestack.initialize(clientId, clientSecret, {
 })
 ```
 
+This is not required. Pass remote URLs to the same config options and the files will be downloaded and cached when first calling `initialize`.
+
 ## Contributing
 
 See the [contributing guide](CONTRIBUTING.md) to learn how to contribute to the repository and the development workflow.
