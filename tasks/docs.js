@@ -13,12 +13,15 @@ function redoLinks(data) {
     data
       // Remove links that aren't links to source
       .replace(/\[([^:]+)\]\(.*?\)/g, '$1')
+      .replace(
+        /PipelineProfile([^.])/g,
+        '[PipelineProfile](#PipelineProfile)$1'
+      )
+      .replace(/TTSFormat([^.])/g, '[TTSFormat](#TTSFormat)$1')
+      .replace(/TraceLevel([^.])/g, '[TraceLevel](#TraceLevel)$1')
       .replace(/SpokestackConfig/g, '[SpokestackConfig](#SpokestackConfig)')
-      .replace(/PipelineProfile/g, '[PipelineProfile](#PipelineProfile)')
-      .replace(/TTSFormat/g, '[TTSFormat](#TTSFormat)')
       .replace(/NLUConfig/g, '[NLUConfig](#NLUConfig)')
       .replace(/PipelineConfig/g, '[PipelineConfig](#PipelineConfig)')
-      .replace(/TraceLevel/g, '[TraceLevel](#TraceLevel)')
       .replace(/WakewordConfig/g, '[WakewordConfig](#WakewordConfig)')
   )
 }
