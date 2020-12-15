@@ -162,6 +162,30 @@ interface SpokestackType {
    */
   classify(utterance: string): Promise<SpokestackNLUResult>
   /**
+   * Returns whether Spokestack has been initialized
+   *
+   * ```js
+   * console.log(`isInitialized: ${await Spokestack.isInitialized()}`)
+   * ```
+   */
+  isInitialized(): Promise<boolean>
+  /**
+   * Returns whether the speech pipeline has been started
+   *
+   * ```js
+   * console.log(`isStarted: ${await Spokestack.isStarted()}`)
+   * ```
+   */
+  isStarted(): Promise<boolean>
+  /**
+   * Returns whether the speech pipeline is currently activated
+   *
+   * ```js
+   * console.log(`isActivated: ${await Spokestack.isActivated()}`)
+   * ```
+   */
+  isActivated(): Promise<boolean>
+  /**
    * Bind to any event emitted by the native libraries
    * The events are: "recognize", "partial_recognize", "error", "activate", "deactivate", and "timeout".
    * See the bottom of the README.md for descriptions of the events.

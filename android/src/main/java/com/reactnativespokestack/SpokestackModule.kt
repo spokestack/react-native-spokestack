@@ -15,7 +15,7 @@ import javax.annotation.Nullable
 
 class SpokestackModule(private val reactContext: ReactApplicationContext): ReactContextBaseJavaModule(reactContext) {
   private val adapter = SpokestackAdapter { event: String, data: WritableMap -> sendEvent(event, data) }
-  private lateinit var spokestack: Spokestack
+  private var spokestack: Spokestack? = null
   private val promises = mutableMapOf<SpokestackPromise, Promise>()
   private var say: ((url: String) -> Unit)? = null
   private lateinit var audioPlayer: SpokestackTTSOutput
@@ -36,8 +36,8 @@ class SpokestackModule(private val reactContext: ReactApplicationContext): React
 
   override fun onCatalystInstanceDestroy() {
     super.onCatalystInstanceDestroy()
-    if (spokestack.speechPipeline != null) {
-      spokestack.stop()
+    if (started()) {
+      spokestack?.stop()
     }
   }
 
@@ -105,7 +105,19 @@ class SpokestackModule(private val reactContext: ReactApplicationContext): React
       .withMode(SynthesisRequest.Mode.values()[format])
       .withVoice(voice)
       .build()
-    spokestack.synthesize(req)
+    spokestack?.synthesize(req)
+  }
+
+  private fun initialized(): Boolean {
+    return spokestack != null
+  }
+
+  private fun started(): Boolean {
+    return initialized() && spokestack?.speechPipeline?.isRunning ?: false
+  }
+
+  private fun activated(): Boolean {
+    return started() && spokestack?.speechPipeline?.context?.isActive ?: false
   }
 
   @ReactMethod
@@ -235,8 +247,12 @@ class SpokestackModule(private val reactContext: ReactApplicationContext): React
 
   @ReactMethod
   fun start(promise: Promise) {
+    if (!initialized()) {
+      promise.reject(Exception("Call Spokestack.initialize() before starting the speech pipeline."))
+      return
+    }
     try {
-      spokestack.start()
+      spokestack?.start()
       promise.resolve(null)
     } catch (e: Exception) {
       promise.reject(e)
@@ -246,7 +262,7 @@ class SpokestackModule(private val reactContext: ReactApplicationContext): React
   @ReactMethod
   fun stop(promise: Promise) {
     try {
-      spokestack.stop()
+      spokestack?.stop()
       promise.resolve(null)
     } catch (e: Exception) {
       promise.reject(e)
@@ -255,12 +271,16 @@ class SpokestackModule(private val reactContext: ReactApplicationContext): React
 
   @ReactMethod
   fun activate(promise: Promise) {
-    if (!spokestack.speechPipeline.isRunning) {
+    if (!initialized()) {
+      promise.reject(Exception("Call Spokestack.initialize() and then Spokestack.start() to start the speech pipeline before calling Spokestack.activate()."))
+      return
+    }
+    if (!started()) {
       promise.reject(Exception("The speech pipeline is not yet running. Call Spokestack.start() before calling Spokestack.activate()."))
       return
     }
     try {
-      spokestack.activate()
+      spokestack?.activate()
       promise.resolve(null)
     } catch (e: Exception) {
       promise.reject(e)
@@ -270,7 +290,7 @@ class SpokestackModule(private val reactContext: ReactApplicationContext): React
   @ReactMethod
   fun deactivate(promise: Promise) {
     try {
-      spokestack.deactivate()
+      spokestack?.deactivate()
       promise.resolve(null)
     } catch (e: Exception) {
       promise.reject(e)
@@ -317,6 +337,21 @@ class SpokestackModule(private val reactContext: ReactApplicationContext): React
   @ReactMethod
   fun classify(utterance:String, promise: Promise) {
     promises[SpokestackPromise.CLASSIFY] = promise
-    spokestack.classify(utterance)
+    spokestack?.classify(utterance)
+  }
+
+  @ReactMethod
+  fun isInitialized(promise: Promise) {
+    promise.resolve(initialized())
+  }
+
+  @ReactMethod
+  fun isStarted(promise: Promise) {
+    promise.resolve(started())
+  }
+
+  @ReactMethod
+  fun isActivated(promise: Promise) {
+    promise.resolve(activated())
   }
 }

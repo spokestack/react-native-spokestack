@@ -45,6 +45,11 @@ export default function App() {
       }
     })
       .then(Spokestack.start)
+      .then(async () => {
+        console.log(`Initialized: ${await Spokestack.isInitialized()}`)
+        console.log(`Started: ${await Spokestack.isStarted()}`)
+        console.log(`Activated: ${await Spokestack.isActivated()}`)
+      })
       .catch((error) => {
         setError(error.message)
       })

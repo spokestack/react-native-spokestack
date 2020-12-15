@@ -510,4 +510,28 @@ class RNSpokestack: RCTEventEmitter, SpokestackDelegate {
             notInitialized(reject, module: "Spokestack NLU")
         }
     }
+    
+    /// Return whether Spokestack has been initialized
+    @objc(isInitialized:withRejecter:)
+    func isInitialized(resolve: @escaping RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
+        resolve(speechPipeline != nil)
+    }
+    
+    /// Return whether the speech pipeline has been started
+    @objc(isStarted:withRejecter:)
+    func isStarted(resolve: @escaping RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
+        // isStarted is private in the SpeechPipeline
+        // so we track it ourselves
+        resolve(started)
+    }
+    
+    /// Return whether the speech pipeline is currently activated
+    @objc(isActivated:withRejecter:)
+    func isActivated(resolve: @escaping RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
+        if let pipeline = speechPipeline {
+            resolve(pipeline.context.isActive)
+        } else {
+            resolve(false)
+        }
+    }
 }

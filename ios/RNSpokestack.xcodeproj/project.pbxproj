@@ -20,6 +20,7 @@
 
 /* Begin PBXFileReference section */
 		134814201AA4EA6300B7C361 /* libSpokestack.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libSpokestack.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		F477CAA0258950E700E42E90 /* Downloader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Downloader.swift; sourceTree = "<group>"; };
 		F47C4DFA25681F5B000C166B /* RNSpokestack.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RNSpokestack.m; sourceTree = "<group>"; };
 		F47C4DFB25681F5B000C166B /* RNSpokestack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RNSpokestack.swift; sourceTree = "<group>"; };
 		F4FF95D5245B92E700C19C63 /* Spokestack-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Spokestack-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -47,6 +48,7 @@
 		58B511D21A9E6C8500147676 = {
 			isa = PBXGroup;
 			children = (
+				F477CAA0258950E700E42E90 /* Downloader.swift */,
 				F47C4DFA25681F5B000C166B /* RNSpokestack.m */,
 				F47C4DFB25681F5B000C166B /* RNSpokestack.swift */,
 				F4FF95D5245B92E700C19C63 /* Spokestack-Bridging-Header.h */,
