@@ -1,11 +1,15 @@
 import { Button, StyleSheet, Text, View } from 'react-native'
 import Spokestack, {
+  PipelineProfile,
   SpokestackPlayEvent,
   SpokestackRecognizeEvent
 } from 'react-native-spokestack'
 
 import React from 'react'
 import checkPermission from './checkPermission'
+
+const noTranscriptMessage =
+  'Press the listening button and speak to record a message for speech playback'
 
 export default function App() {
   const [listening, setListening] = React.useState(false)
@@ -30,7 +34,16 @@ export default function App() {
       setError('Microphone permission is required.')
       return
     }
-    Spokestack.initialize(clientId, clientSecret)
+    Spokestack.initialize(clientId, clientSecret, {
+      pipeline: {
+        profile: PipelineProfile.TFLITE_WAKEWORD_NATIVE_ASR
+      },
+      wakeword: {
+        filter: require('../models/filter.tflite'),
+        detect: require('../models/detect.tflite'),
+        encode: require('../models/encode.tflite')
+      }
+    })
       .then(Spokestack.start)
       .catch((error) => {
         setError(error.message)
@@ -48,10 +61,9 @@ export default function App() {
       'partial_recognize',
       ({ transcript }: SpokestackRecognizeEvent) => setPartial(transcript)
     )
-    Spokestack.addEventListener('play', ({ playing }: SpokestackPlayEvent) => {
-      console.log('Player state changed', playing)
+    Spokestack.addEventListener('play', ({ playing }: SpokestackPlayEvent) =>
       setPlaying(playing)
-    })
+    )
 
     init()
 
@@ -75,14 +87,15 @@ export default function App() {
           color="#2f5bea"
         />
         <Button
-          title={playing ? 'Playing...' : `Play "Hello"`}
+          title={playing ? 'Playing...' : `Play transcript`}
           onPress={() => {
-            Spokestack.speak('Hello World')
+            Spokestack.speak(transcript || noTranscriptMessage)
           }}
         />
       </View>
       {!!error && <Text style={styles.error}>{error}</Text>}
       <View style={styles.results}>
+        <Text style={styles.transcript}>Transcript</Text>
         <Text>Partial: "{partial}"</Text>
         <Text>Completed: "{transcript}"</Text>
       </View>
@@ -95,6 +108,10 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'space-around',
     alignItems: 'center'
+  },
+  error: {
+    color: 'red',
+    padding: 20
   },
   buttons: {
     width: '100%',
@@ -109,8 +126,9 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center'
   },
-  error: {
-    color: 'red',
-    padding: 20
+  transcript: {
+    fontSize: 18,
+    fontWeight: '700',
+    marginBottom: 10
   }
 })

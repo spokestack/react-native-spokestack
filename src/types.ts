@@ -1,10 +1,12 @@
+export type RequireSource = number
+
 /**
  * Pipeline profiles set up the speech pipeline based on your needs
  */
 export enum PipelineProfile {
   /**
    * Set up wakeword and use local Apple/Android ASR.
-   * Note that wakeword.filterPath, wakeword.encodePath, and wakeword.detectPath
+   * Note that wakeword.filter, wakeword.encode, and wakeword.detect
    *  are required if any wakeword profile is used.
    */
   TFLITE_WAKEWORD_NATIVE_ASR = 0,
@@ -22,7 +24,7 @@ export enum PipelineProfile {
   PTT_NATIVE_ASR = 2,
   /**
    * Set up wakeword and use remote Spokestack ASR.
-   * Note that wakeword.filterPath, wakeword.encodePath, and wakeword.detectPath
+   * Note that wakeword.filter, wakeword.encode, and wakeword.detect
    *  are required if any wakeword profile is used.
    */
   TFLITE_WAKEWORD_SPOKESTACK_ASR = 3,
@@ -85,7 +87,7 @@ export type SpokestackEvent =
   | SpokestackTraceEvent
   | SpokestackPlayEvent
 
-interface SpokestackNLUSlot {
+export interface SpokestackNLUSlot {
   type: string
   value: string
 }
@@ -96,7 +98,7 @@ export interface SpokestackNLUResult {
   slots: SpokestackNLUSlot[]
 }
 
-interface PipelineConfig {
+export interface PipelineConfig {
   /**
    * Profiles are collections of common configurations for Pipeline stages.
    * Default: PTT_NATIVE_ASR
@@ -165,20 +167,32 @@ interface PipelineConfig {
   agcTargetLevelDbfs?: number
 }
 
-interface NLUConfig {
+export interface NLUConfig {
   /**
-   * String filesystem path to NLU model
+   * The NLU Tensorflow-Lite model. If specified, metadata and vocab are also required.
+   *
+   * This field accepts 2 types of values.
+   * 1. A string representing a remote URL from which to download and cache the file (presumably from a CDN).
+   * 2. A source object retrieved by a `require` or `import` (e.g. `model: require('./nlu.tflite')`)
    */
-  modelPath: string
+  model: string | RequireSource
   /**
-   * String filesystem path to NLU metadata
+   * The JSON file for NLU metadata. If specified, model and vocab are also required.
+   *
+   * This field accepts 2 types of values.
+   * 1. A string representing a remote URL from which to download and cache the file (presumably from a CDN).
+   * 2. A source object retrieved by a `require` or `import` (e.g. `metadata: require('./metadata.json')`)
    */
-  metadataPath: string
+  metadata: string | RequireSource
   /**
-   * String filesystem path to NLU vocab
+   * A txt file containing the NLU vocabulary. If specified, model and metadata are also required.
+   *
+   * This field accepts 2 types of values.
+   * 1. A string representing a remote URL from which to download and cache the file (presumably from a CDN).
+   * 2. A source object retrieved by a `require` or `import` (e.g. `vocab: require('./vocab.txt')`)
    */
-  vocabPath: string
-  /**
+  vocab: string | RequireSource
+  /*
    * @advanced
    *
    * Android-only
@@ -190,26 +204,41 @@ interface NLUConfig {
   inputLength?: number
 }
 
-interface WakewordConfig {
+export interface WakewordConfig {
   /**
-   * File system path to the "filter" Tensorflow-Lite model,
-   * which is used to calculate a mel spectrogram frame from the linear STFT;
+   * The "filter" Tensorflow-Lite model. If specified, detect and encode are also required.
+   *
+   * This field accepts 2 types of values.
+   * 1. A string representing a remote URL from which to download and cache the file (presumably from a CDN).
+   * 2. A source object retrieved by a `require` or `import` (e.g. `filter: require('./filter.tflite')`)
+   *
+   * The filter model is used to calculate a mel spectrogram frame from the linear STFT;
    * its inputs should be shaped [fft-width], and its outputs [mel-width]
    */
-  filterPath: string
+  filter: string | RequireSource
   /**
-   * File system path to the "encode" Tensorflow-Lite model,
-   * which is used to perform each autoregressive step over the mel frames;
+   * The "detect" Tensorflow-Lite model. If specified, filter and encode are also required.
+   *
+   * This field accepts 2 types of values.
+   * 1. A string representing a remote URL from which to download and cache the file (presumably from a CDN).
+   * 2. A source object retrieved by a `require` or `import` (e.g. `detect: require('./detect.tflite')`)
+   *
+   * The encode model is used to perform each autoregressive step over the mel frames;
    * its inputs should be shaped [mel-length, mel-width], and its outputs [encode-width],
    * with an additional state input/output shaped [state-width]
    */
-  detectPath: string
+  detect: string | RequireSource
   /**
-   * File system path to the "detect" Tensorflow-Lite model;
-   * its inputs should be shaped [encode-length, encode-width],
+   * The "encode" Tensorflow-Lite model. If specified, filter and detect are also required.
+   *
+   * This field accepts 2 types of values.
+   * 1. A string representing a remote URL from which to download and cache the file (presumably from a CDN).
+   * 2. A source object retrieved by a `require` or `import` (e.g. `encode: require('./encode.tflite')`)
+   *
+   * Its inputs should be shaped [encode-length, encode-width],
    * and its outputs
    */
-  encodePath: string
+  encode: string | RequireSource
   /**
    * The minimum length of an activation, in milliseconds,
    * used to ignore a VAD deactivation after the wakeword
@@ -326,8 +355,46 @@ interface WakewordConfig {
  * spokestack-android reference: https://javadoc.io/doc/io.spokestack/spokestack-android/latest/index.html
  */
 export interface SpokestackConfig {
+  /**
+   * This option is only used when remote URLs are passed to fields such as `wakeword.filter`.
+   *
+   * Set this to true to allow downloading models over cellular.
+   * Note that `Spokestack.initialize()` will still reject the promise if
+   * models need to be downloaded but there is no network at all.
+   *
+   * Ideally, the app will include network handling itself and
+   * inform the user about file downloads.
+   *
+   * Default: false
+   */
+  allowCellularDownloads?: boolean
+  /**
+   * Wakeword and NLU model files are cached internally.
+   * Set this to true whenever a model is changed
+   * during development to refresh the internal model cache.
+   *
+   * This affects models passed with `require()` as well
+   * as models downloaded from remote URLs.
+   *
+   * Default: false
+   */
+  refreshModels?: boolean
+  /**
+   * This controls the log level for the underlying native
+   * iOS and Android libraries.
+   * See the TraceLevel enum for values.
+   */
   traceLevel?: TraceLevel
+  /**
+   * Most of these options are advanced aside from "profile"
+   */
   pipeline?: PipelineConfig
+  /** Only needed if using Spokestack.classify */
   nlu?: NLUConfig
+  /**
+   * Only required for wakeword
+   * Most options are advanced aside from
+   * filter, encode, and decode for specifying config files.
+   */
   wakeword?: WakewordConfig
 }

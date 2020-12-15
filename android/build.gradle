@@ -1,5 +1,5 @@
 buildscript {
-  // Buildscript is evaluated before everything else so we can't use getExtOrDefault
+  // Build script is evaluated before everything else so we can't use getExtOrDefault
   def kotlin_version = rootProject.ext.has('kotlinVersion') ? rootProject.ext.get('kotlinVersion') : project.properties['Spokestack_kotlinVersion']
 
   repositories {
@@ -29,7 +29,7 @@ android {
   compileSdkVersion getExtOrIntegerDefault('compileSdkVersion')
   buildToolsVersion getExtOrDefault('buildToolsVersion')
   defaultConfig {
-    minSdkVersion 16
+    minSdkVersion 21
     targetSdkVersion getExtOrIntegerDefault('targetSdkVersion')
     versionCode 1
     versionName "1.0"
@@ -120,12 +120,12 @@ repositories {
   }
 }
 
-def kotlin_version = getExtOrDefault('kotlinVersion')
+def kotlinx_version = getExtOrDefault('kotlinxVersion')
 
 dependencies {
   // noinspection GradleDynamicVersion
   implementation 'com.facebook.react:react-native:+'
-  implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+  implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinx_version"
   api 'io.spokestack:spokestack-android:10.0.0'
 
   // for TensorFlow Lite-powered wakeword detection and/or NLU
@@ -133,6 +133,6 @@ dependencies {
 
   // for playback of TTS audio
   implementation 'androidx.lifecycle:lifecycle-common-java8:2.2.0'
-  implementation 'androidx.media:media:1.2.0'
+  implementation 'androidx.media:media:1.2.1'
   implementation 'com.google.android.exoplayer:exoplayer-core:2.11.7'
 }

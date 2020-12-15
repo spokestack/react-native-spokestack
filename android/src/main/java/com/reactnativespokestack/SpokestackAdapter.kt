@@ -45,7 +45,7 @@ class SpokestackAdapter(sendFunc:(event: String, data: WritableMap) -> Unit):io.
         reactEvent.putString("error", "TTS error: " + event.error.localizedMessage)
         sendEvent("error", reactEvent)
       }
-      else -> Log.d(logTag, "TTS event received with unexpected type ${event.type}")
+      null -> Log.d(logTag, "TTSEvent received with null type")
     }
   }
 

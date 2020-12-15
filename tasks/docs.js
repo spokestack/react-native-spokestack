@@ -96,18 +96,7 @@ data +=
 data += '\n\nSpokestackConfig has the following structure:\n'
 data += `\n\n
 \`\`\`ts
-interface SpokestackConfig {
-  traceLevel: TraceLevel,
-  // Most options are advanced aside from "profile"
-  pipeline: PipelineConfig,
-  // Only needed for Spokestack.classify
-  nlu: NLUConfig,
-  // Needed for wakeword
-  // Most options are advanced aside from
-  // filterPath, encodePath, and decodePath
-  // for passing config files.
-  wakeword: WakewordConfig
-})
+${read('../src/types.ts').match(/interface SpokestackConfig[^}]+\}/)[0]}
 \`\`\`
 `
 data += '\n\n### TraceLevel'
@@ -131,17 +120,17 @@ data += getInterfaceItems('_src_types_.pipelineconfig.md', [
 
 data += '\n\n## NLUConfig'
 data += getInterfaceItems('_src_types_.nluconfig.md', [
-  'modelPath',
-  'metadataPath',
-  'vocabPath',
+  'model',
+  'metadata',
+  'vocab',
   'inputLength'
 ])
 
 data += '\n\n## WakewordConfig'
 data += getInterfaceItems('_src_types_.wakewordconfig.md', [
-  'filterPath',
-  'detectPath',
-  'encodePath'
+  'filter',
+  'detect',
+  'encode'
 ])
 data += '\n\n---\n\n'
 const wakewordConfig = getInterfaceContentSplit('_src_types_.wakewordconfig.md')
