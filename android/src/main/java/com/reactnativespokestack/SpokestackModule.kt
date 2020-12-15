@@ -20,7 +20,7 @@ class SpokestackModule(private val reactContext: ReactApplicationContext): React
   private var say: ((url: String) -> Unit)? = null
   private lateinit var audioPlayer: SpokestackTTSOutput
   private lateinit var downloader: Downloader
-  private val filenameToProp = mutableMapOf(
+  private val filenameToProp = mapOf(
     "filter.tflite" to "wake-filter-path",
     "detect.tflite" to "wake-detect-path",
     "encode.tflite" to "wake-encode-path",
@@ -28,6 +28,7 @@ class SpokestackModule(private val reactContext: ReactApplicationContext): React
     "metadata.json" to "nlu-metadata-path",
     "vocab.txt" to "wordpiece-vocab-path"
   )
+  private val propToFilename = filenameToProp.entries.associateBy({ it.value }, { it.key })
 
   override fun getName(): String {
     return "Spokestack"
@@ -156,13 +157,13 @@ class SpokestackModule(private val reactContext: ReactApplicationContext): React
           // Map JS keys to Android keys
           when (key) {
             "filter" -> {
-              wakeDownloads[filenameToProp.keys.first { it.contains("filter") }] = map[key] as String
+              wakeDownloads[propToFilename["wake-filter-path"] as String] = map[key] as String
             }
             "detect" -> {
-              wakeDownloads[filenameToProp.keys.first { it.contains("detect") }] = map[key] as String
+              wakeDownloads[propToFilename["wake-detect-path"] as String] = map[key] as String
             }
             "encode" -> {
-              wakeDownloads[filenameToProp.keys.first { it.contains("encode") }] = map[key] as String
+              wakeDownloads[propToFilename["wake-encode-path"] as String] = map[key] as String
             }
             "activeMin" -> builder.setProperty("wake-active-min", map[key])
             "activeMax" -> builder.setProperty("wake-active-max", map[key])
@@ -196,13 +197,13 @@ class SpokestackModule(private val reactContext: ReactApplicationContext): React
           // Map JS keys to Android keys
           when (key) {
             "model" -> {
-              nluDownloads[filenameToProp.keys.first { it.contains("model") }] = map[key] as String
+              nluDownloads[propToFilename["nlu-model-path"] as String] = map[key] as String
             }
             "metadata" -> {
-              nluDownloads[filenameToProp.keys.first { it.contains("metadata") }] = map[key] as String
+              nluDownloads[propToFilename["nlu-metadata-path"] as String] = map[key] as String
             }
             "vocab" -> {
-              nluDownloads[filenameToProp.keys.first { it.contains("vocab") }] = map[key] as String
+              nluDownloads[propToFilename["wordpiece-vocab-path"] as String] = map[key] as String
             }
             "inputLength" -> builder.setProperty("nlu-input-length", map[key])
           }
