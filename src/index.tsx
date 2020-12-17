@@ -345,6 +345,9 @@ export const {
   deactivate,
   synthesize,
   speak,
-  classify
+  classify,
+  addEventListener,
+  removeEventListener,
+  removeAllListeners
 } = Spokestack as SpokestackType
 export default Spokestack as SpokestackType

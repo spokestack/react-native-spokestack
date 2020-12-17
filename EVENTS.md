@@ -1,6 +1,6 @@
 # Events
 
-Use `Spokestack.addEventListener()`, `Spokestack.removeEventListener()`, and `Spokestack.removeAllListeners()` to add and remove events handlers. All events are available in both iOS and Android.
+Use `addEventListener()`, `removeEventListener()`, and `removeAllListeners()` to add and remove events handlers. All events are available in both iOS and Android.
 
 | Name              |           Data           |                                                                   Description |
 | :---------------- | :----------------------: | ----------------------------------------------------------------------------: |
