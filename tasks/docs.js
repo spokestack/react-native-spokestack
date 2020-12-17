@@ -90,7 +90,7 @@ data += getEnumContent('_src_types_.ttsformat.md')
 
 // Add events table
 data += '\n\n---\n\n'
-data += read('./EVENTS.md')
+data += read('../EVENTS.md')
 
 // Add Spokestack config
 data += '\n\n---\n\n## SpokestackConfig'

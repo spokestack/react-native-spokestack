@@ -13,6 +13,7 @@
     "android",
     "ios",
     "cpp",
+    "EVENTS.md",
     "react-native-spokestack.podspec",
     "!lib/typescript/example",
     "!**/__tests__",
