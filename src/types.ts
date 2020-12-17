@@ -102,7 +102,7 @@ export interface PipelineConfig {
   /**
    * Profiles are collections of common configurations for Pipeline stages.
    * If Wakeword config files are specified, the default will be
-   * `TFLITE_WAKEWORD_SPOKESTACK_ASR`.
+   * `TFLITE_WAKEWORD_NATIVE_ASR`.
    * Otherwise, the default is `PTT_NATIVE_ASR`.
    */
   profile?: PipelineProfile
