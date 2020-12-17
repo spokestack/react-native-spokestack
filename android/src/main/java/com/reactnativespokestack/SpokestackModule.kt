@@ -254,6 +254,11 @@ class SpokestackModule(private val reactContext: ReactApplicationContext): React
     try {
       spokestack?.start()
       promise.resolve(null)
+
+      // Send a start event for parity with iOS
+      val reactEvent = Arguments.createMap()
+      reactEvent.putString("transcript", "")
+      sendEvent("start", reactEvent)
     } catch (e: Exception) {
       promise.reject(e)
     }
@@ -264,6 +269,11 @@ class SpokestackModule(private val reactContext: ReactApplicationContext): React
     try {
       spokestack?.stop()
       promise.resolve(null)
+
+      // Send a stop event for parity with iOS
+      val reactEvent = Arguments.createMap()
+      reactEvent.putString("transcript", "")
+      sendEvent("stop", reactEvent)
     } catch (e: Exception) {
       promise.reject(e)
     }
