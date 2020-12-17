@@ -1,6 +1,6 @@
 {
   "name": "react-native-spokestack",
-  "version": "5.0.0-beta.1",
+  "version": "5.0.0-beta.2",
   "description": "React Native plugin for adding voice using Spokestack",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
