@@ -60,7 +60,7 @@ class SpokestackModule(private val reactContext: ReactApplicationContext): React
     }
   }
 
-  private fun sendEvent(event:String, @Nullable params:WritableMap) {
+  private fun sendEvent(event: String, @Nullable params: WritableMap) {
     if (reactContext.hasActiveCatalystInstance()) {
       when(event.toLowerCase()) {
         "error" -> {
@@ -80,7 +80,7 @@ class SpokestackModule(private val reactContext: ReactApplicationContext): React
           }
         }
         "classify" -> {
-          promises[SpokestackPromise.CLASSIFY]?.resolve(params.getMap("result"))
+          promises[SpokestackPromise.CLASSIFY]?.resolve(params)
           promises.remove(SpokestackPromise.CLASSIFY)
         }
         else -> Log.d(name, "Sending JS event: $event")

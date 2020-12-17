@@ -151,6 +151,8 @@ Add the necessary permissions to your `AndroidManifest.xml`. The first permissio
     <uses-permission android:name="android.permission.INTERNET" />
     <!-- For wakeword and ASR -->
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <!-- For ensuring no downloads happen over cellular, unless forced -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 ```
 
 ### Request RECORD_AUDIO permission
