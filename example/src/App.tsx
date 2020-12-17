@@ -1,6 +1,5 @@
 import { Button, StyleSheet, Text, View } from 'react-native'
 import Spokestack, {
-  PipelineProfile,
   SpokestackPlayEvent,
   SpokestackRecognizeEvent
 } from 'react-native-spokestack'
@@ -35,9 +34,6 @@ export default function App() {
       return
     }
     Spokestack.initialize(clientId, clientSecret, {
-      pipeline: {
-        profile: PipelineProfile.TFLITE_WAKEWORD_NATIVE_ASR
-      },
       wakeword: {
         filter: require('../models/filter.tflite'),
         detect: require('../models/detect.tflite'),

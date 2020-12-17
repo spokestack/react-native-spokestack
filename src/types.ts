@@ -101,7 +101,9 @@ export interface SpokestackNLUResult {
 export interface PipelineConfig {
   /**
    * Profiles are collections of common configurations for Pipeline stages.
-   * Default: PTT_NATIVE_ASR
+   * If Wakeword config files are specified, the default will be
+   * `TFLITE_WAKEWORD_SPOKESTACK_ASR`.
+   * Otherwise, the default is `PTT_NATIVE_ASR`.
    */
   profile?: PipelineProfile
   /**

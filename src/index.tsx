@@ -281,6 +281,18 @@ Spokestack.initialize = (
   if (wakewordConfig.encode && typeof wakewordConfig.encode !== 'string') {
     wakewordConfig.encode = resolveModelUrl(wakewordConfig.encode)
   }
+  // Default the profile to one supporting wakeword
+  // if wakeword config files are specified
+  // and no profile was set.
+  if (
+    wakewordConfig.filter &&
+    wakewordConfig.detect &&
+    wakewordConfig.encode &&
+    !config.pipeline?.profile
+  ) {
+    config.pipeline = config.pipeline || {}
+    config.pipeline.profile = PipelineProfile.TFLITE_WAKEWORD_NATIVE_ASR
+  }
   const nluConfig = (config.nlu || {}) as NLUConfig
   if (nluConfig.model && typeof nluConfig.model !== 'string') {
     nluConfig.model = resolveModelUrl(nluConfig.model)

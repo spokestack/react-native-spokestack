@@ -66,7 +66,7 @@ class RNSpokestack: RCTEventEmitter, SpokestackDelegate {
     }
 
     override func supportedEvents() -> [String]! {
-        return ["activate", "deactivate", "timeout", "recognize", "partial_recognize", "play", "error", "trace"]
+        return ["activate", "deactivate", "start", "stop", "timeout", "recognize", "partial_recognize", "play", "error", "trace"]
     }
 
     func handleError(_ error: Error) -> Void {
@@ -128,6 +128,7 @@ class RNSpokestack: RCTEventEmitter, SpokestackDelegate {
             resolve(nil)
             rejecters.removeValue(forKey: RNSpokestackPromise.start)
         }
+        sendEvent(withName: "start", body: [ "transcript": "" ])
     }
 
     func didStop() {
@@ -136,6 +137,7 @@ class RNSpokestack: RCTEventEmitter, SpokestackDelegate {
             resolve(nil)
             rejecters.removeValue(forKey: RNSpokestackPromise.stop)
         }
+        sendEvent(withName: "stop", body: [ "transcript": "" ])
     }
 
     func didTimeout() {
@@ -410,6 +412,10 @@ class RNSpokestack: RCTEventEmitter, SpokestackDelegate {
     /// Start the speech pipeline
     @objc(start:withRejecter:)
     func start(resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
+        if started {
+            resolve(nil)
+            return
+        }
         if let pipeline = speechPipeline {
             resolvers[RNSpokestackPromise.start] = resolve
             rejecters[RNSpokestackPromise.start] = reject
@@ -422,6 +428,10 @@ class RNSpokestack: RCTEventEmitter, SpokestackDelegate {
     /// Start the speech pipeline
     @objc(stop:withRejecter:)
     func stop(resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
+        if !started {
+            resolve(nil)
+            return
+        }
         if let pipeline = speechPipeline {
             resolvers[RNSpokestackPromise.stop] = resolve
             rejecters[RNSpokestackPromise.stop] = reject
