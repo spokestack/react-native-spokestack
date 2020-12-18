@@ -331,11 +331,6 @@ class SpokestackModule(private val reactContext: ReactApplicationContext): React
       val response = AudioResponse(uri)
       audioPlayer.audioReceived(response)
 
-      /* TODO: Change this to a playback started listener when spokestack-android supports it. */
-      val reactEvent = Arguments.createMap()
-      reactEvent.putBoolean("playing", true)
-      sendEvent("play", reactEvent)
-
       // Resolve RN promise
       promise.resolve(null)
       promises.remove(SpokestackPromise.SPEAK)
