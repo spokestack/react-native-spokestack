@@ -154,7 +154,7 @@ class RNSpokestack: RCTEventEmitter, SpokestackDelegate {
 
     func success(result: TextToSpeechResult) {
         if let resolve = resolvers.removeValue(forKey: RNSpokestackPromise.synthesize) {
-            resolve(result.url)
+            resolve(result.url?.absoluteString)
             rejecters.removeValue(forKey: RNSpokestackPromise.synthesize)
         } else if let resolve = resolvers.removeValue(forKey: RNSpokestackPromise.speak) {
             resolve(nil)
