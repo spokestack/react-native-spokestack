@@ -22,8 +22,8 @@ export default async function checkPermission() {
 
   // iOS brings up its own dialogs automatically
   // However, the best way to handle permissions is
-  // to request both microphone and speech recognition
-  // access in an onboarding screen for your app that
+  // to request speech recognition access in an
+  // onboarding screen for your app that
   // explains why the permissions are needed.
   return true
 }

@@ -122,6 +122,10 @@ class SpokestackModule(private val reactContext: ReactApplicationContext): React
 
   @ReactMethod
   fun initialize(clientId: String, clientSecret: String, config: ReadableMap, promise: Promise) = runBlocking(Dispatchers.Default) {
+    if (initialized()) {
+      promise.resolve(null)
+      return@runBlocking
+    }
     if (clientId.isEmpty() || clientSecret.isEmpty()) {
       val e = IllegalArgumentException("Client ID and Client Secret are required to initialize Spokestack")
       promise.reject(e)

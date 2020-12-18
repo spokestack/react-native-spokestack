@@ -240,6 +240,7 @@ class RNSpokestack: RCTEventEmitter, SpokestackDelegate {
     @objc(initialize:withClientSecret:withConfig:withResolver:withRejecter:)
     func initialize(clientId: String, clientSecret: String, config: Dictionary<String, Any>?, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
         if speechPipeline != nil {
+            resolve(nil)
             return
         }
         downloader = Downloader(allowCellular: RCTConvert.bool(config?["allowCellular"]), refreshModels: RCTConvert.bool(config?["refreshModels"]))
