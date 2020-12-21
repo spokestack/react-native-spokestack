@@ -124,7 +124,7 @@ The following is a suggestion that should fit most use cases:
 
 ### ASR Support
 
-The example usage uses the system-provided ASRs (`AndroidSpeechRecognizer` and `AppleSpeechRecognizer`). However, `AndroidSpeechRecognizer` is not available on 100% of devices. If such a device is supported, use Spokestack ASR instead.
+The example usage uses the system-provided ASRs (`AndroidSpeechRecognizer` and `AppleSpeechRecognizer`). However, `AndroidSpeechRecognizer` is not available on 100% of devices. If your app supports a device that doesn't have built-in speech recognition, use Spokestack ASR instead by setting the `profile` to a Spokestack profile using the `profile` prop.
 
 See our [ASR documentation](https://www.spokestack.io/docs/concepts/asr) for more information.
 
