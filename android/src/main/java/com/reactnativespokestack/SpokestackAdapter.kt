@@ -55,9 +55,18 @@ class SpokestackAdapter(sendFunc:(event: String, data: WritableMap) -> Unit):io.
         reactEvent.putString("url", event.ttsResponse.audioUri.toString())
         sendEvent("synthesize", reactEvent)
       }
-      TTSEvent.Type.PLAYBACK_COMPLETE -> {
+      TTSEvent.Type.PLAYBACK_STARTED -> {
+        reactEvent.putBoolean("playing", true)
+        sendEvent("play", reactEvent)
+      }
+      TTSEvent.Type.PLAYBACK_STOPPED -> {
         reactEvent.putBoolean("playing", false)
         sendEvent("play", reactEvent)
+      }
+      TTSEvent.Type.PLAYBACK_COMPLETE -> {
+        // Playback is not pause-able in iOS
+        // so this event does not exist there.
+        Log.d(logTag, "Playback has completed")
       }
       TTSEvent.Type.ERROR -> {
         reactEvent.putString("error", "TTS error: " + event.error.localizedMessage)

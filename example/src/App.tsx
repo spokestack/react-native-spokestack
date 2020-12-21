@@ -8,7 +8,7 @@ import React from 'react'
 import checkPermission from './checkPermission'
 
 const noTranscriptMessage =
-  'Press the listening button and speak to record a message for speech playback'
+  'Press the "Listen" button and speak to record a message for speech playback'
 
 export default function App() {
   const [listening, setListening] = React.useState(false)
