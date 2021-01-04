@@ -47,14 +47,14 @@ function getEnumContent(filename) {
  * @param {string} filename
  * @param {Array<string>} items List of functions or properties to extract from an interface
  */
-function getInterfaceItems(filename, items) {
+function getInterfaceItems(filename, items, header = '###') {
   const data = getInterfaceContentSplit(filename)
   return items
     .map((fn) => {
       const rfn = new RegExp(`\\n###\\s*${fn}`)
       for (const m of data) {
         if (rfn.test(m)) {
-          return m
+          return m.replace('###', header)
         }
       }
       console.warn(`Item not found: ${fn}`)
@@ -77,11 +77,22 @@ data += getInterfaceItems('_src_index_.spokestacktype.md', [
   'stop',
   'activate',
   'deactivate',
+  'synthesize',
+  'speak',
+  'classify'
+])
+
+data += '\n\n---\n\n#### SpokestackNLUResult'
+data += getInterfaceItems(
+  '_src_types_.spokestacknluresult.md',
+  ['intent', 'slots', 'confidence'],
+  '#####'
+)
+
+data += getInterfaceItems('_src_index_.spokestacktype.md', [
   'addEventListener',
   'removeEventListener',
-  'removeAllListeners',
-  'synthesize',
-  'speak'
+  'removeAllListeners'
 ])
 
 // Add TTSFormat

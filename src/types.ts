@@ -87,15 +87,16 @@ export type SpokestackEvent =
   | SpokestackTraceEvent
   | SpokestackPlayEvent
 
-export interface SpokestackNLUSlot {
-  type: string
-  value: string
-}
-
 export interface SpokestackNLUResult {
+  /** The intent based on the match provided by the NLU model */
   intent: string
+  /** A percentage of the confidence of the match, given by the tensorflow */
   confidence: number
-  slots: SpokestackNLUSlot[]
+  /** Data associated with the intent, provided by the NLU model */
+  slots: {
+    type: string
+    value: string
+  }[]
 }
 
 export interface PipelineConfig {
