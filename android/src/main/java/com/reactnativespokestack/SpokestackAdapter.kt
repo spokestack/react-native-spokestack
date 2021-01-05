@@ -30,8 +30,8 @@ class SpokestackAdapter(sendFunc:(event: String, data: WritableMap) -> Unit):io.
     reactEvent.putString("confidence", result.confidence.toString())
 
     // Slots is an array of slots, not a map
-    val slots = Arguments.createArray()
-    for ((_, slot) in result.slots) {
+    val slots = Arguments.createMap()
+    for ((name, slot) in result.slots) {
       val slotMap = Arguments.createMap()
       slotMap.putString("type", slot.type)
       slotMap.putString("rawValue", slot.rawValue.toString())
@@ -42,9 +42,9 @@ class SpokestackAdapter(sendFunc:(event: String, data: WritableMap) -> Unit):io.
         null -> slotMap.putNull("value")
         else -> slotMap.putString("value", slot.value.toString())
       }
-      slots.pushMap(slotMap)
+      slots.putMap(name, slotMap)
     }
-    reactEvent.putArray("slots", slots)
+    reactEvent.putMap("slots", slots)
     sendEvent("classify", reactEvent)
   }
 

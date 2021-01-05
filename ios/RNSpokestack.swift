@@ -164,14 +164,21 @@ class RNSpokestack: RCTEventEmitter, SpokestackDelegate {
 
     func classification(result: NLUResult) {
         if let resolve = resolvers.removeValue(forKey: RNSpokestackPromise.classify) {
+            var slots: [String:[String:String]] = [:]
+            if let resultSlots = result.slots {
+                for (name, slot) in resultSlots {
+                    slots[name] = [
+                        "type": slot.type,
+                        "value": RCTConvert.nsString(slot.value),
+                        "rawValue": RCTConvert.nsString(slot.rawValue)
+                    ]
+                }
+            }
+
             resolve([
                 "intent": result.intent,
                 "confidence": result.confidence,
-                "slots": result.slots!.map { (name, slot) in [
-                    "type": slot.type,
-                    "value": slot.value ?? nil,
-                    "rawValue": slot.rawValue ?? nil
-                ] }
+                "slots": slots
             ])
             rejecters.removeValue(forKey: RNSpokestackPromise.classify)
         }
@@ -257,8 +264,6 @@ class RNSpokestack: RCTEventEmitter, SpokestackDelegate {
                 speechConfig.tracing = Trace.Level(rawValue: RCTConvert.nsInteger(value)) ?? Trace.Level.NONE
                 break
             case "nlu":
-                // All values in pipeline are Strings
-                // so no RCTConvert calls are needed
                 for (nluKey, nluValue) in value as! Dictionary<String, String> {
                     switch nluKey {
                     case "model":

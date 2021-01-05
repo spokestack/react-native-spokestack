@@ -85,7 +85,13 @@ data += getInterfaceItems('_src_index_.spokestacktype.md', [
 data += '\n\n---\n\n#### SpokestackNLUResult'
 data += getInterfaceItems(
   '_src_types_.spokestacknluresult.md',
-  ['intent', 'slots', 'confidence'],
+  ['intent', 'confidence', 'slots'],
+  '#####'
+)
+data += '\n\n---\n\n#### SpokestackNLUSlot'
+data += getInterfaceItems(
+  '_src_types_.spokestacknluslot.md',
+  ['type', 'value', 'rawValue'],
   '#####'
 )
 

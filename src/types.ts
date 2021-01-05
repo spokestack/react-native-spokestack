@@ -87,6 +87,12 @@ export type SpokestackEvent =
   | SpokestackTraceEvent
   | SpokestackPlayEvent
 
+export interface SpokestackNLUSlot {
+  type: string
+  value: string
+  rawValue: string
+}
+
 export interface SpokestackNLUResult {
   /** The intent based on the match provided by the NLU model */
   intent: string
@@ -94,9 +100,8 @@ export interface SpokestackNLUResult {
   confidence: number
   /** Data associated with the intent, provided by the NLU model */
   slots: {
-    type: string
-    value: string
-  }[]
+    [key: string]: SpokestackNLUSlot
+  }
 }
 
 export interface PipelineConfig {

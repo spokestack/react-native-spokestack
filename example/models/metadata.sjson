@@ -1,0 +1,66 @@
+{
+  "domain": "minecraft",
+  "intents": [
+    {
+      "name": "AMAZON.YesIntent",
+      "description": "",
+      "implicit_slots": [],
+      "slots": []
+    },
+    {
+      "name": "AMAZON.NoIntent",
+      "description": "",
+      "implicit_slots": [],
+      "slots": []
+    },
+    {
+      "name": "AMAZON.StopIntent",
+      "description": "",
+      "implicit_slots": [],
+      "slots": []
+    },
+    {
+      "name": "RecipeIntent",
+      "description": "",
+      "implicit_slots": [],
+      "slots": [
+        {
+          "name": "Item",
+          "capture_name": "Item",
+          "description": "",
+          "type": "entity",
+          "facets": "{}"
+        }
+      ]
+    },
+    {
+      "name": "AMAZON.RepeatIntent",
+      "description": "",
+      "implicit_slots": [],
+      "slots": []
+    },
+    {
+      "name": "AMAZON.CancelIntent",
+      "description": "",
+      "implicit_slots": [],
+      "slots": []
+    },
+    {
+      "name": "AMAZON.FallbackIntent",
+      "description": "",
+      "implicit_slots": [],
+      "slots": []
+    },
+    {
+      "name": "AMAZON.HelpIntent",
+      "description": "",
+      "implicit_slots": [],
+      "slots": []
+    }
+  ],
+  "tags": [
+    "o",
+    "b_Item",
+    "i_Item"
+  ]
+}
