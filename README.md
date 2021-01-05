@@ -31,13 +31,13 @@ Then follow the instructions for each platform to link react-native-spokestack t
 <details>
   <summary>iOS details</summary>
 
+First, set your iOS deployment target in XCode to 13.0.
+
 ### Edit Podfile
 
 Before running `pod install`, make sure to make the following edits.
 
-react-native-spokestack makes use of relatively new APIs only available in iOS 13+. Make sure to set your deployment target to iOS 13 at the top of your Podfile:
-
-Also set your deployment target to 13.0 in your XCode project.
+react-native-spokestack makes use of relatively new APIs only available in iOS 13+. Set the deployment target to iOS 13 at the top of your Podfile:
 
 ```ruby
 platform :ios, '13.0'
@@ -51,7 +51,7 @@ target 'SpokestackExample' do
   #...
 ```
 
-For the time being, `use_frameworks!` does not work with Flipper, so we also need to disable Flipper. Remove any Flipper-related lines in your Podfile. In React Native 0.63.2, they look like this:
+For now, `use_frameworks!` does not work with Flipper, so we also need to disable Flipper. Remove any Flipper-related lines in your Podfile. In React Native 0.63.2, they look like this:
 
 ```ruby
   # X Remove or comment out these lines X
@@ -70,7 +70,7 @@ $ npx pod-install
 
 ### Edit Info.plist
 
-Add the following to your Info.plist to enable permissions. In XCode, also ensure your iOS deployment target is set to 13.0 or higher.
+Add the following to your Info.plist to enable permissions.
 
 ```xml
 <key>NSMicrophoneUsageDescription</key>
@@ -157,10 +157,10 @@ Add the necessary permissions to your `AndroidManifest.xml`. The first permissio
 
 ### Request RECORD_AUDIO permission
 
-The responsibility to request permission for RECORD_AUDIO on new devices is left to the user, as there are differing strategies for how to handle permissions.
+The RECORD_AUDIO permission is special in that it must be both listed in the `AndroidManifest.xml` as well as requested at runtime. There are a couple ways to handle this (react-native-spokestack does not do this for you):
 
-1. Add a screen to your onboarding that explains the need for the permissions used on each platform (RECORD_AUDIO on Android and Microphone and Speech Recognition on iOS). **Recommended**
-2. Request the permissions only when needed. This is also a good option as it avoids asking for permission as soon as the app is launched. Avoid asking for permission with no context or without making it clear why it is needed.
+1. **Recommended** Add a screen to your onboarding that explains the need for the permissions used on each platform (RECORD_AUDIO on Android and Speech Recognition on iOS). Have a look at [react-native-permissions](https://github.com/zoontek/react-native-permissions) to handle permissions in a more robust way.
+2. Request the permissions only when needed, such as when a user taps on a "listen" button. Avoid asking for permission with no context or without explaining why it is needed. In other words, we do not recommend asking for permission on app launch.
 
 While iOS will bring up permissions dialogs automatically for any permissions needed, you must do this manually in Android.
 
