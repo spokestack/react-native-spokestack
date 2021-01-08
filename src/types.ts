@@ -88,15 +88,18 @@ export type SpokestackEvent =
   | SpokestackPlayEvent
 
 export interface SpokestackNLUSlot {
+  /** The slot's type, as defined in the model metadata */
   type: string
-  value: string
+  /** The parsed (typed) value of the slot recognized in the user utterance */
+  value: any
+  /** The original string value of the slot recognized in the user utterance */
   rawValue: string
 }
 
 export interface SpokestackNLUResult {
   /** The intent based on the match provided by the NLU model */
   intent: string
-  /** A percentage of the confidence of the match, given by the tensorflow */
+  /** A number from 0 to 1 representing the NLU model's confidence in the intent it recognized, where 1 represents absolute confidence. */
   confidence: number
   /** Data associated with the intent, provided by the NLU model */
   slots: {

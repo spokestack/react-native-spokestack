@@ -164,12 +164,24 @@ class RNSpokestack: RCTEventEmitter, SpokestackDelegate {
 
     func classification(result: NLUResult) {
         if let resolve = resolvers.removeValue(forKey: RNSpokestackPromise.classify) {
-            var slots: [String:[String:String]] = [:]
+            var slots: [String:[String:Any?]] = [:]
             if let resultSlots = result.slots {
                 for (name, slot) in resultSlots {
+                    var value: Any?
+                    if let v = slot.value as? Int {
+                        value = RCTConvert.int(v)
+                    } else if let v = slot.value as? Float {
+                        value = RCTConvert.float(v)
+                    } else if let v = slot.value as? Double {
+                        value = RCTConvert.double(v)
+                    } else if let v = slot.value as? Bool {
+                        value = RCTConvert.bool(v)
+                    } else {
+                        value = RCTConvert.nsString(slot.value)
+                    }
                     slots[name] = [
                         "type": slot.type,
-                        "value": RCTConvert.nsString(slot.value),
+                        "value": value,
                         "rawValue": RCTConvert.nsString(slot.rawValue)
                     ]
                 }

@@ -94,7 +94,7 @@ export default function App() {
         <Text style={styles.instructionText}>Tap "Listen" to talk</Text>
         <Text style={styles.instructionText}>
           This example uses a sample NLU model for Minecraft. To begin, tap
-          listen and say, "How do I make a castle?"
+          Listen and say, "How do I make a castle?"
         </Text>
       </View>
       <View style={styles.buttons}>
