@@ -147,7 +147,7 @@
   },
   "release-it": {
     "hooks": {
-      "after:bump": "npm run docs && git add README.md"
+      "after:bump": "npm run build && npm run docs && git add README.md"
     },
     "git": {
       "commitMessage": "chore: release ${version}",
