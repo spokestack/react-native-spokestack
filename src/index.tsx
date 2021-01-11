@@ -294,13 +294,13 @@ Spokestack.initialize = (
     config.pipeline.profile = PipelineProfile.TFLITE_WAKEWORD_NATIVE_ASR
   }
   const nluConfig = (config.nlu || {}) as NLUConfig
-  if (nluConfig.model && typeof nluConfig.model !== 'string') {
+  if (typeof nluConfig.model === 'number') {
     nluConfig.model = resolveModelUrl(nluConfig.model)
   }
-  if (nluConfig.metadata && typeof nluConfig.metadata !== 'string') {
+  if (typeof nluConfig.metadata === 'number') {
     nluConfig.metadata = resolveModelUrl(nluConfig.metadata)
   }
-  if (nluConfig.vocab && typeof nluConfig.vocab !== 'string') {
+  if (typeof nluConfig.vocab === 'number') {
     nluConfig.vocab = resolveModelUrl(nluConfig.vocab)
   }
   return originalInit(id, secret, config)
