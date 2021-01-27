@@ -1,4 +1,4 @@
-# react-native-spokestack
+<a href="https://www.spokestack.io/docs/react-native/getting-started" title="Getting Started with Spokestack + React Native">![React Native Spokestack](./example/react-native-spokestack.png)</a>
 
 React Native plugin for adding voice using [Spokestack](https://www.spokestack.io). This includes speech recognition, wakeword, and natural language understanding, as well as synthesizing text to speech using Spokestack voices.
 
