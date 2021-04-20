@@ -31,7 +31,19 @@ Then follow the instructions for each platform to link react-native-spokestack t
 <details>
   <summary>iOS details</summary>
 
-First, set your iOS deployment target in XCode to 13.0.
+### Set deployment target
+
+First, open XCode and go to Project -> Info to set the iOS Deployment target to 13.0 or higher.
+
+Also, set deployment to 13.0 under Target -> General -> Deployment Info.
+
+### Remove invalid library search path
+
+When Flipper was introduced to React Native, some library search paths were set for Swift. There has been a longstanding issue with the default search paths in React Native projects because a search path was added for swift 5.0 which prevented any other React Native libraries from using APIs only available in Swift 5.2 or later. Spokestack-iOS, a dependency of react-native-spokestack makes use of these APIs and XCode will fail to build.
+
+Fortunately, the fix is fairly simple. Go to your target -> Build Settings and search for "Library Search Paths".
+
+Remove `"\"$(TOOLCHAIN_DIR)/usr/lib/swift-5.0/$(PLATFORM_NAME)\""` from the list.
 
 ### Edit Podfile
 
@@ -51,15 +63,38 @@ target 'SpokestackExample' do
   #...
 ```
 
-For now, `use_frameworks!` does not work with Flipper, so we also need to disable Flipper. Remove any Flipper-related lines in your Podfile. In React Native 0.63.2, they look like this:
+For now, `use_frameworks!` does not work with Flipper, so we also need to disable Flipper. Remove any Flipper-related lines in your Podfile. In React Native 0.63.2+, they look like this:
 
 ```ruby
   # X Remove or comment out these lines X
-  use_flipper!
-  post_install do |installer|
-    flipper_post_install(installer)
-  end
+  # use_flipper!
+  # post_install do |installer|
+  #   flipper_post_install(installer)
+  # end
   # XX
+```
+
+#### Bug in React Native 0.64.0 (should be fixed in 0.64.1)
+
+React Native 0.64.0 broke any projects using `use_frameworks!` in their Podfiles.
+
+For more info on this bug, see https://github.com/facebook/react-native/issues/31149.
+
+To workaround this issue, add the following to your Podfile:
+
+```ruby
+# Moves 'Generate Specs' build_phase to be first for FBReactNativeSpec
+post_install do |installer|
+  installer.pods_project.targets.each do |target|
+    if (target.name&.eql?('FBReactNativeSpec'))
+      target.build_phases.each do |build_phase|
+        if (build_phase.respond_to?(:name) && build_phase.name.eql?('[CP-User] Generate Specs'))
+          target.build_phases.move(build_phase, 0)
+        end
+      end
+    end
+  end
+end
 ```
 
 Remove your existing Podfile.lock and Pods folder to ensure no conflicts, then install the pods:
@@ -134,12 +169,13 @@ See our [ASR documentation](https://www.spokestack.io/docs/concepts/asr) for mor
 // ...
   ext {
     // Minimum SDK is 21
+    // React Native 0.64+ already has this set
     minSdkVersion = 21
 // ...
   dependencies {
     // Minimium gradle is 3.0.1+
     // The latest React Native already has this
-    classpath("com.android.tools.build:gradle:3.5.3")
+    classpath("com.android.tools.build:gradle:4.1.0")
 ```
 
 ### Edit AndroidManifest.xml
