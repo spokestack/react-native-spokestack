@@ -211,11 +211,11 @@ class RNSpokestack: RCTEventEmitter, SpokestackDelegate {
     func makeCompleteForModelDownload(speechProp: String) -> (Error?, String?) -> Void {
         return { (error: Error?, fileUrl: String?) -> Void in
             self.numRequests -= 1
-            if (error != nil) {
-                self.failure(error: error!)
+            if (error != nil || fileUrl == nil) {
+                self.failure(error: error ?? RNSpokestackDownloadError.downloadUnsuccessful)
             } else {
                 // Set local model filepath on speech config
-                self.speechConfig.setValue(fileUrl, forKey: speechProp)
+                self.speechConfig.setValue(fileUrl!, forKey: speechProp)
 
                 // Build the pipeline if there are no more requests
                 if self.numRequests <= 0 {

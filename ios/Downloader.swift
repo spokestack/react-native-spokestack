@@ -14,6 +14,7 @@ enum RNSpokestackDownloadError: Error {
     case noResponse
     case downloadUnsuccessful
     case documentsDirectoryNotAvailable
+    case writeFailure
 }
 
 extension RNSpokestackDownloadError: LocalizedError {
@@ -26,9 +27,11 @@ extension RNSpokestackDownloadError: LocalizedError {
         case .noResponse:
             return NSLocalizedString("A download completed but there was no response.", comment: "")
         case .downloadUnsuccessful:
-            return NSLocalizedString("A download completed but was not successful", comment: "")
+            return NSLocalizedString("A download request completed but was not a 200. Check the URL for typos.", comment: "")
         case .documentsDirectoryNotAvailable:
             return NSLocalizedString("The documents directory was not accesible. Please ensure react-native-spokestack has access for caching model files.", comment: "")
+        case .writeFailure:
+            return NSLocalizedString("The download completed but the file could not be written to the documents directory.", comment: "")
         }
     }
 }
@@ -82,6 +85,7 @@ public class Downloader: NSObject {
         let destinationPath = destinationUrl.path
 
         if !refreshModels && FileManager().fileExists(atPath: destinationPath) {
+            debugPrint("Returning file from cache",  url)
             complete(nil, destinationPath)
             return
         }
@@ -102,7 +106,7 @@ public class Downloader: NSObject {
                     try data?.write(to: destinationUrl, options: Data.WritingOptions.atomic)
                     complete(error, destinationPath)
                 } catch {
-                    complete(error, destinationPath)
+                    complete(RNSpokestackDownloadError.writeFailure, destinationPath)
                 }
             } else {
                 complete(RNSpokestackDownloadError.downloadUnsuccessful, destinationPath)

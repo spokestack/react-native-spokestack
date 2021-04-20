@@ -302,6 +302,7 @@ export interface WakewordConfig {
   stateWidth?: number
   /**
    * @advanced
+   * @deprecated No longer used by the underlying library.
    *
    * The desired linear Root Mean Squared (RMS) signal energy,
    * which is used for signal normalization and should be tuned
@@ -310,6 +311,7 @@ export interface WakewordConfig {
   rmsTarget?: number
   /**
    * @advanced
+   * @deprecated No longer used by the underlying library.
    *
    * The Exponentially-Weighted Moving Average (EWMA) update
    * rate for the current RMS signal energy (0 for no RMS normalization)
