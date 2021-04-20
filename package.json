@@ -8,7 +8,7 @@
   "react-native": "src/index",
   "source": "src/index",
   "scripts": {
-    "bootstrap": "concurrently --raw \"npm i\" \"cd example && npm i\" \"npm run pods\"",
+    "bootstrap": "concurrently --raw \"npm i\" \"cd example && npm i\" && npm run pods",
     "build": "bob build",
     "docs": "typedoc --excludePrivate --tsconfig tsconfig.typedoc.json --plugin typedoc-plugin-markdown --hideBreadcrumbs --out docs --readme none src/index.tsx && node tasks/docs.js",
     "format": "prettier --write \"**/*.tsx\" \"**/*.ts\" \"**/*.js\" \"**/*.md\" \"**/*.json\"",
