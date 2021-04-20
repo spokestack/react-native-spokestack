@@ -388,6 +388,15 @@ export interface SpokestackConfig {
    * as models downloaded from remote URLs.
    *
    * Default: true in dev mode, false otherwise
+   *
+   * **Important:** By default, apps in production will
+   * cache models to avoid downloading them every time
+   * the app is launched. The side-effect of this optimization
+   * is that if models change on the CDN, apps will
+   * not pick up those changes–unless the app were reinstalled.
+   * We think this is a fair trade-off, but set this to `true`
+   * if you prefer to download the models every time the app
+   * is launched.
    */
   refreshModels?: boolean
   /**
