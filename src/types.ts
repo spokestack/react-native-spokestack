@@ -387,7 +387,7 @@ export interface SpokestackConfig {
    * This affects models passed with `require()` as well
    * as models downloaded from remote URLs.
    *
-   * Default: false
+   * Default: true in dev mode, false otherwise
    */
   refreshModels?: boolean
   /**

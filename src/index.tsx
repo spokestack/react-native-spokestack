@@ -270,6 +270,10 @@ Spokestack.initialize = (
   secret: string,
   config: SpokestackConfig = {}
 ) => {
+  // Set refreshModels to true in development by default
+  if (typeof config.refreshModels !== 'boolean') {
+    config.refreshModels = __DEV__
+  }
   // Resolve source objects to URLs for local downloads
   const wakewordConfig = (config.wakeword || {}) as WakewordConfig
   if (wakewordConfig.filter && typeof wakewordConfig.filter !== 'string') {
