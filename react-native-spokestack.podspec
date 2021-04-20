@@ -17,6 +17,6 @@ Pod::Spec.new do |s|
   s.requires_arc = true
   s.static_framework = true
 
-  s.dependency "Spokestack-iOS", "14.0.1"
+  s.dependency "Spokestack-iOS", "14.0.5"
   s.dependency "React"
 end
