@@ -5,6 +5,7 @@ enum RNSpokestackError: Error {
     case notStarted
     case builderNotAvailable
     case downloaderNotAvailable
+    case downloadFailed
 }
 
 extension RNSpokestackError: LocalizedError {
@@ -18,6 +19,8 @@ extension RNSpokestackError: LocalizedError {
             return NSLocalizedString("buildPipeline() was called somehow without first initializing a builder", comment: "")
         case .downloaderNotAvailable:
             return NSLocalizedString("Models were passed to initialize that could not be downloaded. The downloader was not initialized properly.", comment: "")
+        case .downloadFailed:
+            return NSLocalizedString("A download callback was called, but there were no arguments. Check the code for the bad path.", comment: "")
         }
     }
 }
@@ -212,7 +215,7 @@ class RNSpokestack: RCTEventEmitter, SpokestackDelegate {
         return { (error: Error?, fileUrl: String?) -> Void in
             self.numRequests -= 1
             if (error != nil || fileUrl == nil) {
-                self.failure(error: error ?? RNSpokestackDownloadError.downloadUnsuccessful)
+                self.failure(error: error ?? RNSpokestackError.downloadFailed)
             } else {
                 // Set local model filepath on speech config
                 self.speechConfig.setValue(fileUrl!, forKey: speechProp)
