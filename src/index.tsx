@@ -1,4 +1,11 @@
 import {
+  EmitterSubscription,
+  NativeEventEmitter,
+  NativeModules,
+  PermissionsAndroid,
+  Platform
+} from 'react-native'
+import {
   NLUConfig,
   PipelineProfile,
   SpokestackConfig,
@@ -8,12 +15,6 @@ import {
   TraceLevel,
   WakewordConfig
 } from './types'
-import {
-  NativeEventEmitter,
-  NativeModules,
-  PermissionsAndroid,
-  Platform
-} from 'react-native'
 
 import resolveModelUrl from './resolveModelUrl'
 
@@ -190,6 +191,11 @@ interface SpokestackType {
    * The events are: "recognize", "partial_recognize", "error", "activate", "deactivate", and "timeout".
    * See the bottom of the README.md for descriptions of the events.
    *
+   * @param eventType name of the event for which we are registering listener
+   * @param listener the listener function
+   * @param context context of the listener
+   *
+   * @example
    * ```js
    * useEffect(() => {
    *   const listener = Spokestack.addEventListener('recognize', onRecognize)
@@ -200,25 +206,37 @@ interface SpokestackType {
    * }, [])
    * ```
    */
-  addEventListener: typeof emitter.addListener
+  addEventListener(
+    eventType: string,
+    listener: (event: any) => void,
+    context?: Object
+  ): EmitterSubscription
   /**
    * Remove an event listener
    *
+   * @param eventType - Name of the event to emit
+   * @param listener - Function to invoke when the specified event is emitted
+   *
+   * @example
    * ```js
    * Spokestack.removeEventListener('recognize', onRecognize)
    * ```
    */
-  removeEventListener: typeof emitter.removeListener
+  removeEventListener(
+    eventType: string,
+    listener: (...args: any[]) => any
+  ): void
   /**
    * Remove any existing listeners
    *
+   * @example
    * ```js
    * componentWillUnmount() {
    *   Spokestack.removeAllListeners()
    * }
    * ```
    */
-  removeAllListeners: () => void
+  removeAllListeners(): void
 }
 
 // This is necessary to allow usage where arguments may

@@ -96,15 +96,17 @@ export interface SpokestackNLUSlot {
   rawValue: string
 }
 
+export interface SpokestackNLUSlots {
+  [key: string]: SpokestackNLUSlot
+}
+
 export interface SpokestackNLUResult {
   /** The intent based on the match provided by the NLU model */
   intent: string
   /** A number from 0 to 1 representing the NLU model's confidence in the intent it recognized, where 1 represents absolute confidence. */
   confidence: number
   /** Data associated with the intent, provided by the NLU model */
-  slots: {
-    [key: string]: SpokestackNLUSlot
-  }
+  slots: SpokestackNLUSlots
 }
 
 export interface PipelineConfig {
