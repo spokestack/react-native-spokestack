@@ -365,8 +365,9 @@ class RNSpokestack: RCTEventEmitter, SpokestackDelegate {
                 for (pipelineKey, pipelineValue) in value as! Dictionary<String, Int> {
                     switch pipelineKey {
                     case "profile":
-                        speechPipelineBuilder = speechPipelineBuilder?.useProfile(SpeechPipelineProfiles(rawValue: pipelineValue) ??
-                                                                                    SpeechPipelineProfiles.pushToTalkAppleSpeech)
+                        let profile = SpeechPipelineProfiles(rawValue: pipelineValue) ?? SpeechPipelineProfiles.pushToTalkAppleSpeech;
+//                        debugPrint("Setting profile", profile.rawValue)
+                        speechPipelineBuilder = speechPipelineBuilder?.useProfile(profile)
                         break
                     case "sampleRate":
                         speechConfig.sampleRate = pipelineValue

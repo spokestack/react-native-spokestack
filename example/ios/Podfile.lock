@@ -206,7 +206,7 @@ PODS:
   - React-jsinspector (0.64.0)
   - react-native-spokestack (5.0.0):
     - React
-    - Spokestack-iOS (= 14.0.5)
+    - Spokestack-iOS (= 14.0.6)
   - React-perflogger (0.64.0)
   - React-RCTActionSheet (0.64.0):
     - React-Core/RCTActionSheetHeaders (= 0.64.0)
@@ -271,7 +271,7 @@ PODS:
     - React-cxxreact (= 0.64.0)
     - React-jsi (= 0.64.0)
     - React-perflogger (= 0.64.0)
-  - Spokestack-iOS (14.0.5):
+  - Spokestack-iOS (14.0.6):
     - filter_audio (~> 0.5.0)
     - TensorFlowLiteSwift (~> 2.3.0)
   - TensorFlowLiteC (2.3.0):
@@ -402,7 +402,7 @@ SPEC CHECKSUMS:
   React-jsi: 74341196d9547cbcbcfa4b3bbbf03af56431d5a1
   React-jsiexecutor: 06a9c77b56902ae7ffcdd7a4905f664adc5d237b
   React-jsinspector: 0ae35a37b20d5e031eb020a69cc5afdbd6406301
-  react-native-spokestack: 478811ca3abaf278a90e0d53d27d71f285e1b52f
+  react-native-spokestack: 445ef1665894ece308411d0d79fe6308178076a8
   React-perflogger: 9c547d8f06b9bf00cb447f2b75e8d7f19b7e02af
   React-RCTActionSheet: 3080b6e12e0e1a5b313c8c0050699b5c794a1b11
   React-RCTAnimation: 3f96f21a497ae7dabf4d2f150ee43f906aaf516f
@@ -415,7 +415,7 @@ SPEC CHECKSUMS:
   React-RCTVibration: 0fd6b21751a33cb72fce1a4a33ab9678416d307a
   React-runtimeexecutor: cad74a1eaa53ee6e7a3620231939d8fe2c6afcf0
   ReactCommon: cfe2b7fd20e0dbd2d1185cd7d8f99633fbc5ff05
-  Spokestack-iOS: 615ed65de54845e4e3b91dc593412adaf1332c68
+  Spokestack-iOS: 230301d67ff70d87d589cd8db915e2897a528a24
   TensorFlowLiteC: 51f50caf5777f740a70e2c1a5dbdc149e7aeb50b
   TensorFlowLiteSwift: fb152cc1eec36b25b03a23c07f5d58113170af58
   Yoga: 8c8436d4171c87504c648ae23b1d81242bdf3bbf
