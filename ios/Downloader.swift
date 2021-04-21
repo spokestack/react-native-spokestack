@@ -12,7 +12,7 @@ enum RNSpokestackDownloadError: Error {
     case networkNotAvailable
     case networkStatusNotAvailable
     case noResponse
-    case downloadUnsuccessful
+    case downloadUnsuccessful(Int)
     case documentsDirectoryNotAvailable
     case writeFailure
 }
@@ -26,8 +26,8 @@ extension RNSpokestackDownloadError: LocalizedError {
             return NSLocalizedString("The network status has not yet been set by iOS.", comment: "")
         case .noResponse:
             return NSLocalizedString("A download completed but there was no response.", comment: "")
-        case .downloadUnsuccessful:
-            return NSLocalizedString("A download request completed but was not a 200. Check the URL for typos.", comment: "")
+        case let .downloadUnsuccessful(statusCode):
+            return NSLocalizedString("A download request completed but returned a \(statusCode). Check the URL for typos.", comment: "")
         case .documentsDirectoryNotAvailable:
             return NSLocalizedString("The documents directory was not accesible. Please ensure react-native-spokestack has access for caching model files.", comment: "")
         case .writeFailure:
@@ -109,7 +109,7 @@ public class Downloader: NSObject {
                     complete(RNSpokestackDownloadError.writeFailure, destinationPath)
                 }
             } else {
-                complete(RNSpokestackDownloadError.downloadUnsuccessful, destinationPath)
+                complete(RNSpokestackDownloadError.downloadUnsuccessful(response.statusCode), destinationPath)
             }
         })
         task.resume()
