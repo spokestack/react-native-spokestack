@@ -261,8 +261,8 @@ class SpokestackModule(private val reactContext: ReactApplicationContext): React
       return
     }
     try {
-      spokestack?.start()
-      spokestack?.resume()
+      spokestack!!.start()
+      spokestack!!.resume()
       promise.resolve(null)
 
       // Send a start event for parity with iOS
