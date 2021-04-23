@@ -64,6 +64,7 @@ class SpokestackModule(private val reactContext: ReactApplicationContext): React
     if (reactContext.hasActiveCatalystInstance()) {
       when(event.toLowerCase()) {
         "error" -> {
+          Log.e(name, "Received error event with params: $params")
           // Reject all existing promises
           for ((key, promise) in promises) {
             promise.reject(Exception("Error in Spokestack during ${key.name}."))
@@ -98,14 +99,17 @@ class SpokestackModule(private val reactContext: ReactApplicationContext): React
   }
 
   private fun textToSpeech(input: String, format: Int, voice: String) {
+    if (!initialized()) {
+      throw Exception("Spokestack must be initialized before synthesizing text")
+    }
     if (format > 2 || format < 0) {
-      throw Exception(("A format of $format is not supported. Please use an int from 0 to 2 (or use the TTSFormat enum). Refer to documentation for further details."))
+      throw Exception("A format of $format is not supported. Please use an int from 0 to 2 (or use the TTSFormat enum). Refer to documentation for further details.")
     }
     val req = SynthesisRequest.Builder(input)
       .withMode(SynthesisRequest.Mode.values()[format])
       .withVoice(voice)
       .build()
-    spokestack?.synthesize(req)
+    spokestack!!.synthesize(req)
   }
 
   private fun initialized(): Boolean {
@@ -113,7 +117,8 @@ class SpokestackModule(private val reactContext: ReactApplicationContext): React
   }
 
   private fun started(): Boolean {
-    return initialized() && spokestack?.speechPipeline?.isRunning ?: false
+    val pipeline = spokestack?.speechPipeline
+    return initialized() && pipeline?.isRunning!! && !pipeline.isPaused
   }
 
   private fun activated(): Boolean {
@@ -257,6 +262,7 @@ class SpokestackModule(private val reactContext: ReactApplicationContext): React
     }
     try {
       spokestack?.start()
+      spokestack?.resume()
       promise.resolve(null)
 
       // Send a start event for parity with iOS
@@ -271,7 +277,9 @@ class SpokestackModule(private val reactContext: ReactApplicationContext): React
   @ReactMethod
   fun stop(promise: Promise) {
     try {
-      spokestack?.stop()
+      // Calling stop here is more destructive than we want
+      // and removes all references to TTS. Use pause instead.
+      spokestack?.pause()
       promise.resolve(null)
 
       // Send a stop event for parity with iOS
@@ -345,8 +353,12 @@ class SpokestackModule(private val reactContext: ReactApplicationContext): React
 
   @ReactMethod
   fun classify(utterance:String, promise: Promise) {
+    if (!initialized()) {
+      promise.reject(Exception("Call Spokestack.initialize() before calling Spokestack.classify()."))
+      return
+    }
     promises[SpokestackPromise.CLASSIFY] = promise
-    spokestack?.classify(utterance)
+    spokestack!!.classify(utterance)
   }
 
   @ReactMethod
