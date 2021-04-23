@@ -4,6 +4,7 @@ require_relative '../node_modules/@react-native-community/cli-platform-ios/nativ
 platform :ios, '13.0'
 
 # need to move 'Generate Specs' build_phase to be first for FBReactNativeSpec
+# See https://github.com/facebook/react-native/issues/31149
 post_install do |installer|
   installer.pods_project.targets.each do |target|
     if (target.name&.eql?('FBReactNativeSpec'))

@@ -204,7 +204,7 @@ PODS:
     - React-jsi (= 0.64.0)
     - React-perflogger (= 0.64.0)
   - React-jsinspector (0.64.0)
-  - react-native-spokestack (5.0.0):
+  - react-native-spokestack (6.0.0):
     - React
     - Spokestack-iOS (= 14.0.6)
   - React-perflogger (0.64.0)
@@ -402,7 +402,7 @@ SPEC CHECKSUMS:
   React-jsi: 74341196d9547cbcbcfa4b3bbbf03af56431d5a1
   React-jsiexecutor: 06a9c77b56902ae7ffcdd7a4905f664adc5d237b
   React-jsinspector: 0ae35a37b20d5e031eb020a69cc5afdbd6406301
-  react-native-spokestack: 445ef1665894ece308411d0d79fe6308178076a8
+  react-native-spokestack: 145319ac094ccf0206e11f2f64b6002193b1ffa7
   React-perflogger: 9c547d8f06b9bf00cb447f2b75e8d7f19b7e02af
   React-RCTActionSheet: 3080b6e12e0e1a5b313c8c0050699b5c794a1b11
   React-RCTAnimation: 3f96f21a497ae7dabf4d2f150ee43f906aaf516f
@@ -420,6 +420,6 @@ SPEC CHECKSUMS:
   TensorFlowLiteSwift: fb152cc1eec36b25b03a23c07f5d58113170af58
   Yoga: 8c8436d4171c87504c648ae23b1d81242bdf3bbf
 
-PODFILE CHECKSUM: 230942553b564ce935d51e9ba852c256e5dce99f
+PODFILE CHECKSUM: 552f2e41af218bca224798e83bb652e5d3e14691
 
 COCOAPODS: 1.10.1

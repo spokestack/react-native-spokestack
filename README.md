@@ -97,6 +97,8 @@ post_install do |installer|
 end
 ```
 
+#### pod install
+
 Remove your existing Podfile.lock and Pods folder to ensure no conflicts, then install the pods:
 
 ```sh
@@ -204,49 +206,6 @@ React Native already provides a module for this. See [React Native's Permissions
 
 </details>
 
-## Including model files in your app bundle
-
-To include model files locally in your app (rather than downloading them from a CDN), you also need to add the necessary extensions so
-the files can be included by Babel. To do this, edit your [`metro.config.js`](https://facebook.github.io/metro/docs/configuration/).
-
-```js
-const defaults = require('metro-config/src/defaults/defaults')
-
-module.exports = {
-  resolver: {
-    assetExts: defaults.assetExts.concat(['tflite', 'txt', 'sjson'])
-  }
-}
-```
-
-Then include model files using source objects:
-
-```js
-Spokestack.initialize(clientId, clientSecret, {
-  wakeword: {
-    filter: require('./filter.tflite'),
-    detect: require('./detect.tflite'),
-    encode: require('./encode.tflite')
-  },
-  nlu: {
-    model: require('./nlu.tflite'),
-    vocab: require('./vocab.txt'),
-    // Be sure not to use "json" here.
-    // We use a different extension (.sjson) so that the file is not
-    // immediately parsed as json and instead
-    // passes a require source object to Spokestack.
-    // The special extension is only necessary for local files.
-    metadata: require('./metadata.sjson')
-  }
-})
-```
-
-This is not required. Pass remote URLs to the same config options and the files will be downloaded and cached when first calling `initialize`.
-
-## Contributing
-
-See the [contributing guide](CONTRIBUTING.md) to learn how to contribute to the repository and the development workflow.
-
 ## Usage
 
 [Get started using Spokestack](https://www.spokestack.io/docs/React%20Native/getting-started), or check out our in-depth tutorials on [ASR](https://www.spokestack.io/docs/React%20Native/speech-pipeline), [NLU](https://www.spokestack.io/docs/React%20Native/nlu), and [TTS](https://www.spokestack.io/docs/React%20Native/tts). Also be sure to take a look at the [Cookbook](https://www.spokestack.io/docs/React%20Native/cookbook) for quick solutions to common problems.
@@ -290,6 +249,49 @@ function App() {
   )
 }
 ```
+
+## Including model files in your app bundle
+
+To include model files locally in your app (rather than downloading them from a CDN), you also need to add the necessary extensions so
+the files can be included by Babel. To do this, edit your [`metro.config.js`](https://facebook.github.io/metro/docs/configuration/).
+
+```js
+const defaults = require('metro-config/src/defaults/defaults')
+
+module.exports = {
+  resolver: {
+    assetExts: defaults.assetExts.concat(['tflite', 'txt', 'sjson'])
+  }
+}
+```
+
+Then include model files using source objects:
+
+```js
+Spokestack.initialize(clientId, clientSecret, {
+  wakeword: {
+    filter: require('./filter.tflite'),
+    detect: require('./detect.tflite'),
+    encode: require('./encode.tflite')
+  },
+  nlu: {
+    model: require('./nlu.tflite'),
+    vocab: require('./vocab.txt'),
+    // Be sure not to use "json" here.
+    // We use a different extension (.sjson) so that the file is not
+    // immediately parsed as json and instead
+    // passes a require source object to Spokestack.
+    // The special extension is only necessary for local files.
+    metadata: require('./metadata.sjson')
+  }
+})
+```
+
+This is not required. Pass remote URLs to the same config options and the files will be downloaded and cached when first calling `initialize`.
+
+## Contributing
+
+See the [contributing guide](CONTRIBUTING.md) to learn how to contribute to the repository and the development workflow.
 
 ---
 

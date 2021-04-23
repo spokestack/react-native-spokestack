@@ -16,7 +16,7 @@
     "pods": "cd example && npx pod-install --quiet",
     "prepare": "husky install && npm run build",
     "release": "release-it",
-    "test": "npm run lint && jest --runInBand",
+    "test": "npm run lint && npm run test:unit",
     "test:unit": "jest --runInBand",
     "test:watch": "jest --coverage --watchAll",
     "typescript": "tsc -p tsconfig.json --noEmit"
