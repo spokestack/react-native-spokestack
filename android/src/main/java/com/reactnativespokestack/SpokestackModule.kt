@@ -21,12 +21,16 @@ class SpokestackModule(private val reactContext: ReactApplicationContext): React
   private lateinit var audioPlayer: SpokestackTTSOutput
   private lateinit var downloader: Downloader
   private val filenameToProp = mapOf(
-    "filter.tflite" to "wake-filter-path",
     "detect.tflite" to "wake-detect-path",
     "encode.tflite" to "wake-encode-path",
+    "filter.tflite" to "wake-filter-path",
     "nlu.tflite" to "nlu-model-path",
     "metadata.json" to "nlu-metadata-path",
-    "vocab.txt" to "wordpiece-vocab-path"
+    "vocab.txt" to "wordpiece-vocab-path",
+    "keyword_detect.tflite" to "keyword-detect-path",
+    "keyword_encode.tflite" to "keyword-encode-path",
+    "keyword_filter.tflite" to "keyword-filter-path",
+    "keyword_metadata.json" to "keyword-metadata-path"
   )
   private val propToFilename = filenameToProp.entries.associateBy({ it.value }, { it.key })
 
@@ -53,7 +57,8 @@ class SpokestackModule(private val reactContext: ReactApplicationContext): React
     PTTNativeASR(PushToTalkAndroidASR::class.java),
     TFLiteWakewordSpokestackASR(TFWakewordSpokestackASR::class.java),
     VADSpokestackASR(VADTriggerSpokestackASR::class.java),
-    PTTSpokestackASR(PushToTalkSpokestackASR::class.java);
+    PTTSpokestackASR(PushToTalkSpokestackASR::class.java),
+    VADKeywordASR(VADTriggerKeywordASR::class.java);
     private val profile:Class<out PipelineProfile> = p
     fun value():String {
       return this.profile.name
@@ -177,14 +182,14 @@ class SpokestackModule(private val reactContext: ReactApplicationContext): React
         for (key in map.keys) {
           // Map JS keys to Android keys
           when (key) {
-            "filter" -> {
-              wakeDownloads[propToFilename["wake-filter-path"] as String] = map[key] as String
-            }
             "detect" -> {
               wakeDownloads[propToFilename["wake-detect-path"] as String] = map[key] as String
             }
             "encode" -> {
               wakeDownloads[propToFilename["wake-encode-path"] as String] = map[key] as String
+            }
+            "filter" -> {
+              wakeDownloads[propToFilename["wake-filter-path"] as String] = map[key] as String
             }
             "activeMin" -> builder.setProperty("wake-active-min", map[key])
             "activeMax" -> builder.setProperty("wake-active-max", map[key])
@@ -207,6 +212,50 @@ class SpokestackModule(private val reactContext: ReactApplicationContext): React
     } else {
       Log.d(name, "Not enough wakeword config files. Building without wakeword.")
       builder.withoutWakeword()
+    }
+
+    // Keyword
+    val keywordDownloads = mutableMapOf<String, String>()
+    if (config.hasKey("keyword")) {
+      val map = config.getMap("keyword")?.toHashMap()
+      if (map != null) {
+        for (key in map.keys) {
+          // Map JS keys to Android keys
+          when (key) {
+            "detect" -> {
+              keywordDownloads[propToFilename["keyword-detect-path"] as String] = map[key] as String
+            }
+            "encode" -> {
+              keywordDownloads[propToFilename["keyword-encode-path"] as String] = map[key] as String
+            }
+            "filter" -> {
+              keywordDownloads[propToFilename["keyword-filter-path"] as String] = map[key] as String
+            }
+            "metadata" -> {
+              keywordDownloads[propToFilename["keyword-metadata-path"] as String] = map[key] as String
+            }
+            "classes" -> builder.setProperty("keyword-classes", map[key])
+            "encodeLength" -> builder.setProperty("keyword-encode-length", map[key])
+            "encodeWidth" -> builder.setProperty("keyword-encode-width", map[key])
+            "fftWindowSize" -> builder.setProperty("keyword-fft-window-size", map[key])
+            "fftWindowType" -> builder.setProperty("keyword-fft-window-type", map[key])
+            "fftHopLength" -> builder.setProperty("keyword-fft-hop-length", map[key])
+            "melFrameLength" -> builder.setProperty("keyword-mel-frame-length", map[key])
+            "melFrameWidth" -> builder.setProperty("keyword-mel-frame-width", map[key])
+            "preEmphasis" -> builder.setProperty("keyword-pre-emphasis", map[key])
+            "stateWidth" -> builder.setProperty("keyword-state-width", map[key])
+            "threshold" -> builder.setProperty("keyword-threshold", map[key])
+          }
+        }
+      }
+    }
+
+    // Keyword at least needs filter, detect, and encode
+    if (keywordDownloads.size >= 3) {
+      Log.d(name, "Building with keyword.")
+      downloader.downloadAll(keywordDownloads).forEach { (filename, loc) ->
+        builder.setProperty(filenameToProp[filename], loc)
+      }
     }
 
     // NLU

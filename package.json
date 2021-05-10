@@ -10,7 +10,7 @@
   "scripts": {
     "bootstrap": "concurrently --raw \"npm i\" \"cd example && npm i\" && npm run pods",
     "build": "bob build",
-    "docs": "typedoc --excludePrivate --tsconfig tsconfig.typedoc.json --plugin typedoc-plugin-markdown --hideBreadcrumbs --out docs --readme none src/index.tsx && node tasks/docs.js",
+    "docs": "typedoc --excludePrivate --tsconfig tsconfig.typedoc.json --plugin typedoc-plugin-markdown --hideBreadcrumbs --out docs --readme none src/index.ts && node tasks/docs.js",
     "format": "prettier --write \"**/*.tsx\" \"**/*.ts\" \"**/*.js\" \"**/*.md\" \"**/*.json\"",
     "lint": "eslint \"**/*.{js,ts,tsx}\" && prettier --check \"**/*.md\" \"**/*.json\"",
     "pods": "cd example && npx pod-install --quiet",

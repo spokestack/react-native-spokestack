@@ -126,12 +126,12 @@ dependencies {
   // noinspection GradleDynamicVersion
   implementation 'com.facebook.react:react-native:+'
   implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinx_version"
-  api 'io.spokestack:spokestack-android:11.2.0'
+  api 'io.spokestack:spokestack-android:11.3.0'
 
   // for TensorFlow Lite-powered wakeword detection and/or NLU
   implementation 'org.tensorflow:tensorflow-lite:2.3.0'
 
   // for playback of TTS audio
-  implementation 'androidx.media:media:1.3.0'
+  implementation 'androidx.media:media:1.3.1'
   implementation 'com.google.android.exoplayer:exoplayer-core:2.13.3'
 }

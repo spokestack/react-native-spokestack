@@ -43,9 +43,16 @@ internal enum NLUDownloadProp: String, CaseIterable {
 }
 
 internal enum WakewordDownloadProp: String, CaseIterable {
-    case filterModelPath
     case detectModelPath
     case encodeModelPath
+    case filterModelPath
+}
+
+internal enum KeywordDownloadProp: String, CaseIterable {
+    case keywordDetectModelPath
+    case keywordEncodeModelPath
+    case keywordFilterModelPath
+    case keywordMetadataModelPath
 }
 
 @objc(RNSpokestack)
@@ -273,6 +280,7 @@ class RNSpokestack: RCTEventEmitter, SpokestackDelegate {
         speechPipelineBuilder = speechPipelineBuilder?.useProfile(SpeechPipelineProfiles.pushToTalkAppleSpeech)
         var nluDownloads: [URL:(Error?, String?) -> Void] = [:]
         var wakeDownloads: [URL:(Error?, String?) -> Void] = [:]
+        var keywordDownloads: [URL:(Error?, String?) -> Void] = [:]
         for (key, value) in config! {
             switch key {
             case "traceLevel":
@@ -300,10 +308,6 @@ class RNSpokestack: RCTEventEmitter, SpokestackDelegate {
             case "wakeword":
                 for (wakeKey, wakeValue) in value as! Dictionary<String, Any> {
                     switch wakeKey {
-                    case "filter":
-                        wakeDownloads[RCTConvert.nsurl(wakeValue)] = makeCompleteForModelDownload(
-                            speechProp: WakewordDownloadProp.filterModelPath.rawValue)
-                        break
                     case "detect":
                         wakeDownloads[RCTConvert.nsurl(wakeValue)] = makeCompleteForModelDownload(
                             speechProp: WakewordDownloadProp.detectModelPath.rawValue)
@@ -312,32 +316,29 @@ class RNSpokestack: RCTEventEmitter, SpokestackDelegate {
                         wakeDownloads[RCTConvert.nsurl(wakeValue)] = makeCompleteForModelDownload(
                             speechProp: WakewordDownloadProp.encodeModelPath.rawValue)
                         break
+                    case "filter":
+                        wakeDownloads[RCTConvert.nsurl(wakeValue)] = makeCompleteForModelDownload(
+                            speechProp: WakewordDownloadProp.filterModelPath.rawValue)
+                        break
                     case "activeMin":
                         speechConfig.wakeActiveMin = RCTConvert.nsInteger(wakeValue)
                         break
                     case "activeMax":
                         speechConfig.wakeActiveMax = RCTConvert.nsInteger(wakeValue)
                         break
-                    case "wakewords":
-                        speechConfig.wakewords = RCTConvert.nsString(wakeValue)
-                        break
                     case "requestTimeout":
                         speechConfig.wakewordRequestTimeout = RCTConvert.nsInteger(wakeValue)
                         break
-                    case "threshold":
-                        speechConfig.wakeThreshold = RCTConvert.nsNumber(wakeValue)!.floatValue
+                    case "wakewords":
+                        speechConfig.wakewords = RCTConvert.nsString(wakeValue)
                         break
+                        
+                    // Start advanced properties
                     case "encodeLength":
                         speechConfig.encodeLength = RCTConvert.nsInteger(wakeValue)
                         break
-                    case "stateWidth":
-                        speechConfig.stateWidth = RCTConvert.nsInteger(wakeValue)
-                        break
-                    case "rmsTarget":
-                        speechConfig.rmsTarget = RCTConvert.nsNumber(wakeValue)!.floatValue
-                        break
-                    case "rmsAlpha":
-                        speechConfig.rmsAlpha = RCTConvert.nsNumber(wakeValue)!.floatValue
+                    case "encodeWidth":
+                        speechConfig.encodeWidth = RCTConvert.nsInteger(wakeValue)
                         break
                     case "fftWindowSize":
                         speechConfig.fftWindowSize = RCTConvert.nsInteger(wakeValue)
@@ -349,14 +350,79 @@ class RNSpokestack: RCTEventEmitter, SpokestackDelegate {
                     case "fftHopLength":
                         speechConfig.fftHopLength = RCTConvert.nsInteger(wakeValue)
                         break
-                    case "preEmphasis":
-                        speechConfig.preEmphasis = RCTConvert.nsNumber(wakeValue)!.floatValue
-                        break
                     case "melFrameLength":
                         speechConfig.melFrameLength = RCTConvert.nsInteger(wakeValue)
                         break
                     case "melFrameWidth":
                         speechConfig.melFrameWidth = RCTConvert.nsInteger(wakeValue)
+                        break
+                    case "preEmphasis":
+                        speechConfig.preEmphasis = RCTConvert.nsNumber(wakeValue)!.floatValue
+                        break
+                    case "stateWidth":
+                        speechConfig.stateWidth = RCTConvert.nsInteger(wakeValue)
+                        break
+                    case "threshold":
+                        speechConfig.wakeThreshold = RCTConvert.nsNumber(wakeValue)!.floatValue
+                        break
+                    default:
+                        break
+                    }
+                }
+            case "keyword":
+                for (keywordKey, keywordValue) in value as! Dictionary<String, Any> {
+                    switch keywordKey {
+                    case "detect":
+                        keywordDownloads[RCTConvert.nsurl(keywordValue)] = makeCompleteForModelDownload(
+                            speechProp: KeywordDownloadProp.keywordDetectModelPath.rawValue)
+                        break
+                    case "encode":
+                        keywordDownloads[RCTConvert.nsurl(keywordValue)] = makeCompleteForModelDownload(
+                            speechProp: KeywordDownloadProp.keywordEncodeModelPath.rawValue)
+                        break
+                    case "filter":
+                        keywordDownloads[RCTConvert.nsurl(keywordValue)] = makeCompleteForModelDownload(
+                            speechProp: KeywordDownloadProp.keywordFilterModelPath.rawValue)
+                        break
+                    case "metadata":
+                        keywordDownloads[RCTConvert.nsurl(keywordValue)] = makeCompleteForModelDownload(
+                            speechProp: KeywordDownloadProp.keywordMetadataModelPath.rawValue)
+                        break
+                    case "classes":
+                        speechConfig.keywords = RCTConvert.nsString(keywordValue)
+                        break
+                    
+                    // Start advanced properties
+                    case "encodeLength":
+                        speechConfig.keywordEncodeLength = RCTConvert.nsInteger(keywordValue)
+                        break
+                    case "encodeWidth":
+                        speechConfig.keywordEncodeWidth = RCTConvert.nsInteger(keywordValue)
+                        break
+                    case "fftWindowSize":
+                        speechConfig.keywordFFTWindowSize = RCTConvert.nsInteger(keywordValue)
+                        break
+                    case "fftWindowType":
+                        speechConfig.keywordFFTWindowType = SignalProcessing.FFTWindowType(rawValue: RCTConvert.nsString(keywordValue))
+                            ?? SignalProcessing.FFTWindowType.hann
+                        break
+                    case "fftHopLength":
+                        speechConfig.keywordFFTHopLength = RCTConvert.nsInteger(keywordValue)
+                        break
+                    case "melFrameLength":
+                        speechConfig.keywordMelFrameLength = RCTConvert.nsInteger(keywordValue)
+                        break
+                    case "melFrameWidth":
+                        speechConfig.keywordMelFrameWidth = RCTConvert.nsInteger(keywordValue)
+                        break
+                    case "preEmphasis":
+                        speechConfig.preEmphasis = RCTConvert.nsNumber(keywordValue)!.floatValue
+                        break
+                    case "stateWidth":
+                        speechConfig.stateWidth = RCTConvert.nsInteger(keywordValue)
+                        break
+                    case "threshold":
+                        speechConfig.keywordThreshold = RCTConvert.nsNumber(keywordValue)!.floatValue
                         break
                     default:
                         break
@@ -405,19 +471,21 @@ class RNSpokestack: RCTEventEmitter, SpokestackDelegate {
             resolvers[RNSpokestackPromise.initialize] = resolve
             rejecters[RNSpokestackPromise.initialize] = reject
 
-            // Set to total before starting requests
-            // in case the downloader returns the cached version synchronously.
-            // This avoids wakeword building the pipeline before moving on to NLU
-            numRequests = (wakeDownloads.count == WakewordDownloadProp.allCases.count ? wakeDownloads.count : 0) +
-                (nluDownloads.count == NLUDownloadProp.allCases.count ? nluDownloads.count : 0)
-
             if wakeDownloads.count == 3 {
+                numRequests += wakeDownloads.count
                 wakeDownloads.forEach { (url, complete) in
+                    d.downloadModel(url, complete)
+                }
+            }
+            if keywordDownloads.count >= 3 {
+                numRequests += keywordDownloads.count
+                keywordDownloads.forEach { (url, complete) in
                     d.downloadModel(url, complete)
                 }
             }
             if nluDownloads.count == 3 {
                 makeClassifer = true
+                numRequests += nluDownloads.count
                 nluDownloads.forEach { (url, complete) in
                     d.downloadModel(url, complete)
                 }
