@@ -39,7 +39,16 @@ export enum PipelineProfile {
    * This is likely the more common profile
    * when not using wakeword, but Spokestack ASR is preferred.
    */
-  PTT_SPOKESTACK_ASR = 5
+  PTT_SPOKESTACK_ASR = 5,
+  /**
+   * VAD-sensitive TFLiteWakeword activates TFLite Keyword Recognizer
+   * This is not yet supported on android
+   */
+  // TFLITE_WAKEWORD_KEYWORD = 6,
+  /**
+   * VAD-triggered TFLite Keyword Recognizer
+   */
+  VAD_KEYWORD_ASR = 7
 }
 
 /**
@@ -112,8 +121,10 @@ export interface SpokestackNLUResult {
 export interface PipelineConfig {
   /**
    * Profiles are collections of common configurations for Pipeline stages.
-   * If Wakeword config files are specified, the default will be
+   * If Wakeword config files are specified, the default will be set to
    * `TFLITE_WAKEWORD_NATIVE_ASR`.
+   * If Keyword config files are specified, the default will be set to
+   * `VAD_KEYWORD_ASR`.
    * Otherwise, the default is `PTT_NATIVE_ASR`.
    */
   profile?: PipelineProfile
@@ -180,7 +191,7 @@ export interface PipelineConfig {
   agcTargetLevelDbfs?: number
 }
 
-export interface NLUConfig {
+export interface NLUSourceConfig {
   /**
    * The NLU Tensorflow-Lite model. If specified, metadata and vocab are also required.
    *
@@ -194,7 +205,11 @@ export interface NLUConfig {
    *
    * This field accepts 2 types of values.
    * 1. A string representing a remote URL from which to download and cache the file (presumably from a CDN).
-   * 2. A source object retrieved by a `require` or `import` (e.g. `metadata: require('./metadata.json')`)
+   * 2. A source object retrieved by a `require` or `import` (e.g. `metadata: require('./metadata.sjson')`).
+   *
+   * **IMPORTANT: a special extension is used for local metadata JSON files (`.sjson`) when using `require` or `import`
+   *   so the file is not parsed when included but instead imported as a source object. This makes it so the
+   *   file is read and parsed by the underlying native libraries instead.**
    */
   metadata: string | RequireSource
   /**
@@ -205,6 +220,9 @@ export interface NLUConfig {
    * 2. A source object retrieved by a `require` or `import` (e.g. `vocab: require('./vocab.txt')`)
    */
   vocab: string | RequireSource
+}
+
+export interface NLUAdvancedConfig {
   /*
    * @advanced
    *
@@ -217,7 +235,9 @@ export interface NLUConfig {
   inputLength?: number
 }
 
-export interface WakewordConfig {
+export type NLUConfig = NLUSourceConfig & NLUAdvancedConfig
+
+export interface CommandModelSourceConfig {
   /**
    * The "filter" Tensorflow-Lite model. If specified, detect and encode are also required.
    *
@@ -252,37 +272,9 @@ export interface WakewordConfig {
    * and its outputs
    */
   encode: string | RequireSource
-  /**
-   * The minimum length of an activation, in milliseconds,
-   * used to ignore a VAD deactivation after the wakeword
-   */
-  activeMin?: number
-  /**
-   * The maximum length of an activation, in milliseconds,
-   * used to time out the activation
-   */
-  activeMax?: number
-  /**
-   * iOS-only
-   *
-   * A comma-separated list of wakeword keywords
-   * Only necessary when not passing the filter, detect, and encode paths.
-   */
-  wakewords?: string
-  /**
-   * iOS-only
-   *
-   * Length of time to allow an Apple ASR request to run, in milliseconds.
-   * Apple has an undocumented limit of 60000ms per request.
-   */
-  requestTimeout?: number
-  /**
-   * @advanced
-   *
-   * The threshold of the classifier's posterior output,
-   * above which the trigger activates the pipeline, in the range [0, 1]
-   */
-  threshold?: number
+}
+
+export interface CommandModelAdvancedConfig {
   /**
    * @advanced
    *
@@ -296,29 +288,6 @@ export interface WakewordConfig {
    * The size of the encoder output, in vector units
    */
   encodeWidth?: number
-  /**
-   * @advanced
-   *
-   * The size of the encoder state, in vector units (defaults to wake-encode-width)
-   */
-  stateWidth?: number
-  /**
-   * @advanced
-   * @deprecated No longer used by the underlying library.
-   *
-   * The desired linear Root Mean Squared (RMS) signal energy,
-   * which is used for signal normalization and should be tuned
-   * to the RMS target used during training
-   */
-  rmsTarget?: number
-  /**
-   * @advanced
-   * @deprecated No longer used by the underlying library.
-   *
-   * The Exponentially-Weighted Moving Average (EWMA) update
-   * rate for the current RMS signal energy (0 for no RMS normalization)
-   */
-  rmsAlpha?: number
   /**
    * @advanced
    *
@@ -345,13 +314,6 @@ export interface WakewordConfig {
   /**
    * @advanced
    *
-   * The pre-emphasis filter weight to apply to
-   * the normalized audio signal (0 for no pre-emphasis)
-   */
-  preEmphasis?: number
-  /**
-   * @advanced
-   *
    * The length of time to skip each time the
    * overlapping STFT is calculated, in milliseconds
    */
@@ -363,7 +325,115 @@ export interface WakewordConfig {
    * in number of filterbank components
    */
   melFrameWidth?: number
+  /**
+   * @advanced
+   *
+   * The pre-emphasis filter weight to apply to
+   * the normalized audio signal (0 for no pre-emphasis)
+   */
+  preEmphasis?: number
+  /**
+   * @advanced
+   *
+   * The size of the encoder state, in vector units (defaults to wake-encode-width)
+   */
+  stateWidth?: number
+  /**
+   * @advanced
+   *
+   * The threshold of the classifier's posterior output,
+   * above which the trigger activates the pipeline, in the range [0, 1]
+   */
+  threshold?: number
 }
+
+export interface WakewordOnlyConfig {
+  /**
+   * @advanced
+   *
+   * The minimum length of an activation, in milliseconds,
+   * used to ignore a VAD deactivation after the wakeword
+   */
+  activeMin?: number
+  /**
+   * @advanced
+   *
+   * The maximum length of an activation, in milliseconds,
+   * used to time out the activation
+   */
+  activeMax?: number
+  /**
+   * iOS-only
+   *
+   * Length of time to allow an Apple ASR request to run, in milliseconds.
+   * Apple has an undocumented limit of 60000ms per request.
+   */
+  requestTimeout?: number
+  /**
+   * @advanced
+   * Android-only
+   *
+   * The desired linear Root Mean Squared (RMS) signal energy,
+   * which is used for signal normalization and should be tuned
+   * to the RMS target used during training
+   */
+  rmsTarget?: number
+  /**
+   * @advanced
+   * Android-only
+   *
+   * The Exponentially-Weighted Moving Average (EWMA) update
+   * rate for the current RMS signal energy (0 for no RMS normalization)
+   */
+  rmsAlpha?: number
+  /**
+   * iOS-only
+   *
+   * An ordered array or comma-separated list of wakeword keywords
+   * Only necessary when not passing the filter, detect, and encode paths.
+   */
+  wakewords?: string | string[]
+}
+
+export type WakewordConfig = CommandModelSourceConfig &
+  CommandModelAdvancedConfig &
+  WakewordOnlyConfig
+
+export interface KeywordMetadataConfig {
+  /**
+   * The JSON file for Keyword metadata.
+   * Required if `keyword.classes` is not specified.
+   *
+   * This field accepts 2 types of values.
+   * 1. A string representing a remote URL from which to download and cache the file (presumably from a CDN).
+   * 2. A source object retrieved by a `require` or `import` (e.g. `metadata: require('./metadata.sjson')`).
+   *
+   * **IMPORTANT: a special extension is used for local metadata JSON files (`.sjson`) when using `require` or `import`
+   *   so the file is not parsed when included but instead imported as a source object. This makes it so the
+   *   file is read and parsed by the underlying native libraries instead.**
+   */
+  metadata: string | RequireSource
+}
+
+export interface KeywordClassesConfig {
+  /**
+   * A comma-separated list or an ordered array of class names for the keywords.
+   * The name corresponding to the most likely class will be returned
+   * in the transcript field when the recognition event is raised.
+   * Required if `keyword.metadata` is not specified.
+   */
+  classes: string | string[]
+}
+
+export type KeywordWithMetadataConfig = CommandModelSourceConfig &
+  CommandModelAdvancedConfig &
+  KeywordMetadataConfig
+
+export type KeywordWithClassesConfig = CommandModelSourceConfig &
+  CommandModelAdvancedConfig &
+  KeywordClassesConfig
+
+export type KeywordConfig = KeywordWithMetadataConfig | KeywordWithClassesConfig
 
 /**
  * Spokestack-iOS reference: https://spokestack.github.io/spokestack-ios/index.html
@@ -384,7 +454,7 @@ export interface SpokestackConfig {
    */
   allowCellularDownloads?: boolean
   /**
-   * Wakeword and NLU model files are cached internally.
+   * Wakeword, Keyword, and NLU model files are cached internally.
    * Set this to true whenever a model is changed
    * during development to refresh the internal model cache.
    *
@@ -419,6 +489,18 @@ export interface SpokestackConfig {
    * Only required for wakeword
    * Most options are advanced aside from
    * filter, encode, and decode for specifying config files.
+   *
+   * Keyword and wakeword should not be used together.
+   * Specify one or the other.
    */
   wakeword?: WakewordConfig
+  /**
+   * Only required for the keyword recognizer
+   * Most options are advanced aside from
+   * filter, encode, decode, metadata, and classes.
+   *
+   * Keyword and wakeword should not be used together.
+   * Specify one or the other.
+   */
+  keyword?: KeywordConfig
 }

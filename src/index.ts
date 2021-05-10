@@ -6,6 +6,9 @@ import {
   Platform
 } from 'react-native'
 import {
+  KeywordConfig,
+  KeywordWithClassesConfig,
+  KeywordWithMetadataConfig,
   NLUConfig,
   PipelineProfile,
   SpokestackConfig,
@@ -292,29 +295,85 @@ Spokestack.initialize = (
   if (typeof config.refreshModels !== 'boolean') {
     config.refreshModels = __DEV__
   }
+
+  /**
+   * Wakeword
+   */
+
   // Resolve source objects to URLs for local downloads
   const wakewordConfig = (config.wakeword || {}) as WakewordConfig
-  if (wakewordConfig.filter && typeof wakewordConfig.filter !== 'string') {
-    wakewordConfig.filter = resolveModelUrl(wakewordConfig.filter)
-  }
-  if (wakewordConfig.detect && typeof wakewordConfig.detect !== 'string') {
+  if (typeof wakewordConfig.detect === 'number') {
     wakewordConfig.detect = resolveModelUrl(wakewordConfig.detect)
   }
-  if (wakewordConfig.encode && typeof wakewordConfig.encode !== 'string') {
+  if (typeof wakewordConfig.encode === 'number') {
     wakewordConfig.encode = resolveModelUrl(wakewordConfig.encode)
   }
-  // Default the profile to one supporting wakeword
-  // if wakeword config files are specified
-  // and no profile was set.
-  if (
+  if (typeof wakewordConfig.filter === 'number') {
+    wakewordConfig.filter = resolveModelUrl(wakewordConfig.filter)
+  }
+  // Convert wakewords to a comma-separated list if an array
+  if (Array.isArray(wakewordConfig.wakewords)) {
+    wakewordConfig.wakewords = wakewordConfig.wakewords.join(',')
+  }
+  const hasWakeword = !!(
     wakewordConfig.filter &&
     wakewordConfig.detect &&
-    wakewordConfig.encode &&
-    !config.pipeline?.profile
-  ) {
-    config.pipeline = config.pipeline || {}
-    config.pipeline.profile = PipelineProfile.TFLITE_WAKEWORD_NATIVE_ASR
+    wakewordConfig.encode
+  )
+
+  /**
+   * Keyword
+   */
+
+  // Resolve source objects to URLs for local downloads
+  const keywordConfig = (config.keyword || {}) as KeywordConfig
+  if (typeof keywordConfig.detect === 'number') {
+    keywordConfig.detect = resolveModelUrl(keywordConfig.detect)
   }
+  if (typeof keywordConfig.encode === 'number') {
+    keywordConfig.encode = resolveModelUrl(keywordConfig.encode)
+  }
+  if (typeof keywordConfig.filter === 'number') {
+    keywordConfig.filter = resolveModelUrl(keywordConfig.filter)
+  }
+  const keywordMetadataConfig = keywordConfig as KeywordWithMetadataConfig
+  if (typeof keywordMetadataConfig.metadata === 'number') {
+    keywordMetadataConfig.metadata = resolveModelUrl(
+      keywordMetadataConfig.metadata
+    )
+  }
+  const keywordClassesConfig = keywordConfig as KeywordWithClassesConfig
+  // Convert classes to a comma-separated list if an array
+  if (Array.isArray(keywordClassesConfig.classes)) {
+    keywordClassesConfig.classes = keywordClassesConfig.classes.join(',')
+  }
+  const hasKeyword = !!(
+    keywordConfig.filter &&
+    keywordConfig.detect &&
+    keywordConfig.encode &&
+    (keywordClassesConfig.classes || keywordMetadataConfig.metadata)
+  )
+
+  // Set default profile based on presence of wakeword or keyword config
+  // Do not set a default if profile is set explicitly
+  if (!config.pipeline?.profile) {
+    config.pipeline = config.pipeline || {}
+    if (hasWakeword && !hasKeyword) {
+      config.pipeline.profile = PipelineProfile.TFLITE_WAKEWORD_NATIVE_ASR
+    } else if (hasKeyword && !hasWakeword) {
+      config.pipeline.profile = PipelineProfile.VAD_KEYWORD_ASR
+    }
+  }
+
+  if (hasWakeword && hasKeyword) {
+    throw new Error(
+      'It looks like you are trying to use both wakeword and keyword. Please specify one or the other.'
+    )
+  }
+
+  /**
+   * NLU
+   */
   const nluConfig = (config.nlu || {}) as NLUConfig
   if (typeof nluConfig.model === 'number') {
     nluConfig.model = resolveModelUrl(nluConfig.model)

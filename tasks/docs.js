@@ -25,9 +25,6 @@ function addLinks(data) {
       /\bSpokestackConfig([^.])/g,
       '[SpokestackConfig](#SpokestackConfig)$1'
     )
-    .replace(/\bNLUConfig([^.])/g, '[NLUConfig](#NLUConfig)$1')
-    .replace(/\bPipelineConfig([^.])/g, '[PipelineConfig](#PipelineConfig)$1')
-    .replace(/\bWakewordConfig([^.])/g, '[WakewordConfig](#WakewordConfig)$1')
 }
 
 function redoLinks(data) {
@@ -51,12 +48,14 @@ function getFunctions(functions) {
     .join('\n\n')
 }
 
-function getInterfaceContent(filename) {
+function getInterfaceContent(filename, customHeader) {
   return removeLinks(
     read(`../docs/interfaces/${filename}`)
-      .replace(/# Interface:\s*(.+)[^]+##\s*Properties/, '#### $1')
+      .replace(
+        /# Interface:\s*(.+)[^]+##\s*Properties/,
+        typeof customHeader === 'string' ? customHeader : '## $1'
+      )
       .replace(/___/g, '')
-      .replace(/\n### /g, '\n##### ')
       // Remove superfluous type declarations
       .replace(/#### Type declaration:[^]+?▸ .+/g, '')
       // Remove double "Defined in"
@@ -122,9 +121,30 @@ ${read('../src/types.ts').match(/interface SpokestackConfig[^}]+\}/)[0]}
 `
 data += getEnumContent('tracelevel.md')
 data += getEnumContent('pipelineprofile.md')
-data += getInterfaceContent('pipelineconfig.md')
-data += getInterfaceContent('nluconfig.md')
-data += getInterfaceContent('wakewordconfig.md')
+data += getInterfaceContent('pipelineconfig.md', '\n\n## Pipeline Config')
+data += getInterfaceContent('nlusourceconfig.md', '\n\n## NLU Config')
+data += getInterfaceContent('nluadvancedconfig.md', '')
+data += getInterfaceContent(
+  'commandmodelsourceconfig.md',
+  '\n\n## Wakeword Config' +
+    '\nWakeword and keyword are mutually exclusive. Only specify one or the other.'
+)
+data += getInterfaceContent('wakewordonlyconfig.md', '')
+data += getInterfaceContent(
+  'commandmodelsourceconfig.md',
+  '\n\n## Keyword Config' +
+    '\nWakeword and keyword are mutually exclusive. Only specify one or the other.'
+)
+data += getInterfaceContent(
+  'keywordmetadataconfig.md',
+  '\n\nEither `metadata` or `classes` is required, and they are exclusive.'
+)
+data += getInterfaceContent('keywordclassesconfig.md', '')
+data += getInterfaceContent(
+  'commandmodeladvancedconfig.md',
+  '\n\n## Advanced Wakeword and Keyword Config' +
+    '\n\nThese properties can be passed to either the `wakeword` or `keyword` config object.'
+)
 
 // Add license info
 data += `\n---\n\n ## License\n\nApache-2.0\n\nCopyright ${new Date().getFullYear()} Spokestack\n`
