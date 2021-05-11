@@ -84,13 +84,17 @@ let data =
 // Add Spokestack methods from README
 data += getFunctions([
   'initialize',
+  'destroy',
   'start',
   'stop',
   'activate',
   'deactivate',
   'synthesize',
   'speak',
-  'classify'
+  'classify',
+  'isInitialized',
+  'isStarted',
+  'isActivated'
 ])
 
 data += getInterfaceContent('spokestacknluresult.md')

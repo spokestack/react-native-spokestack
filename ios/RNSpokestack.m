@@ -46,4 +46,7 @@ RCT_EXTERN_METHOD(isStarted:(RCTPromiseResolveBlock)resolve
 RCT_EXTERN_METHOD(isActivated:(RCTPromiseResolveBlock)resolve
                   withRejecter:(RCTPromiseRejectBlock)reject)
 
+RCT_EXTERN_METHOD(destroy:(RCTPromiseResolveBlock)resolve
+                  withRejecter:(RCTPromiseRejectBlock)reject)
+
 @end

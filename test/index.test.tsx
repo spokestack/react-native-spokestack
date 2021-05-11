@@ -4,6 +4,7 @@ const synthesize = jest.fn()
 const speak = jest.fn()
 NativeModules.Spokestack = {
   initialize,
+  destroy: jest.fn(),
   start: jest.fn(),
   stop: jest.fn(),
   activate: jest.fn(),
@@ -24,6 +25,7 @@ const testInput = 'Hello world'
 describe('Index', () => {
   it('has all expected exports', () => {
     expect(Spokestack.initialize).toBeDefined()
+    expect(Spokestack.destroy).toBeDefined()
     expect(Spokestack.start).toBeDefined()
     expect(Spokestack.stop).toBeDefined()
     expect(Spokestack.activate).toBeDefined()

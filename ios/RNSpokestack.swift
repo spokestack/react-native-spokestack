@@ -470,22 +470,30 @@ class RNSpokestack: RCTEventEmitter, SpokestackDelegate {
             // from the cache and the last one builds the pipeline
             resolvers[RNSpokestackPromise.initialize] = resolve
             rejecters[RNSpokestackPromise.initialize] = reject
+            let doWakeword = wakeDownloads.count == 3
+            let doKeyword = keywordDownloads.count >= 3
+            let doNLU = nluDownloads.count == 3
+            
+            // Set all request counts up-front
+            // in case some downloads complete synchronously
+            // from cache. This avoids building the pipeline
+            // before all downloads finish.
+            numRequests = (doWakeword ? wakeDownloads.count : 0) +
+                (doKeyword ? keywordDownloads.count : 0) +
+                (doNLU ? nluDownloads.count : 0)
 
-            if wakeDownloads.count == 3 {
-                numRequests += wakeDownloads.count
+            if doWakeword {
                 wakeDownloads.forEach { (url, complete) in
                     d.downloadModel(url, complete)
                 }
             }
-            if keywordDownloads.count >= 3 {
-                numRequests += keywordDownloads.count
+            if doKeyword {
                 keywordDownloads.forEach { (url, complete) in
                     d.downloadModel(url, complete)
                 }
             }
-            if nluDownloads.count == 3 {
+            if doNLU {
                 makeClassifer = true
-                numRequests += nluDownloads.count
                 nluDownloads.forEach { (url, complete) in
                     d.downloadModel(url, complete)
                 }
@@ -633,5 +641,24 @@ class RNSpokestack: RCTEventEmitter, SpokestackDelegate {
         } else {
             resolve(false)
         }
+    }
+    
+    /// Destroys the speech pipeline and frees up all resources
+    @objc(destroy:withRejecter:)
+    func destroy(resolve: @escaping RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
+        if let pipeline = speechPipeline {
+            pipeline.stop()
+            speechPipeline = nil
+            
+            synthesizer?.stopSpeaking()
+            synthesizer = nil
+            
+            classifier = nil
+            
+            downloader = nil
+            
+            speechContext = nil
+        }
+        resolve(nil)
     }
 }
