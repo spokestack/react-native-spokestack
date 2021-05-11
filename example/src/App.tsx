@@ -85,12 +85,13 @@ export default function App() {
 
     return () => {
       Spokestack.removeAllListeners()
+      Spokestack.stop()
     }
   }, [])
 
   return (
     <View style={styles.container}>
-      <View style={styles.instructions}>
+      <View>
         <Text style={styles.instructionText}>Tap "Listen" to talk</Text>
         <Text style={styles.instructionText}>
           This example uses a sample NLU model for Minecraft. To begin, tap
@@ -134,7 +135,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 20
   },
-  instructions: {},
   instructionText: {
     fontSize: 18,
     textAlign: 'center',
