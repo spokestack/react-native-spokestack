@@ -16,10 +16,10 @@ import javax.annotation.Nullable
 class SpokestackModule(private val reactContext: ReactApplicationContext): ReactContextBaseJavaModule(reactContext) {
   private val adapter = SpokestackAdapter { event: String, data: WritableMap -> sendEvent(event, data) }
   private var spokestack: Spokestack? = null
+  private var audioPlayer: SpokestackTTSOutput? = null
+  private var downloader: Downloader? = null
   private val promises = mutableMapOf<SpokestackPromise, Promise>()
   private var say: ((url: String) -> Unit)? = null
-  private lateinit var audioPlayer: SpokestackTTSOutput
-  private lateinit var downloader: Downloader
   private val filenameToProp = mapOf(
     "detect.tflite" to "wake-detect-path",
     "encode.tflite" to "wake-encode-path",
@@ -206,7 +206,7 @@ class SpokestackModule(private val reactContext: ReactApplicationContext): React
     // Wakeword needs all three config paths
     if (wakeDownloads.size == 3) {
       Log.d(name, "Building with wakeword.")
-      downloader.downloadAll(wakeDownloads).forEach { (filename, loc) ->
+      downloader!!.downloadAll(wakeDownloads).forEach { (filename, loc) ->
         builder.setProperty(filenameToProp[filename], loc)
       }
     } else {
@@ -253,7 +253,7 @@ class SpokestackModule(private val reactContext: ReactApplicationContext): React
     // Keyword at least needs filter, detect, and encode
     if (keywordDownloads.size >= 3) {
       Log.d(name, "Building with keyword.")
-      downloader.downloadAll(keywordDownloads).forEach { (filename, loc) ->
+      downloader!!.downloadAll(keywordDownloads).forEach { (filename, loc) ->
         builder.setProperty(filenameToProp[filename], loc)
       }
     }
@@ -283,7 +283,7 @@ class SpokestackModule(private val reactContext: ReactApplicationContext): React
 
     if (nluDownloads.size == 3) {
       Log.d(name, "Building with NLU.")
-      downloader.downloadAll(nluDownloads).forEach { (filename, loc) ->
+      downloader!!.downloadAll(nluDownloads).forEach { (filename, loc) ->
         builder.setProperty(filenameToProp[filename], loc)
       }
     } else {
@@ -296,8 +296,8 @@ class SpokestackModule(private val reactContext: ReactApplicationContext): React
 
     // Initialize the audio player for speaking
     audioPlayer = SpokestackTTSOutput(null)
-    audioPlayer.setAndroidContext(reactContext.applicationContext)
-    audioPlayer.addListener(adapter)
+    audioPlayer!!.setAndroidContext(reactContext.applicationContext)
+    audioPlayer!!.addListener(adapter)
 
     spokestack = builder.build()
     promise.resolve(null)
@@ -381,12 +381,16 @@ class SpokestackModule(private val reactContext: ReactApplicationContext): React
 
   @ReactMethod
   fun speak(input: String, format: Int, voice: String, promise: Promise) {
+    if (!initialized()) {
+      promise.reject(Exception("Call Spokestack.initialize() before calling Spokestack.speak()."))
+      return
+    }
     promises[SpokestackPromise.SPEAK] = promise
     say = { url ->
       Log.d(name,"Playing audio from URL: $url")
       val uri = Uri.parse(url)
       val response = AudioResponse(uri)
-      audioPlayer.audioReceived(response)
+      audioPlayer?.audioReceived(response)
 
       // Resolve RN promise
       promise.resolve(null)
@@ -423,5 +427,19 @@ class SpokestackModule(private val reactContext: ReactApplicationContext): React
   @ReactMethod
   fun isActivated(promise: Promise) {
     promise.resolve(activated())
+  }
+
+  @ReactMethod
+  fun destroy(promise: Promise) {
+    spokestack?.close()
+    spokestack?.removeListener(adapter)
+    spokestack = null
+
+    audioPlayer?.close()
+    audioPlayer = null
+
+    downloader = null
+
+    promise.resolve(null)
   }
 }

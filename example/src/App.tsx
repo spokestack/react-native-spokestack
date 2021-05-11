@@ -37,30 +37,23 @@ export default function App() {
     }
     // This example app demonstrates both ways
     // to pass model files, but we recommend using one or the other.
-    Spokestack.initialize(clientId, clientSecret, {
-      wakeword: {
-        filter: require('../models/filter.tflite'),
-        detect: require('../models/detect.tflite'),
-        encode: require('../models/encode.tflite')
-      },
-      nlu: {
-        model: 'https://s.spokestack.io/u/7fYxV/nlu.tflite',
-        metadata: require('../models/metadata.sjson'),
-        vocab: require('../models/vocab.txt')
-      }
-    })
-      .then(Spokestack.start)
-      .then(async () => {
-        console.log(`Initialized: ${await Spokestack.isInitialized()}`)
-        console.log(`Started: ${await Spokestack.isStarted()}`)
-        console.log(`Activated: ${await Spokestack.isActivated()}`)
+    try {
+      await Spokestack.initialize(clientId, clientSecret, {
+        wakeword: {
+          filter: require('../models/filter.tflite'),
+          detect: require('../models/detect.tflite'),
+          encode: require('../models/encode.tflite')
+        },
+        nlu: {
+          model: 'https://s.spokestack.io/u/7fYxV/nlu.tflite',
+          metadata: require('../models/metadata.sjson'),
+          vocab: require('../models/vocab.txt')
+        }
       })
-      .catch((error) => {
-        setError(error.message)
-      })
-  }
-
-  React.useEffect(() => {
+    } catch (e) {
+      console.error(e)
+      setError(e.message)
+    }
     Spokestack.addEventListener('activate', () => setListening(true))
     Spokestack.addEventListener('deactivate', () => setListening(false))
     Spokestack.addEventListener(
@@ -80,12 +73,22 @@ export default function App() {
     Spokestack.addEventListener('play', ({ playing }: SpokestackPlayEvent) =>
       setPlaying(playing)
     )
+    try {
+      await Spokestack.start()
+      console.log(`Initialized: ${await Spokestack.isInitialized()}`)
+      console.log(`Started: ${await Spokestack.isStarted()}`)
+      console.log(`Activated: ${await Spokestack.isActivated()}`)
+    } catch (e) {
+      console.error(e)
+      setError(e.message)
+    }
+  }
 
+  React.useEffect(() => {
     init()
 
     return () => {
-      Spokestack.removeAllListeners()
-      Spokestack.stop()
+      Spokestack.destroy()
     }
   }, [])
 
@@ -102,21 +105,32 @@ export default function App() {
         <Button
           title={listening ? 'Listening...' : 'Listen'}
           onPress={async () => {
-            if (listening) {
-              Spokestack.deactivate()
-            } else {
-              Spokestack.activate()
+            try {
+              if (listening) {
+                await Spokestack.deactivate()
+              } else {
+                await Spokestack.activate()
+              }
+            } catch (e) {
+              console.error(e)
+              setError(e.message)
             }
           }}
           color="#2f5bea"
         />
         <Button
           title={playing ? 'Playing...' : `Play transcript`}
-          onPress={() => {
-            Spokestack.speak(transcript || noTranscriptMessage)
+          onPress={async () => {
+            try {
+              await Spokestack.speak(transcript || noTranscriptMessage)
+            } catch (e) {
+              console.error(e)
+              setError(e.message)
+            }
           }}
         />
       </View>
+
       {!!error && <Text style={styles.error}>{error}</Text>}
       <View style={styles.results}>
         <Text style={styles.transcript}>Transcript</Text>

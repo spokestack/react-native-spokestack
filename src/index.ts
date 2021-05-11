@@ -48,6 +48,7 @@ interface SpokestackType {
    *
    * See SpokestackConfig for all available options.
    *
+   * @example
    * ```js
    * import Spokestack from 'react-native-spokestack'
    *
@@ -66,9 +67,23 @@ interface SpokestackType {
     config?: SpokestackConfig
   ): Promise<void>
   /**
+   * Destroys the speech pipeline, removes all listeners, and frees up all resources.
+   * This can be called before re-initializing the pipeline.
+   * A good place to call this is in `componentWillUnmount`.
+   *
+   * @example
+   * ```js
+   * componentWillUnmount() {
+   *   Spokestack.destroy()
+   * }
+   * ```
+   */
+  destroy(): Promise<void>
+  /**
    * Start the speech pipeline.
    * The speech pipeline starts in the `deactivate` state.
    *
+   * @example
    * ```js
    * import Spokestack from 'react-native-spokestack`
    *
@@ -83,6 +98,7 @@ interface SpokestackType {
    * Stop the speech pipeline.
    * This effectively stops ASR, VAD, and wakeword.
    *
+   * @example
    * ```js
    * import Spokestack from 'react-native-spokestack`
    *
@@ -98,6 +114,7 @@ interface SpokestackType {
    * VAD profiles can also activate ASR without the need
    * to call this method.
    *
+   * @example
    * ```js
    * import Spokestack from 'react-native-spokestack`
    *
@@ -113,6 +130,7 @@ interface SpokestackType {
    * to listening for the wakeword.
    * If VAD is active, the pipeline can reactivate without calling activate().
    *
+   * @example
    * ```js
    * import Spokestack from 'react-native-spokestack`
    *
@@ -129,6 +147,7 @@ interface SpokestackType {
    *
    * There is currently only one free voice available ("demo-male").
    *
+   * @example
    * ```js
    * const url = await Spokestack.synthesize('Hello world')
    * play(url)
@@ -145,6 +164,7 @@ interface SpokestackType {
    *
    * There is currently only one free voice available ("demo-male").
    *
+   * @example
    * ```js
    * await Spokestack.speak('Hello world')
    * ```
@@ -156,6 +176,7 @@ interface SpokestackType {
    * passed to Spokestack.initialize().
    * See https://www.spokestack.io/docs/concepts/nlu for more info.
    *
+   * @example
    * ```js
    * const result = await Spokestack.classify('hello')
    *
@@ -168,6 +189,7 @@ interface SpokestackType {
   /**
    * Returns whether Spokestack has been initialized
    *
+   * @example
    * ```js
    * console.log(`isInitialized: ${await Spokestack.isInitialized()}`)
    * ```
@@ -176,6 +198,7 @@ interface SpokestackType {
   /**
    * Returns whether the speech pipeline has been started
    *
+   * @example
    * ```js
    * console.log(`isStarted: ${await Spokestack.isStarted()}`)
    * ```
@@ -184,6 +207,7 @@ interface SpokestackType {
   /**
    * Returns whether the speech pipeline is currently activated
    *
+   * @example
    * ```js
    * console.log(`isActivated: ${await Spokestack.isActivated()}`)
    * ```
@@ -234,9 +258,7 @@ interface SpokestackType {
    *
    * @example
    * ```js
-   * componentWillUnmount() {
-   *   Spokestack.removeAllListeners()
-   * }
+   * Spokestack.removeAllListeners()
    * ```
    */
   removeAllListeners(): void
@@ -387,6 +409,15 @@ Spokestack.initialize = (
   return originalInit(id, secret, config)
 }
 
+// Remove all JS listeners as well as calling
+// destroy natively
+const originalDestroy = Spokestack.destroy
+Spokestack.destroy = () => {
+  originalDestroy()
+  // Remove listeners after destroy
+  Spokestack.removeAllListeners()
+}
+
 Object.assign(Spokestack, {
   // Add enums as values
   PipelineProfile,
@@ -420,6 +451,7 @@ export * from './types'
 // Allow importing these methods separately
 export const {
   initialize,
+  destroy,
   start,
   stop,
   activate,
@@ -427,6 +459,9 @@ export const {
   synthesize,
   speak,
   classify,
+  isInitialized,
+  isStarted,
+  isActivated,
   addEventListener,
   removeEventListener,
   removeAllListeners
