@@ -47,15 +47,15 @@ describe('Index', () => {
     speak.mockReset()
   })
 
-  it('sets allows native to set a default pipeline profile', () => {
-    Spokestack.initialize('id', 'secret')
+  it('sets allows native to set a default pipeline profile', async () => {
+    await Spokestack.initialize('id', 'secret')
     expect(initialize).toHaveBeenCalledWith('id', 'secret', {
       refreshModels: true,
       pipeline: {}
     })
   })
 
-  it('sets a default profile if wakeword is specified', () => {
+  it('sets a default profile if wakeword is specified', async () => {
     const config = {
       wakeword: {
         detect: 'faux_url',
@@ -63,7 +63,7 @@ describe('Index', () => {
         filter: 'faux_url'
       }
     }
-    Spokestack.initialize('id', 'secret', config)
+    await Spokestack.initialize('id', 'secret', config)
     expect(initialize).toHaveBeenCalledWith('id', 'secret', {
       ...config,
       refreshModels: true,
@@ -79,14 +79,14 @@ describe('Index', () => {
         encode: 'faux_url'
       }
     }
-    Spokestack.initialize('id', 'secret', configIncomplete)
+    await Spokestack.initialize('id', 'secret', configIncomplete)
     expect(initialize).toHaveBeenCalledWith('id', 'secret', {
       ...configIncomplete,
       refreshModels: true
     })
   })
 
-  it('sets a default profile if keyword is specified', () => {
+  it('sets a default profile if keyword is specified', async () => {
     const config = {
       keyword: {
         detect: 'faux_url',
@@ -95,7 +95,7 @@ describe('Index', () => {
       }
     }
     // Must pass either classes or metadata to set the profile
-    Spokestack.initialize('id', 'secret', config)
+    await Spokestack.initialize('id', 'secret', config)
     expect(initialize).toHaveBeenCalledWith('id', 'secret', {
       ...config,
       refreshModels: true
@@ -108,7 +108,7 @@ describe('Index', () => {
         metadata: 'faux_url'
       }
     }
-    Spokestack.initialize('id', 'secret', configMeta)
+    await Spokestack.initialize('id', 'secret', configMeta)
     expect(initialize).toHaveBeenCalledWith('id', 'secret', {
       ...configMeta,
       refreshModels: true,
@@ -124,9 +124,12 @@ describe('Index', () => {
         classes: ['one', 'two']
       }
     }
-    Spokestack.initialize('id', 'secret', configClasses)
+    await Spokestack.initialize('id', 'secret', configClasses)
     expect(initialize).toHaveBeenCalledWith('id', 'secret', {
-      ...configClasses,
+      keyword: {
+        ...config.keyword,
+        classes: 'one,two'
+      },
       refreshModels: true,
       pipeline: {
         profile: PipelineProfile.VAD_KEYWORD_ASR
@@ -134,8 +137,8 @@ describe('Index', () => {
     })
   })
 
-  it('sets a default format of TEXT and default voice of demo-male for synthesize', () => {
-    Spokestack.synthesize(testInput)
+  it('sets a default format of TEXT and default voice of demo-male for synthesize', async () => {
+    await Spokestack.synthesize(testInput)
     expect(synthesize).toHaveBeenCalledWith(
       testInput,
       TTSFormat.TEXT,
@@ -143,8 +146,8 @@ describe('Index', () => {
     )
   })
 
-  it('sets a default format of TEXT and default voice of demo-male for speak', () => {
-    Spokestack.speak(testInput)
+  it('sets a default format of TEXT and default voice of demo-male for speak', async () => {
+    await Spokestack.speak(testInput)
     expect(speak).toHaveBeenCalledWith(testInput, TTSFormat.TEXT, 'demo-male')
   })
 

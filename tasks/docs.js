@@ -130,24 +130,22 @@ data += getInterfaceContent('nlusourceconfig.md', '\n\n## NLU Config')
 data += getInterfaceContent('nluadvancedconfig.md', '')
 data += getInterfaceContent(
   'commandmodelsourceconfig.md',
-  '\n\n## Wakeword Config' +
-    '\nWakeword and keyword are mutually exclusive. Only specify one or the other.'
+  '\n\n## Wakeword Config'
 )
 data += getInterfaceContent('wakewordonlyconfig.md', '')
 data += getInterfaceContent(
   'commandmodelsourceconfig.md',
-  '\n\n## Keyword Config' +
-    '\nWakeword and keyword are mutually exclusive. Only specify one or the other.'
+  '\n\n## Keyword Config'
 )
 data += getInterfaceContent(
   'keywordmetadataconfig.md',
-  '\n\nEither `metadata` or `classes` is required, and they are exclusive.'
+  '\n\nEither `metadata` or `classes` is required, and they are mutually exclusive.'
 )
 data += getInterfaceContent('keywordclassesconfig.md', '')
 data += getInterfaceContent(
   'commandmodeladvancedconfig.md',
   '\n\n## Advanced Wakeword and Keyword Config' +
-    '\n\nThese properties can be passed to either the `wakeword` or `keyword` config object.'
+    '\n\nThese properties can be passed to either the `wakeword` or `keyword` config object, but are not shared.'
 )
 
 // Add license info

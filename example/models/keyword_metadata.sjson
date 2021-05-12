@@ -1,0 +1,16 @@
+{
+  "name": "digits",
+  "type": "keyword",
+  "classes": [
+    {"name": "zero", "utterances": [{"id": "zero", "text": "zero"}]},
+    {"name": "one", "utterances": [{"id": "one", "text": "one"}]},
+    {"name": "two", "utterances": [{"id": "two", "text": "two"}]},
+    {"name": "three", "utterances": [{"id": "three", "text": "three"}]},
+    {"name": "four", "utterances": [{"id": "four", "text": "four"}]},
+    {"name": "five", "utterances": [{"id": "five", "text": "five"}]},
+    {"name": "six", "utterances": [{"id": "six", "text": "six"}]},
+    {"name": "seven", "utterances": [{"id": "seven", "text": "seven"}]},
+    {"name": "eight", "utterances": [{"id": "eight", "text": "eight"}]},
+    {"name": "nine", "utterances": [{"id": "nine", "text": "nine"}]}
+  ]
+}
