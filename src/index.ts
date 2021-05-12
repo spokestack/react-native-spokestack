@@ -381,16 +381,18 @@ Spokestack.initialize = (
   if (!config.pipeline?.profile) {
     config.pipeline = config.pipeline || {}
     if (hasWakeword && !hasKeyword) {
+      // If wakeword is set and keyword is not,
+      // default to a profile that works with wakeword.
       config.pipeline.profile = PipelineProfile.TFLITE_WAKEWORD_NATIVE_ASR
-    } else if (hasKeyword && !hasWakeword) {
+    } else if (!hasWakeword && hasKeyword) {
+      // If keyword is set, and wakeword is not,
+      // default to a profile that works with keyword.
       config.pipeline.profile = PipelineProfile.VAD_KEYWORD_ASR
+    } else if (hasWakeword && hasKeyword) {
+      // If both keyword and wakeword are set,
+      // default to a profile that works for both.
+      config.pipeline.profile = PipelineProfile.TFLITE_WAKEWORD_KEYWORD
     }
-  }
-
-  if (hasWakeword && hasKeyword) {
-    throw new Error(
-      'It looks like you are trying to use both wakeword and keyword. Please specify one or the other.'
-    )
   }
 
   /**

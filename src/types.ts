@@ -44,7 +44,7 @@ export enum PipelineProfile {
    * VAD-sensitive TFLiteWakeword activates TFLite Keyword Recognizer
    * This is not yet supported on android
    */
-  // TFLITE_WAKEWORD_KEYWORD = 6,
+  TFLITE_WAKEWORD_KEYWORD = 6,
   /**
    * VAD-triggered TFLite Keyword Recognizer
    */
@@ -121,10 +121,20 @@ export interface SpokestackNLUResult {
 export interface PipelineConfig {
   /**
    * Profiles are collections of common configurations for Pipeline stages.
-   * If Wakeword config files are specified, the default will be set to
-   * `TFLITE_WAKEWORD_NATIVE_ASR`.
-   * If Keyword config files are specified, the default will be set to
-   * `VAD_KEYWORD_ASR`.
+   *
+   * If no profile is set explicitly, Spokestack determines,
+   * a sensible default profile based on the config
+   * passed to `Spokestack.initialize()`:
+   *
+   * If wakeword config files are set (and keyword config is not),
+   *   the default will be set to `TFLITE_WAKEWORD_NATIVE_ASR`.
+   *
+   * If keyword config files are set (and wakeword config is not),
+   *   the default will be set to `VAD_KEYWORD_ASR`.
+   *
+   * If both wakeword and keyword config files are set,
+   *   the default will be set to `TFLITE_WAKEWORD_KEYWORD`.
+   *
    * Otherwise, the default is `PTT_NATIVE_ASR`.
    */
   profile?: PipelineProfile

@@ -58,6 +58,8 @@ class SpokestackModule(private val reactContext: ReactApplicationContext): React
     TFLiteWakewordSpokestackASR(TFWakewordSpokestackASR::class.java),
     VADSpokestackASR(VADTriggerSpokestackASR::class.java),
     PTTSpokestackASR(PushToTalkSpokestackASR::class.java),
+    // Wakeword/keyword not yet supported
+    TFLiteWakewordKeyword(VADTriggerKeywordASR::class.java),
     VADKeywordASR(VADTriggerKeywordASR::class.java);
     private val profile:Class<out PipelineProfile> = p
     fun value():String {
@@ -122,8 +124,7 @@ class SpokestackModule(private val reactContext: ReactApplicationContext): React
   }
 
   private fun started(): Boolean {
-    val pipeline = spokestack?.speechPipeline
-    return initialized() && pipeline?.isRunning!! && !pipeline.isPaused
+    return initialized() && spokestack?.speechPipeline?.isRunning!!
   }
 
   private fun activated(): Boolean {
@@ -157,23 +158,7 @@ class SpokestackModule(private val reactContext: ReactApplicationContext): React
     if (config.hasKey("traceLevel")) {
       builder.setProperty("trace-level", config.getInt("traceLevel"))
     }
-    // SpeechPipeline
-    // Default to PTT
-    builder.pipelineBuilder.useProfile(PipelineProfiles.PTTNativeASR.value())
-    if (config.hasKey("pipeline")) {
-      val map = config.getMap("pipeline")?.toHashMap()
-      if (map != null) {
-        for (key in map.keys) {
-          // JS uses camelCase for keys
-          // Convert to kebab-case
-          builder.setProperty(kebabCase(key), map[key])
-        }
-        if (map.containsKey("profile")) {
-          val profile = PipelineProfiles.values()[(map["profile"] as Double).toInt()]
-          builder.pipelineBuilder.useProfile(profile.value())
-        }
-      }
-    }
+
     // Wakeword
     val wakeDownloads = mutableMapOf<String, String>()
     if (config.hasKey("wakeword")) {
@@ -293,6 +278,24 @@ class SpokestackModule(private val reactContext: ReactApplicationContext): React
 
     // TTS is automatically built and available
     builder.withoutAutoPlayback()
+
+    // Profile
+    // Default to PTT
+    var profile = PipelineProfiles.PTTNativeASR.value()
+    if (config.hasKey("pipeline")) {
+      val map = config.getMap("pipeline")?.toHashMap()
+      if (map != null) {
+        for (key in map.keys) {
+          // JS uses camelCase for keys
+          // Convert to kebab-case
+          builder.setProperty(kebabCase(key), map[key])
+        }
+        if (map.containsKey("profile")) {
+          profile = PipelineProfiles.values()[(map["profile"] as Double).toInt()].value()
+        }
+      }
+    }
+    builder.withPipelineProfile(profile)
 
     // Initialize the audio player for speaking
     audioPlayer = SpokestackTTSOutput(null)
@@ -436,6 +439,7 @@ class SpokestackModule(private val reactContext: ReactApplicationContext): React
     spokestack = null
 
     audioPlayer?.close()
+    audioPlayer?.removeListener(adapter)
     audioPlayer = null
 
     downloader = null

@@ -17,6 +17,8 @@ export default function App() {
   const [transcript, setTranscript] = React.useState('')
   const [partial, setPartial] = React.useState('')
   const [prompt, setPrompt] = React.useState('')
+  const [initializing, setInitializing] = React.useState(false)
+  const [showKeyword, setShowKeyword] = React.useState(false)
   const [error, setError] = React.useState('')
 
   async function init() {
@@ -35,44 +37,91 @@ export default function App() {
       setError('Microphone permission is required.')
       return
     }
+    if (await Spokestack.isInitialized()) {
+      // Reset state
+      setTranscript('')
+      setPartial('')
+      setPrompt('')
+      try {
+        await Spokestack.destroy()
+      } catch (e) {
+        console.error(e)
+        setError(e.message)
+        return
+      }
+    }
     // This example app demonstrates both ways
     // to pass model files, but we recommend using one or the other.
+    setInitializing(true)
     try {
-      await Spokestack.initialize(clientId, clientSecret, {
-        wakeword: {
-          filter: require('../models/filter.tflite'),
-          detect: require('../models/detect.tflite'),
-          encode: require('../models/encode.tflite')
-        },
-        nlu: {
-          model: 'https://s.spokestack.io/u/7fYxV/nlu.tflite',
-          metadata: require('../models/metadata.sjson'),
-          vocab: require('../models/vocab.txt')
-        }
-      })
+      if (showKeyword) {
+        await Spokestack.initialize(clientId, clientSecret, {
+          keyword: {
+            detect: require('../models/keyword_detect.tflite'),
+            encode: require('../models/keyword_encode.tflite'),
+            filter: require('../models/keyword_filter.tflite'),
+            classes: [
+              'zero',
+              'one',
+              'two',
+              'three',
+              'four',
+              'five',
+              'six',
+              'seven',
+              'eight',
+              'nine'
+            ]
+          }
+        })
+      } else {
+        await Spokestack.initialize(clientId, clientSecret, {
+          wakeword: {
+            detect: require('../models/detect.tflite'),
+            encode: require('../models/encode.tflite'),
+            filter: require('../models/filter.tflite')
+          },
+          nlu: {
+            model: 'https://s.spokestack.io/u/7fYxV/nlu.tflite',
+            metadata: require('../models/metadata.sjson'),
+            vocab: require('../models/vocab.txt')
+          }
+        })
+      }
     } catch (e) {
       console.error(e)
       setError(e.message)
+      setInitializing(false)
+      return
     }
     Spokestack.addEventListener('activate', () => setListening(true))
     Spokestack.addEventListener('deactivate', () => setListening(false))
+    Spokestack.addEventListener('play', ({ playing }: SpokestackPlayEvent) =>
+      setPlaying(playing)
+    )
     Spokestack.addEventListener(
       'recognize',
       async ({ transcript }: SpokestackRecognizeEvent) => {
         setTranscript(transcript)
-        const node = await Spokestack.classify(transcript)
-        const next = handleIntent(node)
-        await Spokestack.speak(next.prompt)
-        setPrompt(next.prompt)
+        if (showKeyword) {
+          const prompt = `I heard you say ${transcript}.`
+          await Spokestack.speak(prompt)
+          setPrompt(prompt)
+        } else {
+          const node = await Spokestack.classify(transcript)
+          const next = handleIntent(node)
+          await Spokestack.speak(next.prompt)
+          setPrompt(next.prompt)
+        }
       }
     )
     Spokestack.addEventListener(
       'partial_recognize',
       ({ transcript }: SpokestackRecognizeEvent) => setPartial(transcript)
     )
-    Spokestack.addEventListener('play', ({ playing }: SpokestackPlayEvent) =>
-      setPlaying(playing)
-    )
+    // Spokestack.addEventListener('trace', ({ message }: SpokestackTraceEvent) =>
+    //   console.log(message)
+    // )
     try {
       await Spokestack.start()
       console.log(`Initialized: ${await Spokestack.isInitialized()}`)
@@ -82,6 +131,7 @@ export default function App() {
       console.error(e)
       setError(e.message)
     }
+    setInitializing(false)
   }
 
   React.useEffect(() => {
@@ -90,20 +140,16 @@ export default function App() {
     return () => {
       Spokestack.destroy()
     }
-  }, [])
+  }, [showKeyword])
 
   return (
     <View style={styles.container}>
-      <View>
-        <Text style={styles.instructionText}>Tap "Listen" to talk</Text>
-        <Text style={styles.instructionText}>
-          This example uses a sample NLU model for Minecraft. To begin, tap
-          Listen and say, "How do I make a castle?"
-        </Text>
-      </View>
       <View style={styles.buttons}>
         <Button
-          title={listening ? 'Listening...' : 'Listen'}
+          disabled={initializing || listening || showKeyword}
+          title={
+            listening ? 'Listening...' : showKeyword ? 'Say a number' : 'Listen'
+          }
           onPress={async () => {
             try {
               if (listening) {
@@ -119,6 +165,7 @@ export default function App() {
           color="#2f5bea"
         />
         <Button
+          disabled={initializing || listening || playing}
           title={playing ? 'Playing...' : `Play transcript`}
           onPress={async () => {
             try {
@@ -134,9 +181,33 @@ export default function App() {
       {!!error && <Text style={styles.error}>{error}</Text>}
       <View style={styles.results}>
         <Text style={styles.transcript}>Transcript</Text>
-        <Text>Partial: "{partial}"</Text>
+        {!showKeyword && <Text>Partial: "{partial}"</Text>}
         <Text>Completed: "{transcript}"</Text>
-        <Text>Prompt from NLU: "{prompt}"</Text>
+        <Text>Prompt: "{prompt}"</Text>
+      </View>
+      <View>
+        <Text style={styles.instructionText}>
+          This example app demonstrates some of the robust features of
+          react-native-spokestack.
+        </Text>
+        <Text style={styles.instructionText}>
+          Choose between a sample NLU model for Minecraft or keyword recognition
+          on digits zero-nine.
+        </Text>
+        <Button
+          disabled={initializing}
+          title={
+            initializing
+              ? 'Initializing...'
+              : `Test ${showKeyword ? 'Wakeword & NLU' : 'Keyword'} Instead`
+          }
+          onPress={() => setShowKeyword(!showKeyword)}
+        />
+        <Text style={styles.instructionText}>
+          {showKeyword
+            ? 'Now testing keyword recogntion. Say any number between "zero" and "nine".'
+            : 'Currently testing the NLU model. To begin, tap Listen and say, "How do I make a castle?"'}
+        </Text>
       </View>
     </View>
   )
@@ -150,7 +221,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20
   },
   instructionText: {
-    fontSize: 18,
+    fontSize: 16,
     textAlign: 'center',
     marginBottom: 10
   },
