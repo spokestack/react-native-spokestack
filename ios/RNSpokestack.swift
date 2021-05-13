@@ -284,7 +284,9 @@ class RNSpokestack: RCTEventEmitter, SpokestackDelegate {
         for (key, value) in config! {
             switch key {
             case "traceLevel":
-                speechConfig.tracing = Trace.Level(rawValue: RCTConvert.nsInteger(value)) ?? Trace.Level.NONE
+                let traceLevel = Trace.Level(rawValue: RCTConvert.nsInteger(value)) ?? Trace.Level.NONE
+                debugPrint("Trace level set to: \(traceLevel.rawValue)")
+                speechConfig.tracing = traceLevel
                 break
             case "nlu":
                 for (nluKey, nluValue) in value as! Dictionary<String, String> {

@@ -105,7 +105,7 @@ data += getFunctions([
   'addEventListener',
   'removeEventListener',
   'removeAllListeners'
-])
+]).replace(/\bEvents\b/g, '[Events](#Events)')
 
 data += getEnumContent('ttsformat.md')
 
