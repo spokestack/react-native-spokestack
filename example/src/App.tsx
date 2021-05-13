@@ -37,41 +37,42 @@ export default function App() {
       setError('Microphone permission is required.')
       return
     }
-    if (await Spokestack.isInitialized()) {
-      // Reset state
-      setTranscript('')
-      setPartial('')
-      setPrompt('')
-      try {
-        await Spokestack.destroy()
-      } catch (e) {
-        console.error(e)
-        setError(e.message)
-        return
-      }
-    }
+    // Reset state
+    setListening(false)
+    setPlaying(false)
+    setTranscript('')
+    setPartial('')
+    setPrompt('')
+    setError('')
     // This example app demonstrates both ways
     // to pass model files, but we recommend using one or the other.
     setInitializing(true)
     try {
       if (showKeyword) {
         await Spokestack.initialize(clientId, clientSecret, {
+          wakeword: {
+            detect: require('../models/detect.tflite'),
+            encode: require('../models/encode.tflite'),
+            filter: require('../models/filter.tflite')
+          },
           keyword: {
             detect: require('../models/keyword_detect.tflite'),
             encode: require('../models/keyword_encode.tflite'),
             filter: require('../models/keyword_filter.tflite'),
-            classes: [
-              'zero',
-              'one',
-              'two',
-              'three',
-              'four',
-              'five',
-              'six',
-              'seven',
-              'eight',
-              'nine'
-            ]
+            metadata: require('../models/keyword_metadata.sjson')
+            // Can pass either metadata or classes, which would look like this:
+            // classes: [
+            //   'zero',
+            //   'one',
+            //   'two',
+            //   'three',
+            //   'four',
+            //   'five',
+            //   'six',
+            //   'seven',
+            //   'eight',
+            //   'nine'
+            // ]
           }
         })
       } else {
@@ -146,10 +147,8 @@ export default function App() {
     <View style={styles.container}>
       <View style={styles.buttons}>
         <Button
-          disabled={initializing || listening || showKeyword}
-          title={
-            listening ? 'Listening...' : showKeyword ? 'Say a number' : 'Listen'
-          }
+          disabled={initializing || listening}
+          title={listening ? 'Listening...' : 'Listen'}
           onPress={async () => {
             try {
               if (listening) {
@@ -166,7 +165,7 @@ export default function App() {
         />
         <Button
           disabled={initializing || listening || playing}
-          title={playing ? 'Playing...' : `Play transcript`}
+          title={playing ? 'Playing...' : 'Play transcript'}
           onPress={async () => {
             try {
               await Spokestack.speak(transcript || noTranscriptMessage)
@@ -192,21 +191,23 @@ export default function App() {
         </Text>
         <Text style={styles.instructionText}>
           Choose between a sample NLU model for Minecraft or keyword recognition
-          on digits zero-nine.
+          on digits zero through nine.
         </Text>
         <Button
           disabled={initializing}
           title={
             initializing
               ? 'Initializing...'
-              : `Test ${showKeyword ? 'Wakeword & NLU' : 'Keyword'} Instead`
+              : `Test ${
+                  showKeyword ? 'Wakeword & NLU' : 'Wakeword & Keyword'
+                } Instead`
           }
           onPress={() => setShowKeyword(!showKeyword)}
         />
         <Text style={styles.instructionText}>
           {showKeyword
-            ? 'Now testing keyword recogntion. Say any number between "zero" and "nine".'
-            : 'Currently testing the NLU model. To begin, tap Listen and say, "How do I make a castle?"'}
+            ? 'Now testing keyword recogntion. Tap Listen (or say "Spokestack" if permission is already granted), then any number between "zero" and "nine".'
+            : 'Currently testing the NLU model. Tap Listen (or say "Spokestack" if permission is already granted), then say, "How do I make a castle?"'}
         </Text>
       </View>
     </View>
@@ -223,7 +224,7 @@ const styles = StyleSheet.create({
   instructionText: {
     fontSize: 16,
     textAlign: 'center',
-    marginBottom: 10
+    marginVertical: 10
   },
   error: {
     color: 'red',
