@@ -103,7 +103,10 @@ class SpokestackAdapter(sendFunc:(event: String, data: WritableMap) -> Unit):io.
         reactEvent.putString("error", context.error.message)
         sendEvent(event.name, reactEvent)
       }
-      else -> Log.d(logTag, "Native event received (${event.name}) but not sending JS event.")
+      SpeechContext.Event.TRACE -> {
+        // Event is redundant with the trace method above
+      }
+      else -> Log.d(logTag, "Speech Event received (${event.name}) but not sending JS event.")
     }
   }
 }

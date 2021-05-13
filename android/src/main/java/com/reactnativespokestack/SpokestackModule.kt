@@ -59,8 +59,7 @@ class SpokestackModule(private val reactContext: ReactApplicationContext): React
     TFLiteWakewordSpokestackASR(TFWakewordSpokestackASR::class.java),
     VADSpokestackASR(VADTriggerSpokestackASR::class.java),
     PTTSpokestackASR(PushToTalkSpokestackASR::class.java),
-    // Wakeword/keyword not yet supported
-    TFLiteWakewordKeyword(VADTriggerKeywordASR::class.java),
+    TFLiteWakewordKeyword(TFWakewordKeywordASR::class.java),
     VADKeywordASR(VADTriggerKeywordASR::class.java);
     private val profile:Class<out PipelineProfile> = p
     fun value():String {
@@ -93,7 +92,7 @@ class SpokestackModule(private val reactContext: ReactApplicationContext): React
           promises[SpokestackPromise.CLASSIFY]?.resolve(params)
           promises.remove(SpokestackPromise.CLASSIFY)
         }
-        else -> Log.d(name, "Sending JS event: $event")
+        else -> Log.d(name, "Sending JS event: $eventLower")
       }
       reactContext
         .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
@@ -361,6 +360,7 @@ class SpokestackModule(private val reactContext: ReactApplicationContext): React
       return
     }
     try {
+      audioPlayer?.stopPlayback()
       spokestack?.activate()
       promise.resolve(null)
     } catch (e: Exception) {

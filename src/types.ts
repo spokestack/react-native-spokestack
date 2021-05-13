@@ -41,8 +41,7 @@ export enum PipelineProfile {
    */
   PTT_SPOKESTACK_ASR = 5,
   /**
-   * VAD-sensitive TFLiteWakeword activates TFLite Keyword Recognizer
-   * This is not yet supported on android
+   * VAD-sensitive TFLite wake word activates TFLite keyword recognizer
    */
   TFLITE_WAKEWORD_KEYWORD = 6,
   /**
@@ -122,7 +121,7 @@ export interface PipelineConfig {
   /**
    * Profiles are collections of common configurations for Pipeline stages.
    *
-   * If no profile is set explicitly, Spokestack determines,
+   * If no profile is set explicitly, Spokestack determines
    * a sensible default profile based on the config
    * passed to `Spokestack.initialize()`:
    *
@@ -500,18 +499,12 @@ export interface SpokestackConfig {
    * Only required for wakeword
    * Most options are advanced aside from
    * filter, encode, and decode for specifying config files.
-   *
-   * Keyword and wakeword should not be used together.
-   * Specify one or the other.
    */
   wakeword?: WakewordConfig
   /**
    * Only required for the keyword recognizer
    * Most options are advanced aside from
    * filter, encode, decode, metadata, and classes.
-   *
-   * Keyword and wakeword should not be used together.
-   * Specify one or the other.
    */
   keyword?: KeywordConfig
 }

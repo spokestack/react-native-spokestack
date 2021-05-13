@@ -52,7 +52,7 @@ internal enum KeywordDownloadProp: String, CaseIterable {
     case keywordDetectModelPath
     case keywordEncodeModelPath
     case keywordFilterModelPath
-    case keywordMetadataModelPath
+    case keywordMetadataPath
 }
 
 @objc(RNSpokestack)
@@ -388,7 +388,7 @@ class RNSpokestack: RCTEventEmitter, SpokestackDelegate {
                         break
                     case "metadata":
                         keywordDownloads[RCTConvert.nsurl(keywordValue)] = makeCompleteForModelDownload(
-                            speechProp: KeywordDownloadProp.keywordMetadataModelPath.rawValue)
+                            speechProp: KeywordDownloadProp.keywordMetadataPath.rawValue)
                         break
                     case "classes":
                         speechConfig.keywords = RCTConvert.nsString(keywordValue)
