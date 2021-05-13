@@ -5,8 +5,10 @@
 To run this app, first install dependencies...
 
 ```sh
-$ npm install && npm run pods
+$ cd .. && npm run bootstrap
 ```
+
+Running `bootstrap` top-level installs react-native-spokestack dependencies as well as this app's dependencies and pods.
 
 Then go to https://spokestack.io/create and create a free account.
 After creating an account, click "Account" to go to the account section.

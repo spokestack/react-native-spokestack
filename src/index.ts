@@ -215,8 +215,7 @@ interface SpokestackType {
   isActivated(): Promise<boolean>
   /**
    * Bind to any event emitted by the native libraries
-   * The events are: "recognize", "partial_recognize", "error", "activate", "deactivate", and "timeout".
-   * See the bottom of the README.md for descriptions of the events.
+   * See Events for a list of all available events.
    *
    * @param eventType name of the event for which we are registering listener
    * @param listener the listener function

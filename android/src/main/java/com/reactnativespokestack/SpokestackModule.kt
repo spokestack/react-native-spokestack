@@ -11,6 +11,7 @@ import io.spokestack.spokestack.tts.AudioResponse
 import io.spokestack.spokestack.tts.SpokestackTTSOutput
 import io.spokestack.spokestack.tts.SynthesisRequest
 import kotlinx.coroutines.*
+import java.util.*
 import javax.annotation.Nullable
 
 class SpokestackModule(private val reactContext: ReactApplicationContext): ReactContextBaseJavaModule(reactContext) {
@@ -69,7 +70,8 @@ class SpokestackModule(private val reactContext: ReactApplicationContext): React
 
   private fun sendEvent(event: String, @Nullable params: WritableMap) {
     if (reactContext.hasActiveCatalystInstance()) {
-      when(event.toLowerCase()) {
+      val eventLower = event.toLowerCase(Locale.ROOT)
+      when(eventLower) {
         "error" -> {
           Log.e(name, "Received error event with params: $params")
           // Reject all existing promises
@@ -95,7 +97,7 @@ class SpokestackModule(private val reactContext: ReactApplicationContext): React
       }
       reactContext
         .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
-        .emit(event.toLowerCase(), params)
+        .emit(eventLower, params)
     }
   }
 
@@ -156,7 +158,12 @@ class SpokestackModule(private val reactContext: ReactApplicationContext): React
 
     // Top-level config
     if (config.hasKey("traceLevel")) {
-      builder.setProperty("trace-level", config.getInt("traceLevel"))
+      val traceLevel = config.getInt("traceLevel")
+      builder.setProperty("trace-level", traceLevel)
+      Log.d(name, "Trace level set to: $traceLevel")
+    } else {
+      // Set trace-level to NONE by default
+      builder.setProperty("trace-level", 100)
     }
 
     // Wakeword

@@ -486,6 +486,7 @@ export interface SpokestackConfig {
   /**
    * This controls the log level for the underlying native
    * iOS and Android libraries.
+   * Also add a `"trace"` event listener to get trace events.
    * See the TraceLevel enum for values.
    */
   traceLevel?: TraceLevel
