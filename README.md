@@ -462,6 +462,8 @@ Returns `Promise<string>` with the string
 being the URL for a playable mpeg.
 
 There is currently only one free voice available ("demo-male").
+The voice can be changed if you have created a custom voice using
+a Spokestack Maker account. See https://spokestack.io/pricing#maker.
 
 **`example`**
 

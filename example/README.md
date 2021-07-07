@@ -15,7 +15,9 @@ After creating an account, click "Account" to go to the account section.
 
 Once you have an account, generate a free token in Settings -> API Credentials.
 
-This will generate a free API key to use for TTS, which uses the sample voice by default.
+This will generate a free API key to use for TTS, which uses the "demo-male" sample voice.
+
+The voice can be changed if you have created a custom voice using a [Spokestack Maker account](https://spokestack.io/pricing#maker).
 
 Set these variables in your environment...
 
