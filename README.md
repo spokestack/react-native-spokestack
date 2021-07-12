@@ -274,6 +274,11 @@ Spokestack.initialize(clientId, clientSecret, {
     detect: require('./detect.tflite'),
     encode: require('./encode.tflite')
   },
+  keyword: {
+    filter: require('./keyword/filter.tflite'),
+    detect: require('./keyword/detect.tflite'),
+    encode: require('./keyword/encode.tflite')
+  },
   nlu: {
     model: require('./nlu.tflite'),
     vocab: require('./vocab.txt'),
