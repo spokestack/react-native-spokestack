@@ -170,9 +170,14 @@ See our [ASR documentation](https://www.spokestack.io/docs/concepts/asr) for mor
 ```groovy
 // ...
   ext {
-    // Minimum SDK is 21
-    // React Native 0.64+ already has this set
-    minSdkVersion = 21
+    // Set the minimum SDK to 24.
+    // React Native 0.64+ sets version 21.
+    // If you prefer to leave the minimum SDK at 21,
+    // another option is to set this to 21, but
+    // also set android.enableDexingArtifactTransform=false
+    // in your top-level gradle.properties.
+    // See https://github.com/google/ExoPlayer/issues/6801#issuecomment-574089568
+    minSdkVersion = 24
 // ...
   dependencies {
     // Minimium gradle is 3.0.1+
