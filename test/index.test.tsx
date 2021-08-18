@@ -11,7 +11,9 @@ NativeModules.Spokestack = {
   deactivate: jest.fn(),
   synthesize,
   speak,
-  classify: jest.fn()
+  classify: jest.fn(),
+  addListener: jest.fn(),
+  removeListeners: jest.fn()
 }
 const {
   default: Spokestack,

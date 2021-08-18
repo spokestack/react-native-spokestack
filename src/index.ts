@@ -427,11 +427,19 @@ Object.assign(Spokestack, {
   TraceLevel,
   TTSFormat,
 
-  // Event handling
+  /**
+   * Event handling
+   *
+   * @example
+   * const { remove } = Spokestack.addEventListener('recognize', onRecognize)
+   */
   addEventListener: (
     type: string,
     listener: (event: SpokestackEvent) => void
   ) => emitter.addListener(type, listener),
+  /**
+   * @deprecated Just like the underlying react native method, use `remove` from the return value of `addListener`.
+   */
   removeEventListener: (
     type: string,
     listener: (event: SpokestackEvent) => void
