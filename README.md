@@ -182,7 +182,7 @@ See our [ASR documentation](https://www.spokestack.io/docs/concepts/asr) for mor
   dependencies {
     // Minimium gradle is 3.0.1+
     // The latest React Native already has this
-    classpath("com.android.tools.build:gradle:4.1.0")
+    classpath("com.android.tools.build:gradle:4.2.1")
 ```
 
 ### Edit AndroidManifest.xml
