@@ -351,7 +351,7 @@ await Spokestack.initialize(process.env.CLIENT_ID, process.env.CLIENT_SECRET, {
 
 #### Defined in
 
-[index.ts:64](https://github.com/spokestack/react-native-spokestack/blob/7f11af4/src/index.ts#L64)
+[index.ts:64](https://github.com/spokestack/react-native-spokestack/blob/07c7ced/src/index.ts#L64)
 
 ### destroy
 
@@ -375,7 +375,7 @@ componentWillUnmount() {
 
 #### Defined in
 
-[index.ts:81](https://github.com/spokestack/react-native-spokestack/blob/7f11af4/src/index.ts#L81)
+[index.ts:81](https://github.com/spokestack/react-native-spokestack/blob/07c7ced/src/index.ts#L81)
 
 ### start
 
@@ -401,7 +401,7 @@ Spokestack.initialize(process.env.CLIENT_ID, process.env.CLIENT_SECRET)
 
 #### Defined in
 
-[index.ts:96](https://github.com/spokestack/react-native-spokestack/blob/7f11af4/src/index.ts#L96)
+[index.ts:96](https://github.com/spokestack/react-native-spokestack/blob/07c7ced/src/index.ts#L96)
 
 ### stop
 
@@ -426,7 +426,7 @@ await Spokestack.stop()
 
 #### Defined in
 
-[index.ts:110](https://github.com/spokestack/react-native-spokestack/blob/7f11af4/src/index.ts#L110)
+[index.ts:110](https://github.com/spokestack/react-native-spokestack/blob/07c7ced/src/index.ts#L110)
 
 ### activate
 
@@ -453,7 +453,7 @@ import Spokestack from 'react-native-spokestack`
 
 #### Defined in
 
-[index.ts:126](https://github.com/spokestack/react-native-spokestack/blob/7f11af4/src/index.ts#L126)
+[index.ts:126](https://github.com/spokestack/react-native-spokestack/blob/07c7ced/src/index.ts#L126)
 
 ### deactivate
 
@@ -480,7 +480,7 @@ import Spokestack from 'react-native-spokestack`
 
 #### Defined in
 
-[index.ts:142](https://github.com/spokestack/react-native-spokestack/blob/7f11af4/src/index.ts#L142)
+[index.ts:142](https://github.com/spokestack/react-native-spokestack/blob/07c7ced/src/index.ts#L142)
 
 ### synthesize
 
@@ -515,7 +515,7 @@ play(url)
 
 #### Defined in
 
-[index.ts:158](https://github.com/spokestack/react-native-spokestack/blob/7f11af4/src/index.ts#L158)
+[index.ts:158](https://github.com/spokestack/react-native-spokestack/blob/07c7ced/src/index.ts#L158)
 
 ### speak
 
@@ -550,7 +550,7 @@ await Spokestack.speak('Hello world')
 
 #### Defined in
 
-[index.ts:174](https://github.com/spokestack/react-native-spokestack/blob/7f11af4/src/index.ts#L174)
+[index.ts:174](https://github.com/spokestack/react-native-spokestack/blob/07c7ced/src/index.ts#L174)
 
 ### classify
 
@@ -583,7 +583,7 @@ console.log(result.intent) // launch
 
 #### Defined in
 
-[index.ts:190](https://github.com/spokestack/react-native-spokestack/blob/7f11af4/src/index.ts#L190)
+[index.ts:190](https://github.com/spokestack/react-native-spokestack/blob/07c7ced/src/index.ts#L190)
 
 ### isInitialized
 
@@ -603,7 +603,7 @@ console.log(`isInitialized: ${await Spokestack.isInitialized()}`)
 
 #### Defined in
 
-[index.ts:199](https://github.com/spokestack/react-native-spokestack/blob/7f11af4/src/index.ts#L199)
+[index.ts:199](https://github.com/spokestack/react-native-spokestack/blob/07c7ced/src/index.ts#L199)
 
 ### isStarted
 
@@ -623,7 +623,7 @@ console.log(`isStarted: ${await Spokestack.isStarted()}`)
 
 #### Defined in
 
-[index.ts:208](https://github.com/spokestack/react-native-spokestack/blob/7f11af4/src/index.ts#L208)
+[index.ts:208](https://github.com/spokestack/react-native-spokestack/blob/07c7ced/src/index.ts#L208)
 
 ### isActivated
 
@@ -643,7 +643,7 @@ console.log(`isActivated: ${await Spokestack.isActivated()}`)
 
 #### Defined in
 
-[index.ts:217](https://github.com/spokestack/react-native-spokestack/blob/7f11af4/src/index.ts#L217)
+[index.ts:217](https://github.com/spokestack/react-native-spokestack/blob/07c7ced/src/index.ts#L217)
 
 ## SpokestackNLUResult
 
@@ -655,7 +655,7 @@ A number from 0 to 1 representing the NLU model's confidence in the intent it re
 
 #### Defined in
 
-[types.ts:115](https://github.com/spokestack/react-native-spokestack/blob/7f11af4/src/types.ts#L115)
+[types.ts:115](https://github.com/spokestack/react-native-spokestack/blob/07c7ced/src/types.ts#L115)
 
 ### intent
 
@@ -665,7 +665,7 @@ The intent based on the match provided by the NLU model
 
 #### Defined in
 
-[types.ts:113](https://github.com/spokestack/react-native-spokestack/blob/7f11af4/src/types.ts#L113)
+[types.ts:113](https://github.com/spokestack/react-native-spokestack/blob/07c7ced/src/types.ts#L113)
 
 ### slots
 
@@ -675,7 +675,7 @@ Data associated with the intent, provided by the NLU model
 
 #### Defined in
 
-[types.ts:117](https://github.com/spokestack/react-native-spokestack/blob/7f11af4/src/types.ts#L117)
+[types.ts:117](https://github.com/spokestack/react-native-spokestack/blob/07c7ced/src/types.ts#L117)
 
 # Interface: SpokestackNLUSlots
 
@@ -693,7 +693,7 @@ The original string value of the slot recognized in the user utterance
 
 #### Defined in
 
-[types.ts:104](https://github.com/spokestack/react-native-spokestack/blob/7f11af4/src/types.ts#L104)
+[types.ts:104](https://github.com/spokestack/react-native-spokestack/blob/07c7ced/src/types.ts#L104)
 
 ### type
 
@@ -703,7 +703,7 @@ The slot's type, as defined in the model metadata
 
 #### Defined in
 
-[types.ts:100](https://github.com/spokestack/react-native-spokestack/blob/7f11af4/src/types.ts#L100)
+[types.ts:100](https://github.com/spokestack/react-native-spokestack/blob/07c7ced/src/types.ts#L100)
 
 ### value
 
@@ -713,7 +713,7 @@ The parsed (typed) value of the slot recognized in the user utterance
 
 #### Defined in
 
-[types.ts:102](https://github.com/spokestack/react-native-spokestack/blob/7f11af4/src/types.ts#L102)
+[types.ts:102](https://github.com/spokestack/react-native-spokestack/blob/07c7ced/src/types.ts#L102)
 
 ### addEventListener
 
@@ -748,7 +748,7 @@ useEffect(() => {
 
 #### Defined in
 
-[index.ts:237](https://github.com/spokestack/react-native-spokestack/blob/7f11af4/src/index.ts#L237)
+[index.ts:237](https://github.com/spokestack/react-native-spokestack/blob/07c7ced/src/index.ts#L237)
 
 ### removeEventListener
 
@@ -775,7 +775,7 @@ Spokestack.removeEventListener('recognize', onRecognize)
 
 #### Defined in
 
-[index.ts:253](https://github.com/spokestack/react-native-spokestack/blob/7f11af4/src/index.ts#L253)
+[index.ts:253](https://github.com/spokestack/react-native-spokestack/blob/07c7ced/src/index.ts#L253)
 
 ### removeAllListeners
 
@@ -795,7 +795,7 @@ Spokestack.removeAllListeners()
 
 #### Defined in
 
-[index.ts:265](https://github.com/spokestack/react-native-spokestack/blob/7f11af4/src/index.ts#L265)
+[index.ts:265](https://github.com/spokestack/react-native-spokestack/blob/07c7ced/src/index.ts#L265)
 
 #### TTSFormat
 
@@ -808,19 +808,19 @@ IPA is expected when using SSML or Speech Markdown.
 
 #### Defined in
 
-[types.ts:73](https://github.com/spokestack/react-native-spokestack/blob/7f11af4/src/types.ts#L73)
+[types.ts:73](https://github.com/spokestack/react-native-spokestack/blob/07c7ced/src/types.ts#L73)
 
 • **SSML** = `1`
 
 #### Defined in
 
-[types.ts:72](https://github.com/spokestack/react-native-spokestack/blob/7f11af4/src/types.ts#L72)
+[types.ts:72](https://github.com/spokestack/react-native-spokestack/blob/07c7ced/src/types.ts#L72)
 
 • **TEXT** = `0`
 
 #### Defined in
 
-[types.ts:71](https://github.com/spokestack/react-native-spokestack/blob/7f11af4/src/types.ts#L71)
+[types.ts:71](https://github.com/spokestack/react-native-spokestack/blob/07c7ced/src/types.ts#L71)
 
 ---
 
@@ -923,25 +923,25 @@ A lower number means more logs.
 
 #### Defined in
 
-[types.ts:58](https://github.com/spokestack/react-native-spokestack/blob/7f11af4/src/types.ts#L58)
+[types.ts:58](https://github.com/spokestack/react-native-spokestack/blob/07c7ced/src/types.ts#L58)
 
 • **INFO** = `30`
 
 #### Defined in
 
-[types.ts:60](https://github.com/spokestack/react-native-spokestack/blob/7f11af4/src/types.ts#L60)
+[types.ts:60](https://github.com/spokestack/react-native-spokestack/blob/07c7ced/src/types.ts#L60)
 
 • **NONE** = `100`
 
 #### Defined in
 
-[types.ts:61](https://github.com/spokestack/react-native-spokestack/blob/7f11af4/src/types.ts#L61)
+[types.ts:61](https://github.com/spokestack/react-native-spokestack/blob/07c7ced/src/types.ts#L61)
 
 • **PERF** = `20`
 
 #### Defined in
 
-[types.ts:59](https://github.com/spokestack/react-native-spokestack/blob/7f11af4/src/types.ts#L59)
+[types.ts:59](https://github.com/spokestack/react-native-spokestack/blob/07c7ced/src/types.ts#L59)
 
 #### PipelineProfile
 
@@ -956,7 +956,7 @@ when not using wakeword.
 
 #### Defined in
 
-[types.ts:24](https://github.com/spokestack/react-native-spokestack/blob/7f11af4/src/types.ts#L24)
+[types.ts:24](https://github.com/spokestack/react-native-spokestack/blob/07c7ced/src/types.ts#L24)
 
 • **PTT_SPOKESTACK_ASR** = `5`
 
@@ -967,7 +967,7 @@ when not using wakeword, but Spokestack ASR is preferred.
 
 #### Defined in
 
-[types.ts:42](https://github.com/spokestack/react-native-spokestack/blob/7f11af4/src/types.ts#L42)
+[types.ts:42](https://github.com/spokestack/react-native-spokestack/blob/07c7ced/src/types.ts#L42)
 
 • **TFLITE_WAKEWORD_KEYWORD** = `6`
 
@@ -975,7 +975,7 @@ VAD-sensitive TFLite wake word activates TFLite keyword recognizer
 
 #### Defined in
 
-[types.ts:46](https://github.com/spokestack/react-native-spokestack/blob/7f11af4/src/types.ts#L46)
+[types.ts:46](https://github.com/spokestack/react-native-spokestack/blob/07c7ced/src/types.ts#L46)
 
 • **TFLITE_WAKEWORD_NATIVE_ASR** = `0`
 
@@ -985,7 +985,7 @@ are required if any wakeword profile is used.
 
 #### Defined in
 
-[types.ts:12](https://github.com/spokestack/react-native-spokestack/blob/7f11af4/src/types.ts#L12)
+[types.ts:12](https://github.com/spokestack/react-native-spokestack/blob/07c7ced/src/types.ts#L12)
 
 • **TFLITE_WAKEWORD_SPOKESTACK_ASR** = `3`
 
@@ -995,7 +995,7 @@ are required if any wakeword profile is used.
 
 #### Defined in
 
-[types.ts:30](https://github.com/spokestack/react-native-spokestack/blob/7f11af4/src/types.ts#L30)
+[types.ts:30](https://github.com/spokestack/react-native-spokestack/blob/07c7ced/src/types.ts#L30)
 
 • **VAD_KEYWORD_ASR** = `7`
 
@@ -1003,7 +1003,7 @@ VAD-triggered TFLite Keyword Recognizer
 
 #### Defined in
 
-[types.ts:50](https://github.com/spokestack/react-native-spokestack/blob/7f11af4/src/types.ts#L50)
+[types.ts:50](https://github.com/spokestack/react-native-spokestack/blob/07c7ced/src/types.ts#L50)
 
 • **VAD_NATIVE_ASR** = `1`
 
@@ -1012,7 +1012,7 @@ when Voice Active Detection triggers it.
 
 #### Defined in
 
-[types.ts:17](https://github.com/spokestack/react-native-spokestack/blob/7f11af4/src/types.ts#L17)
+[types.ts:17](https://github.com/spokestack/react-native-spokestack/blob/07c7ced/src/types.ts#L17)
 
 • **VAD_SPOKESTACK_ASR** = `4`
 
@@ -1021,7 +1021,7 @@ when Voice Active Detection triggers it.
 
 #### Defined in
 
-[types.ts:35](https://github.com/spokestack/react-native-spokestack/blob/7f11af4/src/types.ts#L35)
+[types.ts:35](https://github.com/spokestack/react-native-spokestack/blob/07c7ced/src/types.ts#L35)
 
 ## Pipeline Config
 
@@ -1038,7 +1038,7 @@ to maintain a peak of -9dB, configure a value of 9
 
 #### Defined in
 
-[types.ts:192](https://github.com/spokestack/react-native-spokestack/blob/7f11af4/src/types.ts#L192)
+[types.ts:192](https://github.com/spokestack/react-native-spokestack/blob/07c7ced/src/types.ts#L192)
 
 ### agcTargetLevelDbfs
 
@@ -1052,7 +1052,7 @@ Dynamic range compression rate, in dBFS
 
 #### Defined in
 
-[types.ts:200](https://github.com/spokestack/react-native-spokestack/blob/7f11af4/src/types.ts#L200)
+[types.ts:200](https://github.com/spokestack/react-native-spokestack/blob/07c7ced/src/types.ts#L200)
 
 ### ansPolicy
 
@@ -1066,7 +1066,7 @@ Noise policy
 
 #### Defined in
 
-[types.ts:183](https://github.com/spokestack/react-native-spokestack/blob/7f11af4/src/types.ts#L183)
+[types.ts:183](https://github.com/spokestack/react-native-spokestack/blob/07c7ced/src/types.ts#L183)
 
 ### bufferWidth
 
@@ -1078,7 +1078,7 @@ Buffer width, used with frameWidth to determine the buffer size
 
 #### Defined in
 
-[types.ts:155](https://github.com/spokestack/react-native-spokestack/blob/7f11af4/src/types.ts#L155)
+[types.ts:155](https://github.com/spokestack/react-native-spokestack/blob/07c7ced/src/types.ts#L155)
 
 ### frameWidth
 
@@ -1090,7 +1090,7 @@ Speech frame width, in ms
 
 #### Defined in
 
-[types.ts:149](https://github.com/spokestack/react-native-spokestack/blob/7f11af4/src/types.ts#L149)
+[types.ts:149](https://github.com/spokestack/react-native-spokestack/blob/07c7ced/src/types.ts#L149)
 
 ### profile
 
@@ -1115,7 +1115,7 @@ Otherwise, the default is `PTT_NATIVE_ASR`.
 
 #### Defined in
 
-[types.ts:139](https://github.com/spokestack/react-native-spokestack/blob/7f11af4/src/types.ts#L139)
+[types.ts:139](https://github.com/spokestack/react-native-spokestack/blob/07c7ced/src/types.ts#L139)
 
 ### sampleRate
 
@@ -1125,7 +1125,7 @@ Audio sampling rate, in Hz
 
 #### Defined in
 
-[types.ts:143](https://github.com/spokestack/react-native-spokestack/blob/7f11af4/src/types.ts#L143)
+[types.ts:143](https://github.com/spokestack/react-native-spokestack/blob/07c7ced/src/types.ts#L143)
 
 ### vadFallDelay
 
@@ -1138,7 +1138,7 @@ how many negative samples must be received to flip the detector to negative
 
 #### Defined in
 
-[types.ts:166](https://github.com/spokestack/react-native-spokestack/blob/7f11af4/src/types.ts#L166)
+[types.ts:166](https://github.com/spokestack/react-native-spokestack/blob/07c7ced/src/types.ts#L166)
 
 ### vadMode
 
@@ -1148,7 +1148,7 @@ Voice activity detector mode
 
 #### Defined in
 
-[types.ts:159](https://github.com/spokestack/react-native-spokestack/blob/7f11af4/src/types.ts#L159)
+[types.ts:159](https://github.com/spokestack/react-native-spokestack/blob/07c7ced/src/types.ts#L159)
 
 ### vadRiseDelay
 
@@ -1163,7 +1163,7 @@ how many positive samples must be received to flip the detector to positive
 
 #### Defined in
 
-[types.ts:175](https://github.com/spokestack/react-native-spokestack/blob/7f11af4/src/types.ts#L175)
+[types.ts:175](https://github.com/spokestack/react-native-spokestack/blob/07c7ced/src/types.ts#L175)
 
 ## NLU Config
 
@@ -1184,7 +1184,7 @@ file is read and parsed by the underlying native libraries instead.**
 
 #### Defined in
 
-[types.ts:223](https://github.com/spokestack/react-native-spokestack/blob/7f11af4/src/types.ts#L223)
+[types.ts:223](https://github.com/spokestack/react-native-spokestack/blob/07c7ced/src/types.ts#L223)
 
 ### model
 
@@ -1199,7 +1199,7 @@ This field accepts 2 types of values.
 
 #### Defined in
 
-[types.ts:211](https://github.com/spokestack/react-native-spokestack/blob/7f11af4/src/types.ts#L211)
+[types.ts:211](https://github.com/spokestack/react-native-spokestack/blob/07c7ced/src/types.ts#L211)
 
 ### vocab
 
@@ -1214,7 +1214,7 @@ This field accepts 2 types of values.
 
 #### Defined in
 
-[types.ts:231](https://github.com/spokestack/react-native-spokestack/blob/7f11af4/src/types.ts#L231)
+[types.ts:231](https://github.com/spokestack/react-native-spokestack/blob/07c7ced/src/types.ts#L231)
 
 ### inputLength
 
@@ -1222,7 +1222,7 @@ This field accepts 2 types of values.
 
 #### Defined in
 
-[types.ts:244](https://github.com/spokestack/react-native-spokestack/blob/7f11af4/src/types.ts#L244)
+[types.ts:244](https://github.com/spokestack/react-native-spokestack/blob/07c7ced/src/types.ts#L244)
 
 ## Wakeword Config
 
@@ -1243,7 +1243,7 @@ with an additional state input/output shaped [state-width]
 
 #### Defined in
 
-[types.ts:272](https://github.com/spokestack/react-native-spokestack/blob/7f11af4/src/types.ts#L272)
+[types.ts:272](https://github.com/spokestack/react-native-spokestack/blob/07c7ced/src/types.ts#L272)
 
 ### encode
 
@@ -1261,7 +1261,7 @@ and its outputs
 
 #### Defined in
 
-[types.ts:283](https://github.com/spokestack/react-native-spokestack/blob/7f11af4/src/types.ts#L283)
+[types.ts:283](https://github.com/spokestack/react-native-spokestack/blob/07c7ced/src/types.ts#L283)
 
 ### filter
 
@@ -1279,7 +1279,7 @@ its inputs should be shaped [fft-width], and its outputs [mel-width]
 
 #### Defined in
 
-[types.ts:260](https://github.com/spokestack/react-native-spokestack/blob/7f11af4/src/types.ts#L260)
+[types.ts:260](https://github.com/spokestack/react-native-spokestack/blob/07c7ced/src/types.ts#L260)
 
 ### activeMax
 
@@ -1292,7 +1292,7 @@ used to time out the activation
 
 #### Defined in
 
-[types.ts:373](https://github.com/spokestack/react-native-spokestack/blob/7f11af4/src/types.ts#L373)
+[types.ts:373](https://github.com/spokestack/react-native-spokestack/blob/07c7ced/src/types.ts#L373)
 
 ### activeMin
 
@@ -1305,7 +1305,7 @@ used to ignore a VAD deactivation after the wakeword
 
 #### Defined in
 
-[types.ts:366](https://github.com/spokestack/react-native-spokestack/blob/7f11af4/src/types.ts#L366)
+[types.ts:366](https://github.com/spokestack/react-native-spokestack/blob/07c7ced/src/types.ts#L366)
 
 ### requestTimeout
 
@@ -1318,7 +1318,7 @@ Apple has an undocumented limit of 60000ms per request.
 
 #### Defined in
 
-[types.ts:380](https://github.com/spokestack/react-native-spokestack/blob/7f11af4/src/types.ts#L380)
+[types.ts:380](https://github.com/spokestack/react-native-spokestack/blob/07c7ced/src/types.ts#L380)
 
 ### rmsAlpha
 
@@ -1332,7 +1332,7 @@ rate for the current RMS signal energy (0 for no RMS normalization)
 
 #### Defined in
 
-[types.ts:397](https://github.com/spokestack/react-native-spokestack/blob/7f11af4/src/types.ts#L397)
+[types.ts:397](https://github.com/spokestack/react-native-spokestack/blob/07c7ced/src/types.ts#L397)
 
 ### rmsTarget
 
@@ -1347,7 +1347,7 @@ to the RMS target used during training
 
 #### Defined in
 
-[types.ts:389](https://github.com/spokestack/react-native-spokestack/blob/7f11af4/src/types.ts#L389)
+[types.ts:389](https://github.com/spokestack/react-native-spokestack/blob/07c7ced/src/types.ts#L389)
 
 ### wakewords
 
@@ -1360,7 +1360,7 @@ Only necessary when not passing the filter, detect, and encode paths.
 
 #### Defined in
 
-[types.ts:404](https://github.com/spokestack/react-native-spokestack/blob/7f11af4/src/types.ts#L404)
+[types.ts:404](https://github.com/spokestack/react-native-spokestack/blob/07c7ced/src/types.ts#L404)
 
 ## Keyword Config
 
@@ -1381,7 +1381,7 @@ with an additional state input/output shaped [state-width]
 
 #### Defined in
 
-[types.ts:272](https://github.com/spokestack/react-native-spokestack/blob/7f11af4/src/types.ts#L272)
+[types.ts:272](https://github.com/spokestack/react-native-spokestack/blob/07c7ced/src/types.ts#L272)
 
 ### encode
 
@@ -1399,7 +1399,7 @@ and its outputs
 
 #### Defined in
 
-[types.ts:283](https://github.com/spokestack/react-native-spokestack/blob/7f11af4/src/types.ts#L283)
+[types.ts:283](https://github.com/spokestack/react-native-spokestack/blob/07c7ced/src/types.ts#L283)
 
 ### filter
 
@@ -1417,7 +1417,7 @@ its inputs should be shaped [fft-width], and its outputs [mel-width]
 
 #### Defined in
 
-[types.ts:260](https://github.com/spokestack/react-native-spokestack/blob/7f11af4/src/types.ts#L260)
+[types.ts:260](https://github.com/spokestack/react-native-spokestack/blob/07c7ced/src/types.ts#L260)
 
 Either `metadata` or `classes` is required, and they are mutually exclusive.
 
@@ -1439,7 +1439,7 @@ file is read and parsed by the underlying native libraries instead.**
 
 #### Defined in
 
-[types.ts:424](https://github.com/spokestack/react-native-spokestack/blob/7f11af4/src/types.ts#L424)
+[types.ts:424](https://github.com/spokestack/react-native-spokestack/blob/07c7ced/src/types.ts#L424)
 
 ### classes
 
@@ -1452,7 +1452,7 @@ Required if `keyword.metadata` is not specified.
 
 #### Defined in
 
-[types.ts:434](https://github.com/spokestack/react-native-spokestack/blob/7f11af4/src/types.ts#L434)
+[types.ts:434](https://github.com/spokestack/react-native-spokestack/blob/07c7ced/src/types.ts#L434)
 
 ## Advanced Wakeword and Keyword Config
 
@@ -1469,7 +1469,7 @@ used as an input to the classifier, in milliseconds
 
 #### Defined in
 
-[types.ts:293](https://github.com/spokestack/react-native-spokestack/blob/7f11af4/src/types.ts#L293)
+[types.ts:293](https://github.com/spokestack/react-native-spokestack/blob/07c7ced/src/types.ts#L293)
 
 ### encodeWidth
 
@@ -1481,7 +1481,7 @@ The size of the encoder output, in vector units
 
 #### Defined in
 
-[types.ts:299](https://github.com/spokestack/react-native-spokestack/blob/7f11af4/src/types.ts#L299)
+[types.ts:299](https://github.com/spokestack/react-native-spokestack/blob/07c7ced/src/types.ts#L299)
 
 ### fftHopLength
 
@@ -1494,7 +1494,7 @@ overlapping STFT is calculated, in milliseconds
 
 #### Defined in
 
-[types.ts:322](https://github.com/spokestack/react-native-spokestack/blob/7f11af4/src/types.ts#L322)
+[types.ts:322](https://github.com/spokestack/react-native-spokestack/blob/07c7ced/src/types.ts#L322)
 
 ### fftWindowSize
 
@@ -1507,7 +1507,7 @@ in number of samples - should be a power of 2 for maximum efficiency
 
 #### Defined in
 
-[types.ts:306](https://github.com/spokestack/react-native-spokestack/blob/7f11af4/src/types.ts#L306)
+[types.ts:306](https://github.com/spokestack/react-native-spokestack/blob/07c7ced/src/types.ts#L306)
 
 ### fftWindowType
 
@@ -1522,7 +1522,7 @@ before calculating the STFT; currently the "hann" window is supported
 
 #### Defined in
 
-[types.ts:315](https://github.com/spokestack/react-native-spokestack/blob/7f11af4/src/types.ts#L315)
+[types.ts:315](https://github.com/spokestack/react-native-spokestack/blob/07c7ced/src/types.ts#L315)
 
 ### melFrameLength
 
@@ -1535,7 +1535,7 @@ overlapping STFT is calculated, in milliseconds
 
 #### Defined in
 
-[types.ts:329](https://github.com/spokestack/react-native-spokestack/blob/7f11af4/src/types.ts#L329)
+[types.ts:329](https://github.com/spokestack/react-native-spokestack/blob/07c7ced/src/types.ts#L329)
 
 ### melFrameWidth
 
@@ -1548,7 +1548,7 @@ in number of filterbank components
 
 #### Defined in
 
-[types.ts:336](https://github.com/spokestack/react-native-spokestack/blob/7f11af4/src/types.ts#L336)
+[types.ts:336](https://github.com/spokestack/react-native-spokestack/blob/07c7ced/src/types.ts#L336)
 
 ### preEmphasis
 
@@ -1561,7 +1561,7 @@ the normalized audio signal (0 for no pre-emphasis)
 
 #### Defined in
 
-[types.ts:343](https://github.com/spokestack/react-native-spokestack/blob/7f11af4/src/types.ts#L343)
+[types.ts:343](https://github.com/spokestack/react-native-spokestack/blob/07c7ced/src/types.ts#L343)
 
 ### stateWidth
 
@@ -1573,7 +1573,7 @@ The size of the encoder state, in vector units (defaults to wake-encode-width)
 
 #### Defined in
 
-[types.ts:349](https://github.com/spokestack/react-native-spokestack/blob/7f11af4/src/types.ts#L349)
+[types.ts:349](https://github.com/spokestack/react-native-spokestack/blob/07c7ced/src/types.ts#L349)
 
 ### threshold
 
@@ -1586,7 +1586,7 @@ above which the trigger activates the pipeline, in the range [0, 1]
 
 #### Defined in
 
-[types.ts:356](https://github.com/spokestack/react-native-spokestack/blob/7f11af4/src/types.ts#L356)
+[types.ts:356](https://github.com/spokestack/react-native-spokestack/blob/07c7ced/src/types.ts#L356)
 
 ---
 
