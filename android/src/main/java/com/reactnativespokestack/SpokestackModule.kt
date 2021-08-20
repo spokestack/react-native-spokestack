@@ -102,7 +102,7 @@ class SpokestackModule(private val reactContext: ReactApplicationContext): React
 
   private fun kebabCase(str: String): String {
     return str.replace(Regex("([a-z])([A-Z])")) {
-      m -> "${m.groupValues[1]}-${m.groupValues[2].toLowerCase()}"
+        m -> "${m.groupValues[1]}-${m.groupValues[2].toLowerCase()}"
     }
   }
 
@@ -319,8 +319,12 @@ class SpokestackModule(private val reactContext: ReactApplicationContext): React
       return
     }
     try {
-      spokestack!!.start()
-      spokestack!!.resume()
+      if (!started()) {
+        spokestack!!.start()
+      }
+      if (spokestack!!.speechPipeline.isPaused) {
+        spokestack!!.resume()
+      }
       promise.resolve(null)
 
       // Send a start event for parity with iOS
