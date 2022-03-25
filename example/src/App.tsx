@@ -11,6 +11,7 @@ import handleIntent from './handleIntent'
 const noTranscriptMessage =
   'Press the "Listen" button and speak to record a message for speech playback'
 
+
 export default function App() {
   const [listening, setListening] = React.useState(false)
   const [playing, setPlaying] = React.useState(false)
