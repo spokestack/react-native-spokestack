@@ -92,6 +92,7 @@ export default function App() {
       }
     } catch (e) {
       console.error(e)
+      // @ts-ignore
       setError(e.message)
       setInitializing(false)
       return
@@ -131,6 +132,7 @@ export default function App() {
       console.log(`Activated: ${await Spokestack.isActivated()}`)
     } catch (e) {
       console.error(e)
+      // @ts-ignore
       setError(e.message)
     }
     setInitializing(false)
@@ -159,6 +161,7 @@ export default function App() {
               }
             } catch (e) {
               console.error(e)
+              // @ts-ignore
               setError(e.message)
             }
           }}
@@ -172,6 +175,7 @@ export default function App() {
               await Spokestack.speak(transcript || noTranscriptMessage)
             } catch (e) {
               console.error(e)
+              // @ts-ignore
               setError(e.message)
             }
           }}
