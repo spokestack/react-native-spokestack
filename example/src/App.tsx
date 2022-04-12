@@ -4,26 +4,29 @@ import Spokestack, {
   SpokestackRecognizeEvent
 } from 'react-native-spokestack'
 
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import checkPermission from './checkPermission'
 import handleIntent from './handleIntent'
 
-const noTranscriptMessage =
-  'Press the "Listen" button and speak to record a message for speech playback'
+const noTranscriptMessage = 'Press the "Listen" button and speak to record a message for speech playback'
+
+// @ts-ignore
+import { REACT_APP_SPOKESTACK_CLIENT_ID, REACT_APP_SPOKESTACK_CLIENT_SECRET } from '@env';
+
 
 export default function App() {
-  const [listening, setListening] = React.useState(false)
-  const [playing, setPlaying] = React.useState(false)
-  const [transcript, setTranscript] = React.useState('')
-  const [partial, setPartial] = React.useState('')
-  const [prompt, setPrompt] = React.useState('')
-  const [initializing, setInitializing] = React.useState(false)
-  const [showKeyword, setShowKeyword] = React.useState(false)
-  const [error, setError] = React.useState('')
+  const [listening, setListening] = useState(false)
+  const [playing, setPlaying] = useState(false)
+  const [transcript, setTranscript] = useState('')
+  const [partial, setPartial] = useState('')
+  const [prompt, setPrompt] = useState('')
+  const [initializing, setInitializing] = useState(false)
+  const [showKeyword, setShowKeyword] = useState(true)
+  const [error, setError] = useState('')
 
   async function init() {
-    const clientId = process.env.SPOKESTACK_CLIENT_ID
-    const clientSecret = process.env.SPOKESTACK_CLIENT_SECRET
+    const clientId: string = REACT_APP_SPOKESTACK_CLIENT_ID
+    const clientSecret: string = REACT_APP_SPOKESTACK_CLIENT_SECRET
 
     if (!clientId) {
       throw new Error('SPOKESTACK_CLIENT_ID should be set in the environment.')
@@ -50,6 +53,7 @@ export default function App() {
     try {
       if (showKeyword) {
         await Spokestack.initialize(clientId, clientSecret, {
+          allowCellularDownloads: true,
           wakeword: {
             detect: require('../models/detect.tflite'),
             encode: require('../models/encode.tflite'),
@@ -77,6 +81,7 @@ export default function App() {
         })
       } else {
         await Spokestack.initialize(clientId, clientSecret, {
+          allowCellularDownloads: true,
           wakeword: {
             detect: require('../models/detect.tflite'),
             encode: require('../models/encode.tflite'),
@@ -91,6 +96,7 @@ export default function App() {
       }
     } catch (e) {
       console.error(e)
+      // @ts-ignore
       setError(e.message)
       setInitializing(false)
       return
@@ -130,12 +136,13 @@ export default function App() {
       console.log(`Activated: ${await Spokestack.isActivated()}`)
     } catch (e) {
       console.error(e)
+      // @ts-ignore
       setError(e.message)
     }
     setInitializing(false)
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
     init()
 
     return () => {
@@ -158,6 +165,7 @@ export default function App() {
               }
             } catch (e) {
               console.error(e)
+              // @ts-ignore
               setError(e.message)
             }
           }}
@@ -171,6 +179,7 @@ export default function App() {
               await Spokestack.speak(transcript || noTranscriptMessage)
             } catch (e) {
               console.error(e)
+              // @ts-ignore
               setError(e.message)
             }
           }}
@@ -198,9 +207,8 @@ export default function App() {
           title={
             initializing
               ? 'Initializing...'
-              : `Test ${
-                  showKeyword ? 'Wakeword & NLU' : 'Wakeword & Keyword'
-                } Instead`
+              : `Test ${showKeyword ? 'Wakeword & NLU' : 'Wakeword & Keyword'
+              } Instead`
           }
           onPress={() => setShowKeyword(!showKeyword)}
         />
