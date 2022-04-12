@@ -8,13 +8,10 @@ import React, { useState, useEffect } from 'react'
 import checkPermission from './checkPermission'
 import handleIntent from './handleIntent'
 
-const noTranscriptMessage =
-  'Press the "Listen" button and speak to record a message for speech playback'
+const noTranscriptMessage = 'Press the "Listen" button and speak to record a message for speech playback'
 
-import {
-    REACT_APP_SPOKESTACK_CLIENT_ID,
-    REACT_APP_SPOKESTACK_CLIENT_SECRET
-} from '@env';
+// @ts-ignore
+import { REACT_APP_SPOKESTACK_CLIENT_ID, REACT_APP_SPOKESTACK_CLIENT_SECRET } from '@env';
 
 
 export default function App() {

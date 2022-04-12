@@ -29,7 +29,7 @@ android {
   compileSdkVersion getExtOrIntegerDefault('compileSdkVersion')
   buildToolsVersion getExtOrDefault('buildToolsVersion')
   defaultConfig {
-    minSdkVersion 21
+    minSdkVersion 24
     targetSdkVersion getExtOrIntegerDefault('targetSdkVersion')
     versionCode 1
     versionName "1.0"
@@ -121,7 +121,7 @@ dependencies {
   // noinspection GradleDynamicVersion
   implementation 'com.facebook.react:react-native:+'
   implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinx_version"
-  api 'io.spokestack:spokestack-android:11.4.1'
+  api 'io.spokestack:spokestack-android:11.5.2'
 
   // for TensorFlow Lite-powered wakeword detection and/or NLU
   implementation 'org.tensorflow:tensorflow-lite:2.3.0'

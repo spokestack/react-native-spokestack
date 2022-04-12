@@ -22,8 +22,15 @@ The voice can be changed if you have created a custom voice using a [Spokestack 
 Set these variables in your environment...
 
 ```sh
-export SPOKESTACK_CLIENT_ID=$CLIENT_IDENTITY
-export SPOKESTACK_CLIENT_SECRET=$CLIENT_SECRET_KEY
+export REACT_APP_SPOKESTACK_CLIENT_ID=$CLIENT_IDENTITY
+export REACT_APP_SPOKESTACK_CLIENT_SECRET=$CLIENT_SECRET_KEY
+```
+
+or create a .env file on example folder and the following variables.
+
+```sh
+REACT_APP_SPOKESTACK_CLIENT_ID=
+REACT_APP_SPOKESTACK_CLIENT_SECRET=
 ```
 
 Now that you have tokens in place, the app can be run as normal.
