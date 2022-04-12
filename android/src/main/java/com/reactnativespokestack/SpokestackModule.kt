@@ -151,7 +151,7 @@ class SpokestackModule(private val reactContext: ReactApplicationContext): React
 
     downloader = Downloader(
       reactContext.applicationContext,
-      if (config.hasKey("allowCellular")) config.getBoolean("allowCellular") else false,
+      if (config.hasKey("allowCellularDownloads")) config.getBoolean("allowCellularDownloads") else false,
       if (config.hasKey("refreshModels")) config.getBoolean("refreshModels") else false
     )
 

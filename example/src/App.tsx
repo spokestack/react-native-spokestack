@@ -25,8 +25,8 @@ export default function App() {
   const [error, setError] = useState('')
 
   async function init() {
-    const clientId = REACT_APP_SPOKESTACK_CLIENT_ID
-    const clientSecret = REACT_APP_SPOKESTACK_CLIENT_SECRET
+    const clientId: string = REACT_APP_SPOKESTACK_CLIENT_ID
+    const clientSecret: string = REACT_APP_SPOKESTACK_CLIENT_SECRET
 
     if (!clientId) {
       throw new Error('SPOKESTACK_CLIENT_ID should be set in the environment.')
@@ -81,6 +81,7 @@ export default function App() {
         })
       } else {
         await Spokestack.initialize(clientId, clientSecret, {
+          allowCellularDownloads: true,
           wakeword: {
             detect: require('../models/detect.tflite'),
             encode: require('../models/encode.tflite'),
